@@ -1,0 +1,229 @@
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('fontawesome.ttf')
+}
+
+@font-face {
+  font-family: 'EnvyCodeR';
+  src: url('envycoder.ttf')
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('roboto.ttf')
+}
+
+@keyframes down {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0)
+  }
+  45% {
+    transform: translateY(-6px)
+  }
+  75% {
+    transform: translateY(-3px)
+  }
+}
+
+@keyframes slew {
+  25% {
+    transform: rotate(45deg)
+  }
+  75% {
+    transform: rotate(-45deg)
+  }
+  100% {
+    transform: rotate(0)
+  }
+}
+
+body {
+  background:#333;
+  overflow: hidden
+}
+
+canvas {
+  position: absolute
+}
+
+.cur-grab {
+  cursor: move;
+  cursor: grab;
+  cursor: -webkit-grab
+}
+
+.cur-grab:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing
+}
+
+.cur-pointer {
+  cursor: pointer
+}
+
+.cur-e-resize {
+  cursor: e-resize
+}
+
+.cur-n-resize {
+  cursor: n-resize
+}
+
+#grid {
+  position: absolute;
+  width: 144px;
+  background: #222;
+  border-radius: 6px 6px 8px 8px;
+  color: #fff;
+  font-size: 12px;
+  font-family: Roboto;
+  font-weight: bold;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 4px 4px 12px -4px #000;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none
+}
+
+#grid span {
+  display: block;
+  background: #111;
+  width: 100%;
+  line-height: 32px;
+  margin-bottom: 6px;
+  text-align: center;
+  color: #ddd;
+  font-size: 15px;
+  cursor: move;
+  cursor: grab;
+  cursor: -webkit-grab
+}
+
+#grid span:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+#grid label {
+  display: inline-block;
+  float: left;
+  clear: left;
+  width: 64px;
+  line-height: 32px;
+  text-align: right;
+}
+
+#grid input {
+  display: inline-block;
+  float: left;
+  margin-top: 4px;
+  margin-left: 10px;
+  width: 48px;
+  text-align: center;
+  box-sizing: border-box
+}
+
+#grid input:last-child {
+  margin-bottom: 10px
+}
+
+#grid input::-webkit-inner-spin-button, #grid input::-webkit-outer-spin-button { 
+  opacity: 1
+}
+
+#menu {
+  position: absolute;
+  left: 0;
+  bottom: -52px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 -4px 4px 0 #222
+}
+
+#menu ul {
+  background: linear-gradient(#444, #4f4f4f, #444);
+  margin: 0;
+  padding: 0
+}
+
+#menu ul li {
+  display: inline-block;
+  text-align: center;
+  transition: all .3s ease-in-out;
+  padding: 14px;
+  color: #ddd;
+  font-size: 14px;
+  font-family: 'EnvyCodeR';
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none
+}
+
+#menu ul li:last-child {
+  display: block;
+  float: right;
+  width: 60px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#menu ul li:hover {
+  background: #3a3a3a;
+  box-shadow: inset 6px 0 12px -8px #111, inset -6px 0 12px -8px #111;
+}
+
+#menu ul li:active {
+  background: #222;
+}
+
+#menu [class^="ico-"] {
+  display: inline-block;
+  font-family: FontAwesome;
+  transition: transform .3s ease-in-out
+}
+
+.ico-picture, .ico-futboi, .ico-setting {
+  margin-right: 4px
+}
+
+#menu div {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 60px;
+  line-height: 48px;
+  background: none;
+  color: #ddd;
+  cursor: pointer;
+  z-index: -1;
+  transition: all .3s ease-in-out
+}
+
+#menu ul li:hover .ico-picture {
+  transform: scale(1.5) rotate(12deg)
+}
+
+#menu ul li:hover .ico-futboi {
+  animation-name: down;
+  animation-duration: 1s
+}
+
+#menu ul li:hover .ico-setting {
+  animation-name: slew;
+  animation-duration: 1.5s
+}
+
+#menu ul li:hover .ico-close {
+  transform: rotate(180deg)
+}
+
+#menu div:hover .ico-menu {
+  transform: scale(1.5)
+}
