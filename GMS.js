@@ -100,7 +100,7 @@ room.canvas.onmousemove = function(e) {
     return
   }
   if (e.shiftKey) {
-    for (var i = 0, o = room.objects.e; i < o.length; i++) if (o[i].active && o[i].hover(mx, my)) {
+    for (var o = room.objects.e, i = o.length-1; i >= 0; i--) if (o[i].active && o[i].hover(mx, my)) {
       if (o[i].hover(mx, my, _, .75*o[i].height, .75*o[i].width, _)) {
         room.draw();
         for (var j = 0; j < o.length; j++) if (o[j].active) {
@@ -155,9 +155,11 @@ room.canvas.onmousemove = function(e) {
         }
         room.draw(); break
       }
-      if (o[i].action[0] == 3) for (j = 0; j < o.length; j++) if (o[j].active) {
-        o[j].x = Math.floor((mx-o[j].action[1])/room.gridX) * room.gridX;
-        o[j].y = Math.floor((my-o[j].action[2])/room.gridY) * room.gridY;
+      if (o[i].action[0] == 3) {
+        for (j = 0; j < o.length; j++) if (o[j].active) {
+          o[j].x = Math.floor((mx-o[j].action[1])/room.gridX) * room.gridX;
+          o[j].y = Math.floor((my-o[j].action[2])/room.gridY) * room.gridY
+        }
         room.draw()
       }
     }
