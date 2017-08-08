@@ -71,10 +71,10 @@ canvas {
   cursor: n-resize
 }
 
-#grid {
+#\:s\>r {
   position: absolute;
-  width: 144px;
-  background: #222;
+  width: 192px;
+  background: #333;
   border-radius: 6px 6px 8px 8px;
   color: #fff;
   font-size: 12px;
@@ -86,10 +86,106 @@ canvas {
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
-          user-select: none
+          user-select: none;
+  display: none
 }
 
-#grid span {
+#\:s\>r span {
+  display: block;
+  background: #111;
+  width: 100%;
+  line-height: 32px;
+  margin-bottom: 12px;
+  text-align: center;
+  color: #ddd;
+  font-size: 15px;
+  cursor: move;
+  cursor: grab;
+  cursor: -webkit-grab
+}
+
+#\:s\>r span:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing
+}
+
+#\:s\>r label {
+  display: inline-block;
+  float: left;
+  clear: left;
+  width: 64px;
+  line-height: 32px;
+  margin-left: 20px;
+  text-align: right
+}
+
+#\:s\>r input {
+  display: inline-block;
+  float: right;
+  margin-top: 4px;
+  margin-right: 40px;
+  width: 48px;
+  text-align: center;
+  box-sizing: border-box
+}
+
+#\:s\>r input:last-child {
+  margin-bottom: 16px
+}
+
+#\:s\>r input::-webkit-inner-spin-button, #\:s\>r input::-webkit-outer-spin-button { 
+  display: none
+}
+
+#\:s\>r input:focus::-webkit-inner-spin-button, #\:s\>r input:focus::-webkit-outer-spin-button {
+  display: block
+}
+
+#\:s\>r hr {
+    position: relative;
+    display: inline-block;
+    width: 80%;
+    border: 0
+}
+
+#\:s\>r hr:before, #\:s\>r hr:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent
+}
+
+#\:s\>r hr:before {
+    bottom: 100%;
+    border-bottom: 2px solid #444
+}
+
+#\:s\>r hr:after {
+    top: 100%;
+    border-top: 2px solid #222
+}
+
+#\:s\>o {
+  position: absolute;
+  width: 144px;
+  background: #333;
+  border-radius: 6px 6px 8px 8px;
+  color: #fff;
+  font-size: 12px;
+  font-family: Roboto;
+  font-weight: bold;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 4px 4px 12px -4px #000;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+#\:s\>o span {
   display: block;
   background: #111;
   width: 100%;
@@ -103,54 +199,28 @@ canvas {
   cursor: -webkit-grab
 }
 
-#grid span:active {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-}
-
-#grid label {
-  display: inline-block;
-  float: left;
-  clear: left;
-  width: 64px;
-  line-height: 32px;
-  text-align: right;
-}
-
-#grid input {
-  display: inline-block;
-  float: left;
-  margin-top: 4px;
-  margin-left: 10px;
-  width: 48px;
-  text-align: center;
-  box-sizing: border-box
-}
-
-#grid input:last-child {
-  margin-bottom: 10px
-}
-
-#grid input::-webkit-inner-spin-button, #grid input::-webkit-outer-spin-button { 
-  opacity: 1
-}
-
-#menu {
+#\:menu {
   position: absolute;
   left: 0;
   bottom: -52px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 -4px 4px 0 #222
+  box-shadow: 0 0 8px 0 #222;
+  z-index: 1;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none
 }
 
-#menu ul {
-  background: linear-gradient(#444, #4f4f4f, #444);
+#\:menu ul {
+  background: #444;
+  background: linear-gradient(#444, #4a4a4a, #444);
   margin: 0;
   padding: 0
 }
 
-#menu ul li {
+#\:menu ul li {
   display: inline-block;
   text-align: center;
   transition: all .3s ease-in-out;
@@ -166,7 +236,7 @@ canvas {
           user-select: none
 }
 
-#menu ul li:last-child {
+#\:menu ul li:last-child {
   display: block;
   float: right;
   width: 60px;
@@ -174,18 +244,19 @@ canvas {
   padding-right: 0;
 }
 
-#menu ul li:hover {
-  background: #3a3a3a;
-  box-shadow: inset 6px 0 12px -8px #111, inset -6px 0 12px -8px #111;
+#\:menu ul li:hover {
+  background: #404040;
+  box-shadow: inset 6px 0 12px -8px #111, inset -6px 0 12px -8px #111
 }
 
-#menu ul li:active {
-  background: #222;
+#\:menu ul li:active {
+  background: #333;
 }
 
-#menu [class^="ico-"] {
+#\:menu [class^="ico-"] {
   display: inline-block;
   font-family: FontAwesome;
+  font-style: normal;
   transition: transform .3s ease-in-out
 }
 
@@ -193,7 +264,7 @@ canvas {
   margin-right: 4px
 }
 
-#menu div {
+#\:menu div:first-of-type {
   position: fixed;
   right: 0;
   bottom: 0;
@@ -206,24 +277,44 @@ canvas {
   transition: all .3s ease-in-out
 }
 
-#menu ul li:hover .ico-picture {
+#\:menu ul li:hover .ico-picture {
   transform: scale(1.5) rotate(12deg)
 }
 
-#menu ul li:hover .ico-futboi {
+#\:menu ul li:hover .ico-futboi {
   animation-name: down;
   animation-duration: 1s
 }
 
-#menu ul li:hover .ico-setting {
+#\:menu ul li:hover .ico-setting {
   animation-name: slew;
   animation-duration: 1.5s
 }
 
-#menu ul li:hover .ico-close {
+#\:menu ul li:hover .ico-close {
   transform: rotate(180deg)
 }
 
-#menu div:hover .ico-menu {
+#\:menu div:first-of-type:hover .ico-menu {
   transform: scale(1.5)
+}
+
+#popup {
+  position: absolute;
+  left: 10%;
+  width: 80%;
+  height: 0;
+  background: #222;
+  background: linear-gradient(#222, #282828, #222);
+  box-shadow: 8px 8px 12px -8px #000;
+  opacity: 0;
+  display: none
+}
+
+#popup div {
+  position: absolute;
+  top: 100%;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 16px solid #222
 }
