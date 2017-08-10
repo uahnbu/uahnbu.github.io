@@ -71,7 +71,7 @@ canvas {
   cursor: n-resize
 }
 
-#\:s\>r {
+#\:s\5fr {
   position: absolute;
   width: 192px;
   background: #333;
@@ -90,7 +90,7 @@ canvas {
   display: none
 }
 
-#\:s\>r span {
+#\:s\5fr span {
   display: block;
   background: #111;
   width: 100%;
@@ -104,13 +104,12 @@ canvas {
   cursor: -webkit-grab
 }
 
-#\:s\>r span:active {
+#\:s\5fr span:active {
   cursor: grabbing;
   cursor: -webkit-grabbing
 }
 
-#\:s\>r label {
-  display: inline-block;
+#\:s\5fr label {
   float: left;
   clear: left;
   width: 64px;
@@ -119,8 +118,7 @@ canvas {
   text-align: right
 }
 
-#\:s\>r input {
-  display: inline-block;
+#\:s\5fr input {
   float: right;
   margin-top: 4px;
   margin-right: 40px;
@@ -129,26 +127,26 @@ canvas {
   box-sizing: border-box
 }
 
-#\:s\>r input:last-child {
+#\:s\5fr input:last-child {
   margin-bottom: 16px
 }
 
-#\:s\>r input::-webkit-inner-spin-button, #\:s\>r input::-webkit-outer-spin-button { 
+#\:s\5fr input::-webkit-inner-spin-button, #\:s\5fr input::-webkit-outer-spin-button { 
   display: none
 }
 
-#\:s\>r input:focus::-webkit-inner-spin-button, #\:s\>r input:focus::-webkit-outer-spin-button {
+#\:s\5fr input:focus::-webkit-inner-spin-button, #\:s\5fr input:focus::-webkit-outer-spin-button {
   display: block
 }
 
-#\:s\>r hr {
+#\:s\5fr hr {
     position: relative;
     display: inline-block;
     width: 80%;
     border: 0
 }
 
-#\:s\>r hr:before, #\:s\>r hr:after {
+#\:s\5fr hr:before, #\:s\5fr hr:after {
     content: '';
     position: absolute;
     left: 0;
@@ -157,46 +155,198 @@ canvas {
     border-right: 2px solid transparent
 }
 
-#\:s\>r hr:before {
+#\:s\5fr hr:before {
     bottom: 100%;
     border-bottom: 2px solid #444
 }
 
-#\:s\>r hr:after {
+#\:s\5fr hr:after {
     top: 100%;
     border-top: 2px solid #222
 }
 
-#\:s\>o {
+#\:s\5fo {
   position: absolute;
-  width: 144px;
+  width: 70%;
+  height: 70%;
   background: #333;
   border-radius: 6px 6px 8px 8px;
   color: #fff;
   font-size: 12px;
   font-family: Roboto;
   font-weight: bold;
-  text-align: center;
-  overflow: hidden;
   box-shadow: 4px 4px 12px -4px #000;
+  overflow: hidden;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
 
-#\:s\>o span {
+#\:s\5fo span {
   display: block;
   background: #111;
   width: 100%;
   line-height: 32px;
-  margin-bottom: 6px;
   text-align: center;
   color: #ddd;
   font-size: 15px;
   cursor: move;
   cursor: grab;
   cursor: -webkit-grab
+}
+
+#\:s\5fo > div {
+  display: block;
+  width: 100%;
+  height: calc(100% - 64px);
+  margin-top: 16px;
+  margin-bottom: auto
+}
+
+#\:s\5fo > div > * {
+  height: 100%;
+  margin-right: 16px
+}
+
+#\:s\5fo > div > div:first-of-type {
+  float: left;
+  width: 20%;
+  text-align: center;
+  margin-left: 16px
+}
+
+#\:s\5fo > div > div:first-of-type > div {
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+  box-sizing: border-box;
+  position: relative
+}
+
+#\:s\5fo > div > div:first-of-type > div div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  vertical-align: top;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #555 25%, transparent 25%), linear-gradient(-45deg, #555 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #555 75%), linear-gradient(-45deg, transparent 75%, #555 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px
+}
+
+#\:s\5fo img {
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+#\:s\5fo input {
+  display: inline-block;
+  width: 50%;
+  height: 24px;
+  box-sizing: border-box;
+  background: none;
+  border: 0;
+  border-bottom: solid 2px transparent;
+  margin-top: 8px;
+  color: #ddd;
+  font-family: Roboto;
+  font-size: 16px;
+  text-align: center;
+  transition: border-bottom .3s ease-in-out
+}
+
+#\:s\5fo input:focus {
+  outline: 0;
+  border-bottom: solid 2px #888
+}
+
+#\:s\5fo > div > div:nth-of-type(2) {
+  position: relative;
+  float: left;
+  border: 0
+}
+
+#\:s\5fo > div > div:nth-of-type(2):before, #\:s\5fo > div > div:nth-of-type(2):after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent
+}
+
+#\:s\5fo > div > div:nth-of-type(2):before {
+  right: 0;
+  border-right: 2px solid #222
+}
+
+#\:s\5fo > div > div:nth-of-type(2):after {
+  left: 100%;
+  border-left: 2px solid #444
+}
+
+#\:s\5fo > div > div:nth-of-type(3) {
+  height: 100%;
+  overflow-y: auto
+}
+
+#\:s\5fo > div > div:nth-of-type(3)::-webkit-scrollbar {
+  width: 4px;
+  background: #222
+}
+
+#\:s\5fo > div > div:nth-of-type(3)::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: #555
+}
+
+#\:s\5fo > div > div:nth-of-type(3) > div {
+  width: 100%;
+  vertical-align: top;
+  box-sizing: border-box;
+  border: solid 2px #555;
+  border-radius: 3px;
+  background: #333;
+  color: #ddd;
+  font-family: EnvyCodeR;
+  font-size: 14px;
+  overflow: auto;
+  resize: vertical;
+  transition: all .3s ease-in-out
+}
+
+#\:s\5fo > div > div:nth-of-type(3) > div:empty:before{
+  content: attr(placeholder)
+}
+
+#\:s\5fo > div > div:nth-of-type(3) > div::-webkit-scrollbar {
+  width: 8px;
+  background: none
+}
+
+#\:s\5fo > div > div:nth-of-type(3) > div::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: #444
+}
+
+#\:s\5fo > div > div:nth-of-type(3) > div:focus {
+  outline: 0;
+  border: solid 2px #ddd
+}
+
+#\:s\5fo > div > div:nth-of-type(3) > div:first-of-type {
+  height: 30%
+}
+
+#\:s\5fo > div > div:nth-of-type(3) > div:nth-of-type(2) {
+  height: 70%
 }
 
 #\:menu {
@@ -257,14 +407,15 @@ canvas {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
+  margin-right: 4px;
   transition: transform .3s ease-in-out
 }
 
-.ico-picture, .ico-futboi, .ico-setting {
-  margin-right: 4px
+.ico-close, .ico-menu {
+  margin: 0
 }
 
-#\:menu div:first-of-type {
+#\:menu div {
   position: fixed;
   right: 0;
   bottom: 0;
@@ -274,7 +425,7 @@ canvas {
   color: #ddd;
   cursor: pointer;
   z-index: -1;
-  transition: all .3s ease-in-out
+  transition: transform .3s ease-in-out
 }
 
 #\:menu ul li:hover .ico-picture {
@@ -295,7 +446,7 @@ canvas {
   transform: rotate(180deg)
 }
 
-#\:menu div:first-of-type:hover .ico-menu {
+#\:menu div:hover .ico-menu {
   transform: scale(1.5)
 }
 

@@ -1,6 +1,6 @@
 for (var i = 0, e = document.querySelectorAll('.draggable'); i < e.length; i++) e[i].drag = [];
 var room = document.querySelector('canvas').getContext('2d'); room.move = []; var RAD = Math.PI/180, _ = undefined;
-room.m = document.querySelector('#\\:menu'); room.sr = document.querySelector('#\\:s\\>r'); room.so = document.querySelector('#\\:s\\>o');
+room.m = document.querySelector('#\\:menu'); room.sr = document.querySelector('#\\:s\\5fr'); room.so = document.querySelector('#\\:s\\5fo');
 room.canvas.width = +room.sr.querySelector('input').value; room.canvas.height = +room.sr.querySelector('input:nth-of-type(2)').value;
 room.gridX = +room.sr.querySelector('input:nth-of-type(3)').value;
 room.gridY = +room.sr.querySelector('input:nth-of-type(4)').value;
@@ -171,10 +171,10 @@ room.canvas.onmousemove = function(e) {
 document.onkeydown = function(e) {
   if (e.keyCode == 16 && room.canvas.className.indexOf('cur-grab') == -1) room.canvas.classList.add('cur-grab');
   if (e.keyCode == 65 && e.ctrlKey) {
-    for (var i = 0, o = room.objects.e; i < o.length; i++) o[i].active = 1; room.draw(); return false
+    for (var i = 0, o = room.objects.e; i < o.length; i++) o[i].active = 1; room.draw()
   }
   if (e.keyCode == 46) {
-    room.objects.e = room.objects.e.filter(function(k) {return !k.active}); room.draw(); return false
+    room.objects.e = room.objects.e.filter(function(k) {return !k.active}); room.draw()
   }
 }
 document.onkeyup = function(e) {
@@ -187,11 +187,11 @@ document.onmousemove = function(e) {
   }
 }
 for (var i = 0, d = document.querySelectorAll('.draggable'); i < d.length; i++) {
-  d[i].querySelector('span:first-child').onmousedown = function(e,f,g,h,i) {
+  d[i].querySelector('span').onmousedown = function(e,f,g,h,i) {
     var p = this.parentElement; if (!p.drag.length) p.drag = [e.clientX - p.offsetLeft, e.clientY - p.offsetTop]
   }
-  d[i].querySelector('span:first-child').onmouseup = function(e) {this.parentElement.drag = []}
-  d[i].querySelector('span:first-child').ondblclick = function(e) {this.parentElement.style.display = 'none'}
+  d[i].querySelector('span').onmouseup = function(e) {this.parentElement.drag = []}
+  d[i].querySelector('span').ondblclick = function(e) {this.parentElement.style.display = 'none'}
 }
 room.sr.querySelector('input').onchange = function() {
   room.canvas.width = +this.value; room.draw()
