@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+button {
+  width: 64px;
+  height: 64px;
+  border: 0;
+  border-radius: 50%;
+  outline: none;
+  font-weight: bold;
+  font-size: 20px;
+  transition: all .1s ease-in;
+  cursor: pointer;
+}
+#divButtons {
+  background: #2c3e50;
+  padding: 32px;
+  border-radius: 32px 32px 0 0;
+  text-align: center;
+}
+#btnColors button:first-child {
+  background: #f80;
+  color: #c60;
+  box-shadow: 0 5px 0 0 #c60;
+}
+#btnColors button:nth-child(2) {
+  background: #e74c3c;
+  color: #c0392b;
+  box-shadow: 0 5px 0 0 #c0392b;
+}
+#btnColors button:nth-child(3) {
+  background: #a77;
+  color: #433;
+  box-shadow: 0 5px 0 0 #433;
+}
+#btnColors button:nth-child(4) {
+  background: #a0f;
+  color: #407;
+  box-shadow: 0 5px 0 0 #407;
+}
+#btnColors button:nth-child(5) {
+  background: #f1c40f;
+  color: #da0;
+  box-shadow: 0 5px 0 0 #da0;
+}
+#btnColors button:nth-child(6) {
+  background: #2ecc71;
+  color: #27ae60;
+  box-shadow: 0 5px 0 0 #27ae60;
+}
+#btnColors button:active {
+  transform: translate(0, 5px);
+  -webkit-transform: translate(0, 5px);
+  box-shadow: 0 1px 0 0;
+}
+#btnOthers {
+  margin-top: 32px;
+}
+#btnOthers button {
+  width: 96px;
+  border-radius: 12px;
+  background: #3498db;
+  box-shadow: 0 5px 0 0 #2980b9;
+  color: #2c3e50;
+  font-size: 28px;
+}
+#btnOthers button:nth-child(3), #btnOthers button:nth-child(4) {
+  background: #1abc9c;
+  box-shadow: 0 5px 0 0 #16a085;
+}
+#btnOthers button:nth-child(5) {
+  background: #e74c3c;
+  box-shadow: 0 5px 0 0 #c0392b;
+}
+#btnOthers button:active {
+  transform: translate(0, 5px);
+  -webkit-transform: translate(0, 5px);
+  box-shadow: 0 1px 0 0;
+}
+#divCases {
+  margin-top: 32px;
+  font-family: Helvetica;
+  font-size: 64px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div id="divButtons">
+  <div id="btnColors">
+    <button>Cam</button>
+    <button>Đỏ</button>
+    <button>Nâu</button>
+    <button>Tím</button>
+    <button>Vàng</button>
+    <button>Xanh</button>
+  </div>
+  <div id="btnOthers">
+    <button>X</button>
+    <button>Y</button>
+    <button>+</button>
+    <button>=</button>
+    <button><</button>
+  </div>
+</div>
+<div id="divCases"></div>
+<script>
+var cases = [],
+  idCases = document.getElementById('divCases');
+
+document.querySelector('#btnColors button').onclick = function() {
+  if (cases[cases.length-1][0].length < 4) cases[cases.length-1][0] += 'C';
+  draw();
+}
+document.querySelector('#btnColors button:nth-child(2)').onclick = function() {
+  if (cases[cases.length-1][0].length < 4) cases[cases.length-1][0] += 'D';
+  draw();
+}
+document.querySelector('#btnColors button:nth-child(3)').onclick = function() {
+  if (cases[cases.length-1][0].length < 4) cases[cases.length-1][0] += 'N';
+  draw();
+}
+document.querySelector('#btnColors button:nth-child(4)').onclick = function() {
+  if (cases[cases.length-1][0].length < 4) cases[cases.length-1][0] += 'T';
+  draw();
+}
+document.querySelector('#btnColors button:nth-child(5)').onclick = function() {
+  if (cases[cases.length-1][0].length < 4) cases[cases.length-1][0] += 'V';
+  draw();
+}
+document.querySelector('#btnColors button:nth-child(6)').onclick = function() {
+  if (cases[cases.length-1][0].length < 4) cases[cases.length-1][0] += 'X';
+  draw();
+}
+
+document.querySelector('#btnOthers button').onclick = function() {
+  if (
+    cases[cases.length-1][1].length < 4
+    && cases[cases.length-1][1][cases[cases.length-1][1].length - 1] != 'Y'
+  ) cases[cases.length-1][1] += 'X';
+  draw();
+}
+document.querySelector('#btnOthers button:nth-child(2)').onclick = function() {
+  if (cases[cases.length-1][1].length < 4) cases[cases.length-1][1] += 'Y';
+  draw();
+}
+document.querySelector('#btnOthers button:nth-child(3)').onclick = function() {
+  if (!cases.length || cases[cases.length-1][0].length == 4 && cases[cases.length-1][1]) {
+    cases.push(['','']);
+    draw();
+  }
+}
+document.querySelector('#btnOthers button:nth-child(4)').onclick = function() {
+  var rs = findComb(cases);
+  idCases.innerHTML = rs.join(' hoặc ');
+  cases = [];
+}
+document.querySelector('#btnOthers button:nth-child(5)').onclick = function() {
+  cases.pop();
+  draw();
+}
+
+function draw() {
+  idCases.innerHTML = '';
+  cases.forEach(e => {
+    idCases.innerHTML += '> ' + e[0] + '|' + e[1] + '<br>';
+  })
+}
+function findComb(cases) {
+  let combs = Array(4).fill('CNDTVX'.split('')).reduce((a1, a2) => Array.prototype.concat.call(...a1.map(n1 => a2.map(n2 => n1 + n2))));
+  for (let i = 0; i < cases.length; i++) {
+    for (let j = 0; j < combs.length; j++) {
+      if (!matchComb(combs[j], cases[i][0], cases[i][1])) {
+        combs.splice(j,1);
+        j--;
+      }
+    }
+  }
+  return combs;
+}
+function matchComb(c,s,r) {
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] == c[i]) {
+      if (r[0] == 'X') {
+        c = c.substr(0, i) + c.substr(i + 1);
+        s = s.substr(0, i) + s.substr(i + 1);
+        r = r.substr(1);
+        i--;
+      } else {return false; }
+    }
+  }
+  for (i = 0; i < s.length; i++) {
+    if (c.includes(s[i])) {
+      if (r[0] == 'Y') {
+        c = c.substr(0, c.indexOf(s[i])) + c.substr(c.indexOf(s[i]) + 1);
+        r = r.substr(1);
+      } else {return false; }
+    }
+  }
+  return r.length ? false : true;
+}
+</script>
+</body>
+</html>
