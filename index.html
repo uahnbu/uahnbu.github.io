@@ -84,6 +84,7 @@ button {
   font-family: Helvetica;
   font-size: 64px;
   font-weight: bold;
+  text-align: center;
 }
 </style>
 </head>
@@ -154,7 +155,7 @@ document.querySelector('#btnOthers button:nth-child(3)').onclick = function() {
 }
 document.querySelector('#btnOthers button:nth-child(4)').onclick = function() {
   var rs = findComb(cases);
-  idCases.innerHTML = rs.join(' hoặc ');
+  idCases.innerHTML = rs.join('<br>hoặc<br>');
   cases = [];
 }
 document.querySelector('#btnOthers button:nth-child(5)').onclick = function() {
