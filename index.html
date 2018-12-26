@@ -81,8 +81,9 @@ button {
 }
 #divCases {
   margin-top: 32px;
+  color: #2980b9;
   font-family: Helvetica;
-  font-size: 64px;
+  font-size: 32px;
   font-weight: bold;
   text-align: center;
 }
@@ -154,8 +155,10 @@ document.querySelector('#btnOthers button:nth-child(3)').onclick = function() {
   }
 }
 document.querySelector('#btnOthers button:nth-child(4)').onclick = function() {
-  var rs = findComb(cases);
-  idCases.innerHTML = rs.join('<br>hoặc<br>');
+  var fullName = {'C':'Cam', 'D':'Đỏ', 'N':'Nâu', 'T':'Tím', 'V':'Vàng', 'X':'Xanh'};
+  idCases.innerHTML = findComb(cases).map(e =>
+    e.split('').map(f => fullName[f]).join(' ')
+  ).join('<br><span style="color: #7f8c8d">hoặc</span><br>');
   cases = [];
 }
 document.querySelector('#btnOthers button:nth-child(5)').onclick = function() {
