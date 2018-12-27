@@ -155,10 +155,9 @@ document.querySelector('#btnOthers button:nth-child(3)').onclick = function() {
   }
 }
 document.querySelector('#btnOthers button:nth-child(4)').onclick = function() {
-  var fullName = {'C':'Cam', 'D':'Đỏ', 'N':'Nâu', 'T':'Tím', 'V':'Vàng', 'X':'Xanh'};
-  idCases.innerHTML = findComb(cases).map(e =>
-    e.split('').map(f => fullName[f]).join(' ')
-  ).join('<br><span style="color: #7f8c8d">hoặc</span><br>');
+  var fullName = {'C':'Cam', 'D':'Đỏ', 'N':'Nâu', 'T':'Tím', 'V':'Vàng', 'X':'Xanh'},
+    rs = findComb(cases).map(e => e.split('').map(f => fullName[f]).join(' '));
+  idCases.innerHTML = rs.length < 4 ? rs.join('<br><span style="color: #7f8c8d">hoặc</span><br>') : 'Quá nhiều trường hợp';
   cases = [];
 }
 document.querySelector('#btnOthers button:nth-child(5)').onclick = function() {
