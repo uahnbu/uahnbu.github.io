@@ -5,7 +5,7 @@
 <script>
   var file = new File`test.txt`;
   file.open("r"); // open file with write access
-  document.querySelector`div`.innerHTML = file.readln();
+  document.querySelector`div`.innerHTML = file.readln() + '!';
   file.close();
 </script>
 </body>
