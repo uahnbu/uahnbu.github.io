@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div></div>
+<script>
+  fetch('test.txt').then(response => response.text()).then(text => document.querySelector('div').innerHTML = text);
+</script>
+</body>
+</html>
