@@ -3,7 +3,10 @@
 <body>
 <div></div>
 <script>
-  fetch('test.txt').then(response => response.text()).then(text => document.querySelector('div').innerHTML = text);
+  var file = new File`test.txt`;
+  file.open("r"); // open file with write access
+  document.querySelector`div`.innerHTML = file.readln();
+  file.close();
 </script>
 </body>
 </html>
