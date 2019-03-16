@@ -4,8 +4,8 @@
 <div></div>
 <script>
   var file = new File`test.txt`;
-  file.open("r"); // open file with write access
-  document.querySelector`div`.innerHTML = file.readln() + '!';
+  file.open`r`;
+  while (!file.eof) {document.querySelector`div`.innerHTML += file.readln() + '\n';}  
   file.close();
 </script>
 </body>
