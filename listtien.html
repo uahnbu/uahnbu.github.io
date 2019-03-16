@@ -3,7 +3,7 @@
 <body>
 <div></div>
 <script>
-  var file = new File`test.txt`;
+  var file = new File('test.txt');
   file.open`r`;
   while (!file.eof) {document.querySelector`div`.innerHTML += file.readln() + '\n';}  
   file.close();
