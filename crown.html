@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p>1. Goto www.clarifai.com/models/face-detection-image-recognition-model-a403429f2ddf4b49b307e318f00e528b-detection</p>
+<div>2. Paste <code>JSON.stringify({
+  sampleWidth: document.querySelector`#image-view-content`.width,
+  faces: [...document.querySelectorAll`.bounding-box`].map(box => ({
+    x1: box.offsetLeft,
+    x2: box.offsetLeft + box.offsetWidth,
+    y: box.offsetTop
+  }))
+});</code></div>
+<input type="text">
+<input type="text">
+<button>Do the cool thing</button>
+<img src="crown.png" style="display:none">
+<br>
+<canvas width=800 height=300></canvas>
+<script>
+const room = document.querySelector`canvas`.getContext`2d`;
+const crown = document.querySelector`img`;
+document.querySelector`button`.onclick = () => {
+  let data = JSON.parse(document.querySelectorAll`input`[1].value);
+  let img = new Image();
+  img.src = document.querySelector`input`.value;
+  img.onload = () => {
+    room.canvas.width = img.width;
+    room.canvas.height = img.height;
+    room.drawImage(img, 0, 0);
+    const ratio = img.width / data.sampleWidth;
+    room.strokeStyle = 'red';
+    data.faces.forEach(datum => {
+      let w = (datum.x2 - datum.x1) * ratio,
+          h = crown.height / crown.width * w;
+      room.drawImage(crown, 0, 0, crown.width, crown.height, datum.x1 * ratio, datum.y * ratio - h, w, h);
+    });
+  }
+}
+</script>
+</body>
+</html>
