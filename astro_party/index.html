@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas width=768 height=768></canvas>
+<script src="objects.js"></script>
+<script>
+const room = document.querySelector`canvas`.getContext`2d`;
+const RAD = Math.PI / 180;
+const ranInt = (min,max) => parseInt(Math.random() * (max-min+1) + min);
+const keyDown = key => room.keys[key] > 0;
+const keyPressed = key => room.keys[key] === 1;
+const keyReleased = key => room.keys[key] === -1;
+document.onkeydown = e => {
+  if (room.keys[e.keyCode] <= 0) {room.keys[e.keyCode] = 1; }
+}
+document.onkeyup = e => {
+  if (room.keys[e.keyCode] > 0) {room.keys[e.keyCode] = -1; }
+}
+
+room.sprites = [];
+room.objects = {others:[], wall:[], man:[], bullet:[], ship:[]};
+room.width = room.canvas.width;
+room.height = room.canvas.height;
+room.keys = Array(256).fill(0);
+
+room.load = {
+  sprites: [
+    ['ship'      , 1 , false],
+    ['fuel'      , 6 , false],
+    ['bullet'    , 1 , false],
+    ['spark'     , 1 , false],
+    ['man_head'  , 1 , false],
+    ['man_suit'  , 4 , false],
+    ['invincible', 10, false],
+    ['powerup'   , 10, false]
+  ],
+  loaded:0
+};
+room.loadingBar = percent => {
+  room.beginPath();
+  room.fillStyle = '#f00';
+  room.fillRect(room.canvas.width/2 - 128, room.canvas.height/2 - 32, 256, 64);
+  room.fillStyle = '#fff';
+  room.fillRect(room.canvas.width/2 - 120, room.canvas.height/2 - 24, 240, 48);
+  room.fillStyle = '#f00';
+  room.fillRect(room.canvas.width/2 - 112, room.canvas.height/2 - 16, percent * 224, 32);
+}
+room.load.sprites.forEach(e => {
+  let img = new Image();
+  img.src = e[0] + '.png';
+  img.onload = () => {
+    room.sprites[e[0]] = {images: [], mirror: e[2]};
+    let c = document.createElement('canvas').getContext`2d`;
+    c.canvas.width = img.width / e[1];
+    c.canvas.height = img.height;
+    for (let i = 0; i < e[1]; i++) {
+      c.clearRect(0, 0, c.canvas.width, c.canvas.height);
+      c.drawImage(img, c.canvas.width * i, 0, c.canvas.width, img.height, 0, 0, c.canvas.width, img.height);
+      let imgIdx = new Image();
+      imgIdx.src = c.canvas.toDataURL();
+      room.sprites[e[0]].images.push(imgIdx);
+    }
+    room.load.loaded++;
+    room.loadingBar(room.load.loaded / room.load.sprites.length);
+    if (room.load.loaded === room.load.sprites.length) {room.setup(); }
+  }
+});
+
+room.drawExt = (spr,x,y,sprX,sprY,angRfaceLeft,scale,frameCount,FPI,pinX,pinY) => {
+  let IMGs = room.sprites[spr].images,
+      imgIdx = Math.floor(frameCount / FPI);
+  if (typeof angRfaceLeft === 'number') {
+    room.translate(x + (sprX + pinX) * scale, y + (sprY + pinY) * scale);
+    room.rotate(angRfaceLeft);
+    room.drawImage(IMGs[imgIdx], -pinX * scale, -pinY * scale, IMGs[0].width * scale, IMGs[0].height * scale);
+    room.rotate(-angRfaceLeft);
+    room.translate(-x - (sprX + pinX) * scale, -y - (sprY + pinY) * scale);
+  } else {room.drawImage(
+    IMGs[imgIdx], x + sprX * scale, y + sprY * scale, IMGs[0].width * scale, IMGs[0].height * scale
+  ); }
+};
+
+room.lineWidth = 3;
+
+room.draw = () => {
+  room.fillStyle = '#2c3e50';
+  room.beginPath();
+  room.fillRect(0, 0, room.width, room.height);
+  Object.values(room.objects).forEach(clan => clan.forEach(obj => obj.draw()));
+};
+
+room.step = () => {
+  Object.values(room.objects).forEach(clan => clan.forEach(obj => {
+    if (obj.step) {obj.step(); }
+  }));
+  if (room.objects['ship'].length > 1) {
+    room.objects['ship'][1].keys = [87,83,65,68];
+  }
+  room.draw();
+  while (room.keys.includes(-1)) {room.keys[room.keys.indexOf(-1)] = 0; }
+  while (room.keys.includes(1)) {room.keys[room.keys.indexOf(1)] = 2; }
+};
+
+room.setup = () => {
+  const n = 4;
+  let cX = room.width/2,
+      cY = room.height/2;
+  for (let i = 0; i < n; i++) {
+    let pAng = 360 * RAD / n * i;
+    /*room.objects['wall'].push(
+      new Wall(
+        cX + 24 * Math.cos(pAng), cY + 24 * Math.sin(pAng),
+        cX + (cX - 192 - 49) * Math.cos(pAng), cY + (cY - 192 - 49) * Math.sin(pAng),
+        24
+      ),
+      new Wall(
+        cX + (cX - 112) * Math.cos(pAng), cY + (cY - 112) * Math.sin(pAng),
+        cX + (cX - 112) * Math.cos(pAng + (180/n - 12) * RAD),
+        cY + (cY - 112) * Math.sin(pAng + (180/n - 12) * RAD),
+        24
+      ),
+      new Wall(
+        cX + (cX - 112) * Math.cos(pAng), cY + (cY - 112) * Math.sin(pAng),
+        cX + (cX - 112) * Math.cos(pAng - (180/n - 12) * RAD),
+        cY + (cY - 112) * Math.sin(pAng - (180/n - 12) * RAD),
+        24
+      ),
+      new Wall(
+        cX + (cX - 96) * Math.cos(pAng + (180/n - 12) * RAD),
+        cY + (cY - 96) * Math.sin(pAng + (180/n - 12) * RAD),
+        cX + (cX - 15) * Math.cos(pAng + (180/n - 12) * RAD),
+        cY + (cY - 15) * Math.sin(pAng + (180/n - 12) * RAD),
+        24, true
+      ),
+      new Wall(
+        cX + (cX - 96) * Math.cos(pAng - (180/n - 12) * RAD),
+        cY + (cY - 96) * Math.sin(pAng - (180/n - 12) * RAD),
+        cX + (cX - 15) * Math.cos(pAng - (180/n - 12) * RAD),
+        cY + (cY - 15) * Math.sin(pAng - (180/n - 12) * RAD),
+        24, true
+      )
+    );*/
+    for (let i = 12 - 180/n; i < 180/n - 12; i += 30/n - 2) {
+      room.objects['wall'].push(new Wall(
+        cX + cX * Math.cos(pAng + i * RAD),
+        cY + cY * Math.sin(pAng + i * RAD),
+        cX + cX * Math.cos(pAng + (i + 30/n - 2) * RAD),
+        cY + cY * Math.sin(pAng + (i + 30/n - 2) * RAD),
+        1
+      ));
+    }
+    room.objects['man'].push(new Man(
+      cX + (cX - 96) * Math.cos(pAng), cY + (cY - 96) * Math.sin(pAng), pAng + 180 * RAD, 51
+    ));
+  }
+  for (let i = 0; i < 20; i++) {
+    let bAng = 360 * RAD / 20 * i;
+    room.objects['wall'].push(new Wall(
+      cX + (cX - 192) * Math.cos(bAng), cY + (cY - 192) * Math.sin(bAng),
+      cX + (cX - 192 - 49) * Math.cos(bAng), cY + (cY - 192 - 49) * Math.sin(bAng),
+      24, true
+    ));
+  }
+  room.objects['man'].length = 2;
+  setInterval(room.step, 20);
+};
+</script>
+</body>
+</html>
