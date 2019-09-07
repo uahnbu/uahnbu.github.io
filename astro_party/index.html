@@ -107,7 +107,7 @@ room.setup = () => {
       cY = room.height/2;
   for (let i = 0; i < n; i++) {
     let pAng = 360 * RAD / n * i;
-    /*room.objects['wall'].push(
+    room.objects['wall'].push(
       new Wall(
         cX + 24 * Math.cos(pAng), cY + 24 * Math.sin(pAng),
         cX + (cX - 192 - 49) * Math.cos(pAng), cY + (cY - 192 - 49) * Math.sin(pAng),
@@ -139,7 +139,7 @@ room.setup = () => {
         cY + (cY - 15) * Math.sin(pAng - (180/n - 12) * RAD),
         24, true
       )
-    );*/
+    );
     for (let i = 12 - 180/n; i < 180/n - 12; i += 30/n - 2) {
       room.objects['wall'].push(new Wall(
         cX + cX * Math.cos(pAng + i * RAD),
