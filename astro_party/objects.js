@@ -263,8 +263,8 @@ class Ship extends Ball {
     }
     if (keyPressed(this.keys[1])) {this.fuelIdx = -1; }
     if (keyReleased(this.keys[1])) {this.fuelIdx = 0; }
-    if (keyDown(this.keys[2])) {this.ang -= 5 * RAD; }
-    if (keyDown(this.keys[3])) {this.ang += 5 * RAD; }
+    if (keyDown(this.keys[2])) {this.ang -= 8 * RAD; }
+    if (keyDown(this.keys[3])) {this.ang += 8 * RAD; }
     if (this.sparkIdx > 0) {
       if (this.sparkIdx < 12) {this.sparkIdx++; }
       else {this.sparkIdx = 0; }
