@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#keyboard {
+  position: absolute;
+  top: 0;
+  left: 1%;
+  width: 98%;
+  height: 50%;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: #000;
+  box-shadow: 6px 6px 32px -16px #000,
+              inset 0 24px 32px -24px #fff,
+              inset 0 -12px 24px -16px #fff;
+}
+#pad {
+  position: absolute;
+  top: 42%;
+  left: 1%;
+  width: 98%;
+  height: 5%;
+  background: #000;
+  box-shadow: inset 0 16px 6px -8px #222,
+              inset 0 -16px 6px -8px #222;
+}
+#white {
+  position: absolute;
+  top: 47%;
+  left: 1%;
+  width: 98%;
+  height: 50%;
+}
+#black {
+  position: absolute;
+  top: 47%;
+  left: 1%;
+  width: 98%;
+  height: 30%;
+  pointer-events: none;
+}
+.white, .black {
+  box-sizing: border-box;
+  text-align: center;
+  font-family: Consolas;
+  font-size: 1em;
+  cursor: pointer;
+  user-select: none;
+  transition: all .1s ease-out;
+  overflow: hidden;
+}
+.white {
+  display: inline-block;
+  width: 2.778%;
+  height: 100%;
+  border-left: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  border-radius: 0 0 6px 6px;
+  box-shadow: -1px 0 0 rgba(255,255,255,.8) inset,
+              0 0 5px #ccc inset,
+              0 0 3px rgba(0,0,0,.2);
+  background: linear-gradient(to bottom,#eee 0%,#fff 100%);
+  color: #000;
+  font-weight: bold;
+  pointer-events: auto;
+}
+.whiteActive {
+  box-shadow: 2px 0 3px rgba(0,0,0,.1) inset, 
+              -5px 5px 20px rgba(0,0,0,.2) inset,
+              0 0 3px rgba(0,0,0,.2);
+  background: linear-gradient(to bottom,#fff 0%,#e9e9e9 100%);
+}
+.black {
+  position: absolute;
+  width: 2%;
+  height: 100%;
+  border: 1px solid #000;
+  border-radius: 0 0 3px 3px;
+  box-shadow: -1px -1px 2px rgba(255,255,255,.2) inset,
+              0 -5px 2px 3px rgba(0,0,0,.6) inset,
+              0 2px 4px rgba(0,0,0,.5);
+  background: linear-gradient(45deg,#222 0%,#555 100%);
+  color: #fff;
+  pointer-events: all;
+}
+.blackActive {
+  box-shadow: -1px -1px 2px rgba(255,255,255,.2) inset,
+              0 -2px 2px 3px rgba(0,0,0,.6) inset,
+              0 1px 2px rgba(0,0,0,.5);
+  background: linear-gradient(to right,#444 0%,#222 100%);
+}
+.white span {
+  display: inline-block;
+  height: 80%;
+}
+.black span {
+  display: inline-block;
+  height: 60%;
+}
+#tempo {
+  position: absolute;
+  left: 1%;
+  top: 52%;
+  width: 5%;
+  height: 5%;
+  padding-left: 2%;
+  border: none;
+  border-radius: 16px;
+  box-sizing: border-box;
+  color: #2ee590;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1em;
+  font-weight: bold;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+#play {
+  position: absolute;
+  left: 7%;
+  top: 52%;
+  width: 58%;
+  height: 5%;
+  border: none;
+  border-radius: 45px;
+  background: #fff;
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1em;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+#play:hover {
+  background: #2ee59D;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+}
+#play.stop {
+  background: #bdc3c7;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  color: #ecf0f1;
+}
+#record {
+  position: absolute;
+  left: 66%;
+  top: 52%;
+  width: 33%;
+  height: 5%;
+  border: none;
+  border-radius: 45px;
+  background: #fff;
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1em;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+#record.active {
+  background: #e74c3c;
+  color: #ecf0f1;
+}
+#sheet {
+  position: absolute;
+  left: 1%;
+  top: 60%;
+  width: 98%;
+  height: auto;
+  border-radius: 12px;
+  box-sizing: border-box;
+  box-shadow: 6px 6px 32px -16px #000,
+              inset 0 24px 32px -24px #fff,
+              inset 0 -12px 24px -16px #fff;
+  font-family: monospace;
+  font-size: 2em;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  user-select: none;
+}
+#sheet .note_box {
+  display: inline-block;
+  height: 100%;
+  width: auto;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: monospace;
+  font-size: 32px;
+  cursor: pointer;
+}
+#sheet .note_box.select {
+  background: #48dbfb;
+}
+#sheet .note_box.active {
+  background: #2ee59D;
+}
+.note_box .rest {
+  float: right;
+  border: solid 1px #7f8c8d;
+  border-radius: 4px;
+  color: #7f8c8d;
+  font-size: .5em;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div id="keyboard">
+  <div id="pad"></div>
+  <div id="white"></div>
+  <div id="black"></div>
+</div>
+<input type="number" id="tempo" value=5 min=0>
+<button id="play">▶ Play</button>
+<button id="record" class="active">● Record</button>
+<div id="sheet"></div>
+<script src="notes.js"></script>
+<script>
+const white = document.querySelector`#white`;
+const black = document.querySelector`#black`;
+const sheet = document.querySelector`#sheet`;
+const tempo = document.querySelector`#tempo`;
+const butt = document.querySelector`button`;
+let curr = -1;
+const keys = {
+  ids: [
+    49, 50, 81, 51, 87, 69, 52, 82, 53, 84, 54, 89,
+    65, 83, 90, 68, 88, 67, 70, 86, 71, 66, 72, 32,
+    55, 56, 85, 57, 73, 79, 48, 80, 189,219,187,221,
+    74, 75, 78, 76, 77, 188,186,190,222,191,13, 16,
+    46, 220,35, 8,  34, 38, 45, 37, 36, 40, 33, 39,
+    192
+  ],
+  lbs: '12q3we4r5t6yaszdxcfvgbh˽78u9io0p-[=]jknlm,;.\'/↵⇧'.split('')
+    .concat('DEL','\\','END','⇦','pDN','↑','INS','←','⌂','↓','pUP','→','`')
+    .map(lb => lb.length == 1 ? `<br>${lb}` : `${lb[0]}<br>${lb[1]}<br>${lb[2]}`),
+  pts: [],
+  on: Array(61).fill(false)
+};
+keys.lbs[24] += '<br><b style="color:#c0392b">⚫</b>';
+for (let i = 2; i <= 6; i++) {
+  ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'].forEach(
+    note => keys.pts.push(note[1] === '#' ? note[0] + i + '#' : note + i)
+  );
+}
+keys.pts.push('C7');
+const playNote = (i,playing) => {
+  let audio = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAF1RTU0UAAAANAAADTGF2ZjUxLjEyLjEA//uUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAAcAAA' + notes[i]);
+  audio.onended = () => audio.remove();
+  audio.play();
+  if (playing || !document.querySelector`#record`.classList.contains('active')) {return; }
+  [...sheet.querySelectorAll`.note_box`].forEach(box => box.classList.remove('select'));
+  let noteBox = document.createElement('div');
+  noteBox.classList.add('note_box', 'select');
+  noteBox.innerHTML = keys.pts[i];
+  noteBox.value = i;
+  noteBox.addEventListener('mousedown', () => {
+    if (noteBox.classList.contains('active')) {sheet.removeChild(noteBox); }
+    else {
+      [...sheet.querySelectorAll`.note_box`].forEach(box => box.classList.remove('select'));
+      noteBox.classList.add('select');
+      curr = [...sheet.querySelectorAll`.note_box`].indexOf(noteBox);
+    }
+    event.stopPropagation();
+  });
+  sheet.insertBefore(noteBox, [...sheet.querySelectorAll`.note_box`][++curr]);
+  let rest = document.createElement('div');
+  rest.classList.add('rest');
+  rest.innerHTML = tempo.value;
+  rest.addEventListener('mousedown', e => {
+    rest.innerHTML = prompt('Break: ', rest.innerText);
+    event.stopPropagation();
+  });
+  noteBox.appendChild(rest);
+  rest.style.width = rest.offsetHeight - 2 + 'px';
+};
+const playAll = () => {
+  const diva = sheet.querySelectorAll`.note_box`;
+  if (butt.innerText === '▶ Play') {
+    butt.innerHTML = '■ Stop';
+    butt.classList.add('stop');
+    let step = curr === sheet.querySelectorAll`.note_box`.length - 1 ? 0 : curr,
+        loop;
+    (loop = () => {
+      if (step > 0) {
+        diva[step - 1].classList.remove('active');
+        let i = diva[step - 1].value;
+        if (step !== 61) {
+          if ([1,3,6,8,10].includes(i%12)) {
+            black.querySelectorAll`div`[parseInt(i/12)*5 + [1,3,6,8,10].indexOf(i%12)]
+              .classList.remove('blackActive');
+          } else {
+            white.querySelectorAll`div`[parseInt(i/12)*7 + [0,2,4,5,7,9,11].indexOf(i%12)]
+              .classList.remove('whiteActive');
+          }
+        }
+      }
+      if (butt.innerText === '■ Stop') {
+        if (step < diva.length) {
+          diva[step].classList.add('active');
+          if (step !== 61) {
+            playNote(diva[step].value, true);
+            let i = diva[step].value;
+            if ([1,3,6,8,10].includes(i%12)) {
+              black.querySelectorAll`div`[parseInt(i/12)*5 + [1,3,6,8,10].indexOf(i%12)]
+                .classList.add('blackActive');
+            } else {
+              white.querySelectorAll`div`[parseInt(i/12)*7 + [0,2,4,5,7,9,11].indexOf(i%12)]
+                .classList.add('whiteActive');
+            }
+          }
+        }
+        if (++step <= diva.length) {
+          setTimeout(loop, diva[step - 1].querySelector`.rest`.innerText * 100);
+        } else {
+          butt.innerHTML = '▶ Play';
+          butt.classList.remove('stop');
+        }
+      }
+    })();
+  } else {
+    butt.innerHTML = '▶ Play';
+    butt.classList.remove('stop');
+  }
+};
+
+keys.lbs.forEach((key,i) => {
+  let div = document.createElement('div');
+  div.innerHTML = `<span></span>${key}`;
+  if ([1,3,6,8,10].includes(i%12)) {
+    div.classList.add('black');
+    div.style.left = (parseInt(i/12)*7 + 1 + [0,1,3,4,5][[1,3,6,8,10].indexOf(i%12)]) * 2.778 - 1 + '%';
+    div.onmousedown = () => {
+      playNote(i);
+      div.classList.add('blackActive');
+    };
+    div.onmouseup = () => div.classList.remove('blackActive');
+    black.appendChild(div);
+  } else {
+    div.classList.add('white');
+    div.onmousedown = () => {
+      playNote(i);
+      div.classList.add('whiteActive');
+    };
+    div.onmouseup = () => div.classList.remove('whiteActive');
+    white.appendChild(div);
+  }
+});
+
+document.onmousewheel = e => {
+  if (curr >= 0) {
+    let diva = [...sheet.querySelectorAll`.note_box`];
+    if (e.altKey) {
+      if (diva[curr].querySelector`.rest`.innerText >= Math.sign(e.deltaY)) {
+        diva[curr].querySelector`.rest`.innerHTML -= Math.sign(e.deltaY);
+      }
+    } else {
+      if (e.deltaY > 0) {
+        diva[curr].classList.remove('select');
+        if (curr > 0) {curr--; } else {curr = diva.length - 1; }
+        diva[curr].classList.add('select');
+      }
+      if (e.deltaY < 0) {
+        diva[curr].classList.remove('select');
+        if (curr < diva.length - 1) {curr++; } else {curr = 0; }
+        diva[curr].classList.add('select');
+      }
+    }
+  }
+};
+
+document.onkeydown = e => {
+  if (curr >= 0) {
+    let diva = [...sheet.querySelectorAll`.note_box`];
+    switch (e.keyCode) {
+      case 27:
+        sheet.removeChild(diva[curr]);
+        curr = Math.min(curr, sheet.querySelectorAll`.note_box`.length - 1);
+        if (curr >= 0) {sheet.querySelectorAll`.note_box`[curr].classList.add('select'); }
+        return;
+      case 100:
+        diva[curr].classList.remove('select');
+        if (curr > 0) {curr--; } else {curr = diva.length - 1; }
+        diva[curr].classList.add('select');
+        return;
+      case 102:
+        diva[curr].classList.remove('select');
+        if (curr < diva.length - 1) {curr++; } else {curr = 0; }
+        diva[curr].classList.add('select');
+        return;
+      case 104:
+        diva[curr].querySelector`.rest`.innerHTML++;
+        return;
+      case 98:
+        diva[curr].querySelector`.rest`.innerHTML--;
+        return;
+      case 101:
+        playAll();
+        return;
+    }
+  }
+  if (e.keyCode === 103) {tempo.value++; }
+  if (e.keyCode === 97 && tempo.value > 0) {tempo.value--; }
+  if (keys.ids.includes(e.keyCode)) {
+    let i = keys.ids.indexOf(e.keyCode);
+    if (!keys.on[i]) {
+      keys.on[i] = true;
+      playNote(i);
+      if ([1,3,6,8,10].includes(i%12)) {
+        black.querySelectorAll`div`[parseInt(i/12)*5 + [1,3,6,8,10].indexOf(i%12)]
+          .classList.add('blackActive');
+      } else {
+        white.querySelectorAll`div`[parseInt(i/12)*7 + [0,2,4,5,7,9,11].indexOf(i%12)]
+          .classList.add('whiteActive');
+      }
+    }
+  }
+};
+
+document.onkeyup = e => {
+  if (keys.ids.includes(e.keyCode)) {
+    let i = keys.ids.indexOf(e.keyCode);
+    keys.on[i] = false;
+    if ([1,3,6,8,10].includes(i%12)) {
+      black.querySelectorAll`div`[parseInt(i/12)*5 + [1,3,6,8,10].indexOf(i%12)]
+        .classList.remove('blackActive');
+    } else {
+      white.querySelectorAll`div`[parseInt(i/12)*7 + [0,2,4,5,7,9,11].indexOf(i%12)]
+        .classList.remove('whiteActive');
+    }
+  }
+};
+
+butt.onmousedown = () => playAll();
+
+document.querySelector`#record`.onclick = function () {this.classList.toggle('active'); }
+</script>
+</body>
+</html>
