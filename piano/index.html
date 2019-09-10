@@ -2,6 +2,9 @@
 <html>
 <head>
 <style>
+body {
+  overflow: hidden;
+}
 #keyboard {
   position: absolute;
   top: 0;
@@ -170,6 +173,7 @@
   top: 60%;
   width: 98%;
   height: auto;
+  max-height: 39%;
   border-radius: 12px;
   box-sizing: border-box;
   box-shadow: 6px 6px 32px -16px #000,
@@ -177,7 +181,8 @@
               inset 0 -12px 24px -16px #fff;
   font-family: monospace;
   font-size: 2em;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   overflow-wrap: break-word;
   user-select: none;
 }
@@ -263,6 +268,10 @@ const addNote = i => {
     }
     event.stopPropagation();
   });
+  if (curr === sheet.querySelectorAll`.note_box`.length - 1) {
+    sheet.appendChild(noteBox);
+    sheet.scrollTo(0, sheet.offsetHeight);
+  }
   sheet.insertBefore(noteBox, [...sheet.querySelectorAll`.note_box`][++curr]);
   let rest = document.createElement('div');
   rest.classList.add('rest');
@@ -410,7 +419,9 @@ document.onkeydown = e => {
         diva[curr].querySelector`.rest`.innerHTML++;
         return;
       case 98:
-        diva[curr].querySelector`.rest`.innerHTML--;
+        if (diva[curr].querySelector`.rest`.innerText > 0) {
+          diva[curr].querySelector`.rest`.innerHTML--;
+        }
         return;
       case 101:
         playAll();
