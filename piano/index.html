@@ -167,7 +167,7 @@ body {
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
   color: #fff;
 }
-#sheet {
+#container {
   position: absolute;
   left: 1%;
   top: 60%;
@@ -179,11 +179,17 @@ body {
   box-shadow: 6px 6px 32px -16px #000,
               inset 0 24px 32px -24px #fff,
               inset 0 -12px 24px -16px #fff;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+#sheet {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
   font-family: monospace;
   font-size: 2em;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overflow-wrap: break-word;
   user-select: none;
 }
 #sheet .note_box {
@@ -222,7 +228,9 @@ body {
 <button id="play">▶ Play</button>
 <button id="record" class="active">● Record</button>
 <button id="save">Save / Load</button>
-<div id="sheet"></div>
+<div id="container">
+  <div id="sheet"></div>
+</div>
 <script src="notes.js"></script>
 <script>
 const white = document.querySelector`#white`;
@@ -270,9 +278,12 @@ const addNote = i => {
   });
   if (curr === sheet.querySelectorAll`.note_box`.length - 1) {
     sheet.appendChild(noteBox);
-    sheet.scrollTo(0, sheet.offsetHeight);
+    sheet.scrollTo(0, sheet.scrollHeight);
+    curr++;
+  } else {
+    sheet.insertBefore(noteBox, [...sheet.querySelectorAll`.note_box`][++curr]);
   }
-  sheet.insertBefore(noteBox, [...sheet.querySelectorAll`.note_box`][++curr]);
+  scrollSheet();
   let rest = document.createElement('div');
   rest.classList.add('rest');
   rest.innerHTML = tempo.value;
@@ -327,6 +338,7 @@ const playAll = () => {
       if (butt.innerText === '■ Stop') {
         if (step < diva.length) {
           diva[step].classList.add('active');
+          scrollSheet(step);
           playNote(diva[step].value, true);
           let i = diva[step].value;
           if ([1,3,6,8,10].includes(i%12)) {
@@ -348,6 +360,15 @@ const playAll = () => {
   } else {
     butt.innerHTML = '▶ Play';
     butt.classList.remove('stop');
+  }
+};
+const scrollSheet = playing => {
+  const container = document.querySelector`#container`;
+  let diva = [...sheet.querySelectorAll`.note_box`][playing ? playing : curr];
+  if (sheet.offsetHeight - diva.offsetTop < container.offsetHeight) {
+    sheet.style.top = container.offsetHeight - sheet.offsetHeight + 'px';
+  } else {
+    sheet.style.top = -diva.offsetTop + 'px';
   }
 };
 
@@ -385,13 +406,13 @@ document.onmousewheel = e => {
       if (e.deltaY > 0) {
         diva[curr].classList.remove('select');
         if (curr > 0) {curr--; } else {curr = diva.length - 1; }
-        diva[curr].classList.add('select');
       }
       if (e.deltaY < 0) {
         diva[curr].classList.remove('select');
         if (curr < diva.length - 1) {curr++; } else {curr = 0; }
-        diva[curr].classList.add('select');
       }
+      diva[curr].classList.add('select');
+      scrollSheet();
     }
   }
 };
@@ -404,16 +425,19 @@ document.onkeydown = e => {
         sheet.removeChild(diva[curr]);
         curr = Math.min(curr, sheet.querySelectorAll`.note_box`.length - 1);
         if (curr >= 0) {sheet.querySelectorAll`.note_box`[curr].classList.add('select'); }
+        scrollSheet();
         return;
       case 100:
         diva[curr].classList.remove('select');
         if (curr > 0) {curr--; } else {curr = diva.length - 1; }
         diva[curr].classList.add('select');
+        scrollSheet();
         return;
       case 102:
         diva[curr].classList.remove('select');
         if (curr < diva.length - 1) {curr++; } else {curr = 0; }
         diva[curr].classList.add('select');
+        scrollSheet();
         return;
       case 104:
         diva[curr].querySelector`.rest`.innerHTML++;
@@ -422,6 +446,9 @@ document.onkeydown = e => {
         if (diva[curr].querySelector`.rest`.innerText > 0) {
           diva[curr].querySelector`.rest`.innerHTML--;
         }
+        return;
+      case 96:
+        diva[curr].querySelector`.rest`.innerHTML = 0;
         return;
       case 101:
         playAll();
