@@ -302,7 +302,8 @@ const addNote = i => {
   rest.classList.add('rest');
   rest.innerHTML = tempo.value;
   rest.addEventListener('mousedown', e => {
-    rest.innerHTML = prompt('Break: ', rest.innerText);
+    let newText = prompt('Break: ', rest.innerText);
+    rest.innerHTML = newText === null ? rest.innerText : newText;
     if (rest.innerText < 0 || isNaN(rest)) {
       sheet.removeChild(noteBox);
       curr = sheet.querySelectorAll`.note_box`.length ? Math.max(curr - 1, 0) : -1;
@@ -550,7 +551,7 @@ document.querySelector`#curr_left`.onclick = () => {
   diva[curr].classList.remove('select');
   if (curr > 0) {curr--; } else {curr = diva.length - 1; }
   diva[curr].classList.add('select');
-  scrollSheet(); 
+  scrollSheet();
 };
 
 document.querySelector`#curr_right`.onclick = () => {
