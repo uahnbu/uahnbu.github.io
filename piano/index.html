@@ -401,7 +401,7 @@ const convert = notes => {
   const others = '1!2@34$5%6^78*9(0qQwWeErtTyYuiIoOpPasSdDfgGhHjJklLzZxcCvVbBnm';
   sheet.innerHTML = '';
   curr = -1;
-  notes.match(/(?<=^|\W)\w+(?=\W|$)/g).forEach(chord => {
+  notes.match(/(?<=^|\W)[\w!@#$%^&*(]+(?=\W|$)/g).forEach(chord => {
     if (chord.length > 1) {
       chord.slice(0, -1).split``.forEach(note => {
         addNote(others.indexOf(note));
