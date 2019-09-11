@@ -182,7 +182,7 @@ body {
   overflow: hidden;
   overflow-wrap: break-word;
 }
-#sheet {
+#container #sheet {
   position: relative;
   left: 0;
   top: 0;
@@ -216,6 +216,22 @@ body {
   font-size: .5em;
   text-align: center;
 }
+#container #curr_left, #curr_right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  height: 32px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+#container #curr_left {
+  right: 32px;
+}
 </style>
 </head>
 <body>
@@ -230,6 +246,8 @@ body {
 <button id="save">Save / Load</button>
 <div id="container">
   <div id="sheet"></div>
+  <div id="curr_left">&lt;</div>
+  <div id="curr_right">></div>
 </div>
 <script src="notes.js"></script>
 <script>
@@ -262,18 +280,15 @@ for (let i = 2; i <= 6; i++) {
 }
 keys.pts.push('C7');
 const addNote = i => {
-  [...sheet.querySelectorAll`.note_box`].forEach(box => box.classList.remove('select'));
+  if (curr >= 0) {sheet.querySelectorAll`.note_box`[curr].classList.remove('select'); }
   let noteBox = document.createElement('div');
   noteBox.classList.add('note_box', 'select');
   noteBox.innerHTML = keys.pts[i];
   noteBox.value = i;
   noteBox.addEventListener('mousedown', () => {
-    if (noteBox.classList.contains('active')) {sheet.removeChild(noteBox); }
-    else {
-      [...sheet.querySelectorAll`.note_box`].forEach(box => box.classList.remove('select'));
-      noteBox.classList.add('select');
-      curr = [...sheet.querySelectorAll`.note_box`].indexOf(noteBox);
-    }
+    sheet.querySelectorAll`.note_box`[curr].classList.remove('select');
+    noteBox.classList.add('select');
+    curr = [...sheet.querySelectorAll`.note_box`].indexOf(noteBox);
     event.stopPropagation();
   });
   if (curr === sheet.querySelectorAll`.note_box`.length - 1) {
@@ -281,18 +296,23 @@ const addNote = i => {
     sheet.scrollTo(0, sheet.scrollHeight);
     curr++;
   } else {
-    sheet.insertBefore(noteBox, [...sheet.querySelectorAll`.note_box`][++curr]);
+    sheet.insertBefore(noteBox, sheet.querySelectorAll`.note_box`[++curr]);
   }
-  scrollSheet();
   let rest = document.createElement('div');
   rest.classList.add('rest');
   rest.innerHTML = tempo.value;
   rest.addEventListener('mousedown', e => {
     rest.innerHTML = prompt('Break: ', rest.innerText);
+    if (rest.innerText < 0 || isNaN(rest)) {
+      sheet.removeChild(noteBox);
+      curr = sheet.querySelectorAll`.note_box`.length ? Math.max(curr - 1, 0) : -1;
+      if (curr >= 0) {sheet.querySelectorAll`.note_box`[curr].classList.add('select'); }
+    }
     event.stopPropagation();
   });
   noteBox.appendChild(rest);
   rest.style.width = rest.offsetHeight - 2 + 'px';
+  scrollSheet();
 };
 const playNote = (i,playing) => {
   let audio = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAF1RTU0UAAAANAAADTGF2ZjUxLjEyLjEA//uUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAAcAAA' + notes[i]);
@@ -302,7 +322,7 @@ const playNote = (i,playing) => {
 };
 const playAll = () => {
   const diva = sheet.querySelectorAll`.note_box`;
-  if (butt.innerText === '▶ Play') {
+  if (butt.innerText.startsWith('▶ Play')) {
     butt.innerHTML = '■ Stop';
     butt.classList.add('stop');
     let step = curr === sheet.querySelectorAll`.note_box`.length - 1 ? 0 : curr,
@@ -352,24 +372,44 @@ const playAll = () => {
         if (++step <= diva.length) {
           setTimeout(loop, diva[step - 1].querySelector`.rest`.innerText * 100);
         } else {
-          butt.innerHTML = '▶ Play';
           butt.classList.remove('stop');
+          scrollSheet();
         }
       }
     })();
   } else {
-    butt.innerHTML = '▶ Play';
     butt.classList.remove('stop');
+    scrollSheet();
   }
 };
 const scrollSheet = playing => {
-  const container = document.querySelector`#container`;
-  let diva = [...sheet.querySelectorAll`.note_box`][playing ? playing : curr];
-  if (sheet.offsetHeight - diva.offsetTop < container.offsetHeight) {
-    sheet.style.top = container.offsetHeight - sheet.offsetHeight + 'px';
-  } else {
-    sheet.style.top = -diva.offsetTop + 'px';
+  if (curr >= 0) {
+    const container = document.querySelector`#container`;
+    let diva = sheet.querySelectorAll`.note_box`[playing ? playing : curr];
+    if (sheet.offsetHeight - diva.offsetTop < container.offsetHeight) {
+      sheet.style.top = container.offsetHeight - sheet.offsetHeight + 'px';
+    } else {
+      sheet.style.top = -diva.offsetTop + 'px';
+    }
   }
+  if (typeof playing === 'undefined') {
+    butt.innerHTML = `▶ Play from ${curr + 1}/${sheet.querySelectorAll`.note_box`.length}`;
+  }
+};
+const convert = notes => {
+  const others = '1!2@34$5%6^78*9(0qQwWeErtTyYuiIoOpPasSdDfgGhHjJklLzZxcCvVbBnm';
+  sheet.innerHTML = '';
+  curr = -1;
+  notes.match(/(?<=^|\W)\w+(?=\W|$)/g).forEach(chord => {
+    if (chord.length > 1) {
+      chord.slice(0, -1).split``.forEach(note => {
+        addNote(others.indexOf(note));
+        [...sheet.querySelectorAll`.note_box`].slice(-1)[0].querySelector`.rest`.innerHTML = 0;
+      });
+    }
+    addNote(others.indexOf(chord.slice(-1)));
+    [...sheet.querySelectorAll`.note_box`].slice(-1)[0].querySelector`.rest`.innerHTML = tempo.value;    
+  });
 };
 
 keys.lbs.forEach((key,i) => {
@@ -397,7 +437,7 @@ keys.lbs.forEach((key,i) => {
 
 document.onmousewheel = e => {
   if (curr >= 0) {
-    let diva = [...sheet.querySelectorAll`.note_box`];
+    const diva = sheet.querySelectorAll`.note_box`;
     if (e.altKey) {
       if (diva[curr].querySelector`.rest`.innerText >= Math.sign(e.deltaY)) {
         diva[curr].querySelector`.rest`.innerHTML -= Math.sign(e.deltaY);
@@ -419,11 +459,11 @@ document.onmousewheel = e => {
 
 document.onkeydown = e => {
   if (curr >= 0) {
-    let diva = [...sheet.querySelectorAll`.note_box`];
+    const diva = sheet.querySelectorAll`.note_box`;
     switch (e.keyCode) {
       case 27:
         sheet.removeChild(diva[curr]);
-        curr = Math.min(curr, sheet.querySelectorAll`.note_box`.length - 1);
+        curr = diva.length - 1 ? Math.max(curr - 1, 0) : -1;
         if (curr >= 0) {sheet.querySelectorAll`.note_box`[curr].classList.add('select'); }
         scrollSheet();
         return;
@@ -503,6 +543,22 @@ document.querySelector`#save`.onclick = () => {
         = note.match(/(?<=.{2})[^#]+/g)[0];
     });
   };
+};
+
+document.querySelector`#curr_left`.onclick = () => {
+  const diva = sheet.querySelectorAll`.note_box`;
+  diva[curr].classList.remove('select');
+  if (curr > 0) {curr--; } else {curr = diva.length - 1; }
+  diva[curr].classList.add('select');
+  scrollSheet(); 
+};
+
+document.querySelector`#curr_right`.onclick = () => {
+  const diva = sheet.querySelectorAll`.note_box`;
+  diva[curr].classList.remove('select');
+  if (curr < diva.length - 1) {curr++; } else {curr = 0; }
+  diva[curr].classList.add('select');
+  scrollSheet();
 };
 </script>
 </body>
