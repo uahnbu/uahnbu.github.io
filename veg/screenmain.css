@@ -1,5 +1,6 @@
 #screenmain {
   overflow: hidden;
+  background-image: linear-gradient(to bottom, #3A6073, #16222A);
 }
 #bottommenu {
   position: absolute;
@@ -53,6 +54,8 @@
   top: 32px;
   height: 650px;
   overflow-y: scroll;
+  opacity: 0;
+  transition: ease-in-out .5s all;
 }
 
 .main-tree {
@@ -162,4 +165,18 @@
 {
 	border-radius: 10px;
 	background-color: #f1c40f;
+}
+
+#fbimg {
+  width: 100%;
+  height: calc(110% + 64px);
+}
+
+#fbback {
+  position: absolute;
+  left: 16px;
+  top: 32px;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
 }

@@ -140,11 +140,11 @@ body {
 }
 
 #process {
-  width: 128px;
+  width: 160px;
   height: 64px;
   position: absolute;
   bottom: 8px;
-  left: calc(50% - 64px);
+  left: calc(50% - 80px);
   z-index: 2;
   transition: ease-in-out .5s all;
   opacity: 0;

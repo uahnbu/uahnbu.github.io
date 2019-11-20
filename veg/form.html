@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="screen4.css">
 <link rel="stylesheet" href="screen5.css">
 <link rel="stylesheet" href="screen6.css">
+<link rel="stylesheet" href="screen7.css">
 <link rel="stylesheet" href="screenmain.css">
 <link href="https://fonts.googleapis.com/css?family=Calistoga&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
@@ -159,6 +160,32 @@
         <div id="vegieback">Back</div>
         <div id="vegienext">Next</div>
       </div>
+      <div id="screen7" class="screens">
+        <div id="place-title">Bạn có thể tưới cây vào thời gian</div>
+        <div class="dotdot">:</div>
+        <div class="quantity">
+          <input type="number" min="0" max="2" step="1" value="0">
+          <div class="quantity-up">⌃</div>
+          <div class="quantity-down">⌄</div>
+        </div>
+        <div class="quantity">
+          <input type="number" min="0" max="9" step="1" value="7">
+          <div class="quantity-up">⌃</div>
+          <div class="quantity-down">⌄</div>
+        </div>
+        <div class="quantity">
+          <input type="number" min="0" max="5" step="1" value="0">
+          <div class="quantity-up">⌃</div>
+          <div class="quantity-down">⌄</div>
+        </div>
+        <div class="quantity">
+          <input type="number" min="0" max="9" step="1" value="0">
+          <div class="quantity-up">⌃</div>
+          <div class="quantity-down">⌄</div>
+        </div>
+        <div id="vegieback">Back</div>
+        <div id="vegienext">Next</div>
+      </div>
       <div id="screenmain" class="screens">
         <div class="marginal">
           <div class="main-tree">
@@ -217,7 +244,12 @@
           </div>
         </div>
       </div>
+      <div id="screenfb" class="screens">
+        <img src="fb.jpg" id="fbimg">
+        <div id="fbback"></div>
+      </div>
       <div id="process">
+        <div class="pdot"></div>
         <div class="pdot"></div>
         <div class="pdot"></div>
         <div class="pdot"></div>
@@ -305,17 +337,58 @@ q('#vegieback').onclick = () => {
 q('#vegienext').onclick = () => {
   q('#screen6').classList.remove('move-in');
   q('#screen6').classList.add('move-away');
-  q('#screenmain').classList.add('move-in');
-  q('#process').classList.remove('process-show');
-  setTimeout(() => {
-    q('#bottommenu').classList.add('move-up');
-    q('#icon2').classList.add('move-down');
-  }, 1000);
+  q('#screen7').classList.remove('move-away-right');
+  q('#screen7').classList.add('move-in');
+  q('.pdot:nth-of-type(5)').classList.add('filled');
 }
 
 [...document.querySelectorAll('.main-tree')].forEach(e => e.onclick = () => {
   e.classList.toggle('active');
 });
+  
+[...document.querySelectorAll('.quantity-up')].forEach(e => e.onclick = () => {
+  e.parentElement.querySelector('input').value++;
+});
+  
+[...document.querySelectorAll('.quantity-down')].forEach(e => e.onclick = () => {
+  e.parentElement.querySelector('input').value--;
+});
+
+q('#screen7 #vegieback').onclick = () => {
+  q('#screen7').classList.remove('move-in');
+  q('#screen7').classList.add('move-away-right');
+  q('#screen6').classList.add('move-in');
+  q('.pdot:nth-of-type(5)').classList.remove('filled');
+};
+
+q('#screen7 #vegienext').onclick = () => {
+  q('#screen7').classList.remove('move-in');
+  q('#screen7').classList.add('move-away');
+  q('#screenmain').classList.add('move-in');
+  q('#process').classList.remove('process-show');
+  setTimeout(() => {
+    q('#bottommenu').classList.add('move-up');
+    q('#icon2').classList.add('move-down');
+    setTimeout(q('#screenmain .marginal').classList.add('process-show'), 2000);
+  }, 1000);
+};
+
+document.querySelectorAll('.menu-box')[1].onclick = () => {
+  q('#screenmain').classList.remove('move-in');
+  q('#screenmain').classList.add('move-away');
+  q('#screenfb').classList.remove('move-away-right');
+  q('#screenfb').classList.add('move-in');
+  q('#bottommenu').classList.remove('move-up');
+  q('#icon2').classList.remove('icon-show');
+};
+
+q('#fbback').onclick = () => {
+  q('#screenfb').classList.remove('move-in');
+  q('#screenfb').classList.add('move-away-right');
+  q('#screenmain').classList.add('move-in');
+  q('#bottommenu').classList.add('move-up');
+  q('#icon2').classList.add('icon-show');
+}
 </script>
 </body>
 </html>

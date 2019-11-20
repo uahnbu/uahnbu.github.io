@@ -1,0 +1,85 @@
+.quantity {
+  position: absolute;
+  left: 160px;
+  top: 400px;
+}
+.quantity:nth-of-type(4) {
+  left: 220px;
+}
+.quantity:nth-of-type(3) {
+  left: 320px;
+}
+.quantity:nth-of-type(5) {
+  left: 380px;
+}
+.dotdot {
+  position: absolute;
+  left: 288px;
+  top: 400px;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number]
+{
+  -moz-appearance: textfield;
+}
+
+.quantity input {
+  width: 30px;
+  height: 46px;
+  line-height: 1.65;
+  float: left;
+  display: block;
+  padding: 0;
+  margin: 0;
+  padding-left: 16px;
+  border: 1px solid #eee;
+  font-size: 24px;
+}
+
+.quantity input:focus {
+  outline: 0;
+}
+
+.quantity-nav {
+  float: left;
+  position: relative;
+  height: 42px;
+}
+
+.quantity-up {
+  position: absolute;
+  width: 48px;
+  height: 24px;
+  left: 0;
+  top: -24px;
+  background: none;
+  border-bottom: 1px solid #eee;
+  font-size: 36px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.quantity-down {
+  position: absolute;
+  width: 48px;
+  height: 24px;
+  left: 0;
+  top: 46px;
+  font-size: 36px;
+  padding-bottom: 16px;
+  margin-top: -16px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
