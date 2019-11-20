@@ -1,0 +1,165 @@
+#screenmain {
+  overflow: hidden;
+}
+#bottommenu {
+  position: absolute;
+  width: 100%;
+  height: 64px;
+  bottom: -120px;
+  left: 0;
+  background: white;
+  transition: ease-in-out .5s all;
+}
+#menu-round {
+  content: '';
+  position: absolute;
+  left: calc(50% - 100px);
+  top: -50px;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  background: white;
+  box-shadow: 0 0 12px 0px #aaa;
+  cursor: pointer;
+  z-index: 1;
+}
+#bottommenu.move-up {
+  bottom: 0px;
+}
+#icon2.move-down {
+  top: 660px; 
+}
+.menu-box {
+  position: absolute;
+  left: 0;
+  width: 35%;
+  height: 64px;
+  overflow: hidden;
+  background: none;
+  cursor: pointer;
+}
+
+.menu-box:nth-of-type(2) {
+  left: 64%;
+}
+
+.menu-box img {
+  width: 58px;
+  height: 58px;
+  margin-top: 3px;
+}
+
+#screenmain .marginal {
+  top: 32px;
+  height: 650px;
+  overflow-y: scroll;
+}
+
+.main-tree {
+  margin-left: 32px;
+  margin-top: 32px;
+  display: block;
+  width: 452px;
+  height: 180px;
+  background: white;
+  border-radius: 6px;
+  transition: ease-in-out .2s all;
+  z-index: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.main-tree.active {
+  height: 800px;
+}
+
+.main-img {
+  margin-left: 16px;
+  margin-top: 16px;
+  width: 156px;
+  height: 146px;
+  display: inline-block;
+}
+
+.main-label {
+  display: inline-block;
+  height: 146px;
+  vertical-align: top;
+  margin-top: 32px;
+  margin-left: 52px;
+  text-align: center;
+}
+.main-text1, .main-text2 {
+  font-size: 32px;
+  margin-top: 16px;
+}
+
+.process-bar {
+  position: relative;
+  margin-left: 50px;
+  background-color: #1a1a1a;
+  height: 45px;
+  width: 80%;
+  border-radius: 5px;
+  box-shadow: 0 1px 5px #000 inset, 0 1px 0 #444;
+}
+
+.stripes {
+  background-size: 30px 30px;
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .15) 50%,
+    rgba(255, 255, 255, .15) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+
+.process-bar-inner {
+  display: block;
+  height: 40px;
+  width: 45%;
+  background-color: #34c2e3;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+  position: relative;
+  animation: auto-progress 10s infinite linear;
+  text-align: center;
+  font-size: 32px;
+  padding-top: 6px;
+  color: white;
+}
+
+.demon {
+  position: relative;
+  left: 40px;
+  width: 64px;
+  height: 64px;
+}
+.demon:nth-of-type(3) {
+  left: 300px;
+}
+
+.instruct {
+  margin-top: 32px;
+  position: relative;
+  left: 5%;
+  width: 90%;
+  font-size: 32px;
+}
+
+#screenmain .marginal::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #ecf0f1;
+    border-radius: 6px;
+}
+
+#screenmain .marginal::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #f1c40f;
+}

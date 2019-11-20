@@ -1,0 +1,37 @@
+#congrats {
+  position: absolute;
+  left: calc(50% - 108px);
+  top: 30%;
+  font-family: Indie Flower;
+  transform: rotate(-15deg);
+  font-size: 56px;
+  font-weight: bold;
+  font-style: italic;
+  color: #f1c40f;
+}
+
+#len {
+  position: absolute;
+  top: 400px;
+  color: #eee;
+  font-size: 32px
+}
+
+#lenskip {
+  position: absolute;
+  left: 128px;
+  top: 640px;
+  font-size: 24px;
+  color: #c7ecee;
+  cursor: pointer;
+}
+
+#lennext {
+  position: absolute;
+  left: calc(100% - 128px - 64px);
+  top: 640px;
+  font-size: 24px;
+  color: #2c3e50;
+  cursor: pointer;
+  font-weight: bold;
+}

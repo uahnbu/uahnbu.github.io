@@ -1,0 +1,145 @@
+.places {
+  position: absolute;
+  left: 96px;
+  top: 240px;
+  width: 180px;
+  height: 180px;
+  background: white;
+  border-radius: 6px;
+  transition: ease-in-out .2s all;
+  z-index: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+.places:nth-of-type(2) {
+  left: 300px;
+}
+.places:nth-of-type(3) {
+  top: 440px;
+}
+.places:nth-of-type(4) {
+  left: 300px;
+  top: 440px;
+}
+.place-img {
+  margin-top: 16px;
+  width: 120px;
+  height: 120px;
+  transition: ease-in-out .2s all;
+}
+.place-label {
+  margin-top: 8px;
+}
+.place-text {
+  display: inline-block;
+  transition: ease-in-out .2s all;
+}
+.place-size {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: solid 4px #2980b9;
+  border-radius: 6px;
+  margin-left: 8px;
+  transition: ease-in-out .2s all;
+  color: #2980b9;
+}
+.big-place {
+  left: 64px !important;
+  top: 220px !important;
+  width: 436px;
+  height: 440px;
+  z-index: 1;
+}
+.big-place .place-img {
+  width: 376px;
+  height: 210px;
+}
+.big-place .place-text {
+  font-size: 32px;
+}
+.big-place .place-size {
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+}
+
+
+.size-label-text {
+  display: inline-block;
+  color: ;
+  margin-right: 140px;
+}
+.size-label-text:nth-child(3) {
+  margin-right: 0
+}
+
+.place-cancel {
+  margin-top: 16px;
+}
+
+.place-button {
+  width: 128px;
+  height: 64px;
+  background: #e74c3c;
+  border: none;
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+  color: white;
+  font-size: 24px;
+}
+.place-chosen {
+  background: #4cd137;
+}
+
+#placenext {
+  position: relative;
+  top: 610px;
+  font-size: 24px;
+  color: #2c3e50;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#place-title {
+  position: relative;
+  top: 180px;
+  font-size: 32px;
+}
+
+
+
+
+
+.slider {
+  margin-top: 16px;
+  -webkit-appearance: none;
+  width: 80%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #e84118;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #e84118;
+  cursor: pointer;
+}
