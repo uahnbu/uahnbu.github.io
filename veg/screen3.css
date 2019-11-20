@@ -1,0 +1,61 @@
+.screens {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom, #00F260,  #0575E6);
+    transition: ease-in-out .4s all;
+    overflow: hidden;
+    font-family: Helvetica;
+  }
+  #hoiten {
+    position: absolute;
+    left: 0;
+    top: 256px;
+    transition: ease-in-out .6s all;
+    width: 100%;
+    height: 50%;
+  }
+  #hello {
+    position: absolute;
+    left: 0px;
+    top: 0;
+    font-family: Calistoga;
+    font-size: 46px;
+    transition: ease-in-out .6s all;
+    width: 256px;
+    font-weight: bold;
+    color: #f1c40f;
+  }
+  #bantenla {
+    position: absolute;
+    left: 64px;
+    top: 80px;
+    font-family: Helvetica;
+    font-size: 32px;
+    transition: ease-in-out .6s all;
+  }
+  #ten {
+    position: absolute;
+    left: 224px;
+    top: 76px;
+    width: 256px;
+    border: none;
+    border-bottom: solid 1px #333;
+    outline: none;
+    background: none;
+    color: #fff;
+    font-size: 32px;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-weight: bold;
+  }
+#tennext{
+  position: relative;
+  top: 380px;
+  font-size: 24px;
+  color: #2c3e50;
+  cursor: pointer;
+  font-weight: bold;
+}

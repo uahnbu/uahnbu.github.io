@@ -1,0 +1,77 @@
+#screen6 .marginal {
+  top: 25%;
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.vegies {
+  margin-left: 32px;
+  margin-top: 32px;
+  display: block;
+  width: 452px;
+  height: 180px;
+  background: white;
+  border-radius: 6px;
+  transition: ease-in-out .2s all;
+  z-index: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.vegie-img {
+  margin-left: 16px;
+  margin-top: 16px;
+  width: 156px;
+  height: 146px;
+  display: inline-block;
+}
+
+.vegie-label {
+  display: inline-block;
+  height: 146px;
+  vertical-align: top;
+  margin-top: 32px;
+  margin-left: 52px;
+  text-align: center;
+}
+.vegie-text1, .vegie-text2 {
+  font-size: 32px;
+  margin-top: 16px;
+}
+
+.vegie-chosen {
+  background: #4cd137;
+}
+
+#vegienext {
+  position: absolute;
+  left: 360px;
+  top: 650px;
+  font-size: 24px;
+  color: #2c3e50;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#vegieback {
+  position: absolute;
+  left: 160px;
+  top: 650px;
+  font-size: 24px;
+  color: #2c3e50;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#screen6 .marginal::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #ecf0f1;
+    border-radius: 6px;
+}
+
+#screen6 .marginal::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #f1c40f;
+}

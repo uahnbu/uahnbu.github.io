@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="checkbox.css">
+<link rel="stylesheet" href="screen2.css">
+<link rel="stylesheet" href="screen3.css">
+<link rel="stylesheet" href="screen4.css">
+<link rel="stylesheet" href="screen5.css">
+<link rel="stylesheet" href="screen6.css">
+<link rel="stylesheet" href="screenmain.css">
+<link href="https://fonts.googleapis.com/css?family=Calistoga&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+<style>
+.move-away {left: -100% !important}
+.move-in {left: 0 !important}
+.move-away-right {left: 100% !important}
+</style>
+</head>
+<body>
+<div id="container">
+  <div class="marvel-device ipad silver">
+    <div class="camera"></div>
+    <div class="screen">
+      <div id="background">
+        <div class="icons-container">
+          <div id="icon"></div>
+          VEG
+        </div>
+      </div>
+      <div id="screen2">
+        <div class="marginal">
+          <div id="dkrt">ĐIỀU KHOẢN RIÊNG TƯ</div>
+          <div id="trckhibatdau">
+            <b>Trước khi bắt đầu, bạn hãy đọc và đồng ý với các điều khoản riêng tư và bảo mật nhé!</b>
+          </div>
+          <div id="dieukhoan">
+            <b>ĐIỀU KHOẢN RIÊNG TƯ VÀ CÁC ĐIỀU KHOẢN BẢO MẬT</b></div>
+          <div id="dongy">
+            <input id="dongybox" type="checkbox">
+            <label for='dongybox'>
+              <span></span>
+              Tôi đồng ý
+              <ins><i>Tôi đồng ý</i></ins>
+            </label>
+          </div>
+          <img id="check1" src="check.png" width=128 height=128>
+        </div>
+      </div>
+      <div id="screen3" class="screens">
+        <div id="hoiten">
+          <div id="hello">Xin chào,</div>
+          <div id="bantenla">Bạn tên là</div>
+          <input type="text" id="ten">
+          <div id="tennext">Next</div>
+        </div>
+      </div>
+      <div id="screen4" class="screens">
+          <div class="marginal">
+          <div id="congrats">Congrats!</div>
+          <div id="len">Chúng ta cùng lên kế hoạch trồng cây thôi nào!</div>
+          <div id="lennext">Next</div>
+          <div id="lenskip">Skip</div>
+        </div>
+      </div>
+      <div id="screen5" class="screens">
+        <div id="place-title">Khu vực trồng cây của bạn là</div>
+        <div class="places">
+          <img src="hallway_small.jpg" class="place-img">
+          <div class="place-label">
+            <div class="place-text">Hành lang</div>
+            <div class="place-size">S</div>
+          </div>
+          <input type="range" min="1" max="3" value="1" class="slider">
+          <div class="place-size-label">
+            <div class="size-label-text">Nhỏ</div>
+            <div class="size-label-text">Vừa</div>
+            <div class="size-label-text">Lớn</div>
+          </div>
+          <div class="place-cancel">
+            <button class="place-button">Huỷ bỏ</button>
+          </div>
+        </div>
+        <div class="places">
+          <img src="terrace_small.jpg" class="place-img">
+          <div class="place-label">
+            <div class="place-text">Sân thượng</div>
+            <div class="place-size">S</div>
+          </div>
+          <input type="range" min="1" max="3" value="1" class="slider">
+          <div class="place-size-label">
+            <div class="size-label-text">Nhỏ</div>
+            <div class="size-label-text">Vừa</div>
+            <div class="size-label-text">Lớn</div>
+          </div>
+          <div class="place-cancel">
+            <button class="place-button">Huỷ bỏ</button>
+          </div>
+        </div>
+        <div class="places">
+          <img src="balcony_small.jpg" class="place-img">
+          <div class="place-label">
+            <div class="place-text">Ban công</div>
+            <div class="place-size">S</div>
+          </div>
+          <input type="range" min="1" max="3" value="1" class="slider">
+          <div class="place-size-label">
+            <div class="size-label-text">Nhỏ</div>
+            <div class="size-label-text">Vừa</div>
+            <div class="size-label-text">Lớn</div>
+          </div>
+          <div class="place-cancel">
+            <button class="place-button">Huỷ bỏ</button>
+          </div>
+        </div>
+        <div class="places">
+          <img src="garden_small.jpg" class="place-img">
+          <div class="place-label">
+            <div class="place-text">Sân nhà</div>
+            <div class="place-size">S</div>
+          </div>
+          <input type="range" min="1" max="3" value="1" class="slider">
+          <div class="place-size-label">
+            <div class="size-label-text">Nhỏ</div>
+            <div class="size-label-text">Vừa</div>
+            <div class="size-label-text">Lớn</div>
+          </div>
+          <div class="place-cancel">
+            <button class="place-button">Huỷ bỏ</button>
+          </div>
+        </div>
+        <div id="placenext">Next</div>
+      </div>
+      <div id="screen6" class="screens">
+        <div id="place-title">Gợi ý cây trồng phù hợp</div>
+        <div class="marginal">
+          <div class="vegies">
+            <img src="terrace_small.jpg" class="vegie-img">
+            <div class="vegie-label">
+              <div class="vegie-text1">Cây cọ</div>
+              <div class="vegie-text2">Mức độ: Dễ</div>
+            </div>
+          </div>
+          <div class="vegies">
+            <img src="terrace_small.jpg" class="vegie-img">
+            <div class="vegie-label">
+              <div class="vegie-text1">Cây cỏ</div>
+              <div class="vegie-text2">Mức độ: Dễ</div>
+            </div>
+          </div>
+          <div class="vegies">
+            <img src="terrace_small.jpg" class="vegie-img">
+            <div class="vegie-label">
+              <div class="vegie-text1">Cây cần</div>
+              <div class="vegie-text2">Mức độ: Khó</div>
+            </div>
+          </div>
+        </div>
+        <div id="vegieback">Back</div>
+        <div id="vegienext">Next</div>
+      </div>
+      <div id="screenmain" class="screens">
+        <div class="marginal">
+          <div class="main-tree">
+            <img src="terrace_small.jpg" class="main-img">
+            <div class="main-label">
+              <div class="main-text1">Cây cọ</div>
+              <div class="main-text2">Mức độ: Dễ</div>
+            </div>
+            <img src="dirt.png" class="demon">
+            <img src="veg2.png" class="demon">
+            <div class="process-bar stripes">
+              <span class="process-bar-inner">45%</span>
+            </div>
+            <div class="instruct">
+              Bước 1: Nguyên liệu
+              <br>Một hộp màu
+              <br>Hai trang giấy
+              <br>Ba quả đồi
+            </div>
+          </div>
+          <div class="main-tree">
+            <img src="terrace_small.jpg" class="main-img">
+            <div class="main-label">
+              <div class="main-text1">Cây cọ</div>
+              <div class="main-text2">Mức độ: Dễ</div>
+            </div>
+            <img src="dirt.png" class="demon">
+            <img src="veg2.png" class="demon">
+            <div class="process-bar stripes">
+              <span class="process-bar-inner">45%</span>
+            </div>
+            <div class="instruct">
+              Bước 1: Nguyên liệu
+              <br>Một hộp màu
+              <br>Hai trang giấy
+              <br>Ba quả đồi
+            </div>
+          </div>
+          <div class="main-tree">
+            <img src="terrace_small.jpg" class="main-img">
+            <div class="main-label">
+              <div class="main-text1">Cây cọ</div>
+              <div class="main-text2">Mức độ: Dễ</div>
+            </div>
+            <img src="dirt.png" class="demon">
+            <img src="veg2.png" class="demon">
+            <div class="process-bar stripes">
+              <span class="process-bar-inner">45%</span>
+            </div>
+            <div class="instruct">
+              Bước 1: Nguyên liệu
+              <br>Một hộp màu
+              <br>Hai trang giấy
+              <br>Ba quả đồi
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="process">
+        <div class="pdot"></div>
+        <div class="pdot"></div>
+        <div class="pdot"></div>
+        <div class="pdot"></div>
+      </div>
+      <div id="bottommenu">
+        <div id="menu-round"></div>
+        <div class="menu-box">
+          <img src="setting.png" class="menu-icon">
+        </div>
+        <div class="menu-box">
+          <img src="global.png" class="menu-icon">
+        </div>
+      </div>
+      <div id="icon2"></div>
+    </div>
+    <div class="home"></div>
+  </div>
+</div>
+
+<script>
+const q = e => document.querySelector(e);
+q('#icon').onclick = () => {
+  q('#screen2').classList.add('screen2-opened');
+  q('#icon2').classList.add('icon-show');
+  q('#process').classList.add('process-show');
+};
+q('#dongybox').onchange = () => {
+  setTimeout(() => {
+    q('#check1').classList.add('check1-do');
+    setTimeout(() => {
+      q('#screen2').classList.add('move-away');
+      q('#screen3').classList.add('move-in');
+      q('.pdot').classList.add('filled');
+    }, 1000);
+  }, 800);
+};
+q('#tennext').onclick = () => {
+  q('#screen3').classList.remove('move-in');
+  q('#screen3').classList.add('move-away');
+  q('#screen4').classList.add('move-in');
+  q('.pdot:nth-of-type(2)').classList.add('filled');
+};
+q('#lennext').onclick = () => {
+  q('#screen4').classList.remove('move-in');
+  q('#screen4').classList.add('move-away');
+  q('#screen5').classList.add('move-in');
+  q('.pdot:nth-of-type(3)').classList.add('filled');
+}
+[...document.querySelectorAll('.places')].forEach(e => e.onclick = () => {
+  e.classList.toggle('big-place');
+});
+
+[...document.querySelectorAll('.slider')].forEach(e => {
+  e.oninput = () => {
+    e.parentElement.querySelector('.place-size').innerHTML = ['S', 'M', 'L'][e.value - 1];
+  };
+  e.onclick = f => {
+    e.parentNode.classList.add('place-chosen');
+  };
+});
+[...document.querySelectorAll('.place-cancel')].forEach(e => e.onclick = () => {
+  e.parentElement.classList.remove('place-chosen');
+});
+
+q('#placenext').onclick = () => {
+  q('#screen5').classList.remove('move-in');
+  q('#screen5').classList.add('move-away');
+  q('#screen6').classList.remove('move-away-right');
+  q('#screen6').classList.add('move-in');
+  q('.pdot:nth-of-type(4)').classList.add('filled');
+};
+
+[...document.querySelectorAll('.vegies')].forEach(e => e.onclick = () => {
+  e.classList.toggle('vegie-chosen');
+});
+
+q('#vegieback').onclick = () => {
+  q('#screen6').classList.remove('move-in');
+  q('#screen6').classList.add('move-away-right');
+  q('#screen5').classList.add('move-in');
+  q('.pdot:nth-of-type(4)').classList.remove('filled');
+}
+
+q('#vegienext').onclick = () => {
+  q('#screen6').classList.remove('move-in');
+  q('#screen6').classList.add('move-away');
+  q('#screenmain').classList.add('move-in');
+  q('#process').classList.remove('process-show');
+  setTimeout(() => {
+    q('#bottommenu').classList.add('move-up');
+    q('#icon2').classList.add('move-down');
+  }, 1000);
+}
+
+[...document.querySelectorAll('.main-tree')].forEach(e => e.onclick = () => {
+  e.classList.toggle('active');
+});
+</script>
+</body>
+</html>
