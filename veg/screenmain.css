@@ -22,7 +22,7 @@
   background: white;
   box-shadow: 0 0 12px 0px #aaa;
   cursor: pointer;
-  z-index: 1;
+  z-index: 2;
 }
 #bottommenu.move-up {
   bottom: 0px;
@@ -33,16 +33,23 @@
 .menu-box {
   position: absolute;
   left: 0;
-  width: 35%;
+  width: 18%;
   height: 64px;
   overflow: hidden;
   background: none;
   cursor: pointer;
+  border-right: solid 1px lightgray;
 }
-
-.menu-box:nth-of-type(2) {
+.menu-box:nth-of-type(3) {
+  left: 18%;
+}
+.menu-box:nth-of-type(4) {
   left: 64%;
 }
+.menu-box:nth-of-type(5) {
+  left: 82%;
+}
+
 
 .menu-box img {
   width: 58px;
@@ -76,21 +83,32 @@
   height: 800px;
 }
 
+.main-tree.active .main-img {
+  width: 416px;
+  height: 240px;
+}
+
 .main-img {
   margin-left: 16px;
   margin-top: 16px;
-  width: 156px;
+  width: 200px;
   height: 146px;
   display: inline-block;
+  margin-bottom: 16px;
+  transition: ease-in-out .2s all;
 }
 
 .main-label {
   display: inline-block;
-  height: 146px;
+  width: 192px;
+  height: 130px;
   vertical-align: top;
   margin-top: 32px;
-  margin-left: 52px;
+  margin-left: 16px;
   text-align: center;
+  box-sizing: border-box;
+  padding-top: 32px;
+  transition: ease-in-out .2s all;
 }
 .main-text1, .main-text2 {
   font-size: 32px;
@@ -167,9 +185,39 @@
 	background-color: #f1c40f;
 }
 
+.finnish {
+  width: 256px;
+  height: 96px;
+  box-sizing: border-box;
+  background: #2ecc71;
+  font-size: 32px;
+  text-align: center;
+  padding-top: 28px;
+  position: relative;
+  left: calc(50% - 128px);
+  border-radius: 12px;
+  margin-top: 32px;
+  color: white;
+}
+
+.eradicate {
+  width: 128px;
+  height: 64px;
+  background: #e74c3c;
+  position: relative;
+  left: calc(50% - 64px);
+  box-sizing: border-box;
+  text-align: center;
+  padding-top: 16px;
+  font-size: 24px;
+  border-radius: 6px;
+  top: 32px;
+  color: #c0392b;
+}
+
 #fbimg {
   width: 100%;
-  height: calc(110% + 64px);
+  height: calc(110% + 121px);
 }
 
 #fbback {

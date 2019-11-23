@@ -70,7 +70,7 @@ body {
     transition: ease-in-out .5s all;
     opacity: 0;
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
   }
   #dkrt {
     position: absolute;

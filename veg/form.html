@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="screen6.css">
 <link rel="stylesheet" href="screen7.css">
 <link rel="stylesheet" href="screenmain.css">
+<link rel="stylesheet" href="screenhome.css">
 <link href="https://fonts.googleapis.com/css?family=Calistoga&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
 <style>
@@ -67,7 +68,11 @@
       <div id="screen5" class="screens">
         <div id="place-title">Khu vực trồng cây của bạn là</div>
         <div class="places">
-          <img src="hallway_small.jpg" class="place-img">
+          <div class="img-container">
+            <img src="hallway_small.jpg" class="place-img">
+            <img src="hallway_medium.jpg" class="place-img not-shown">
+            <img src="hallway_big.jpg" class="place-img not-shown">
+          </div>
           <div class="place-label">
             <div class="place-text">Hành lang</div>
             <div class="place-size">S</div>
@@ -83,7 +88,9 @@
           </div>
         </div>
         <div class="places">
-          <img src="terrace_small.jpg" class="place-img">
+          <div class="img-container">
+            <img src="terrace_small.jpg" class="place-img">
+          </div>
           <div class="place-label">
             <div class="place-text">Sân thượng</div>
             <div class="place-size">S</div>
@@ -99,7 +106,9 @@
           </div>
         </div>
         <div class="places">
-          <img src="balcony_small.jpg" class="place-img">
+          <div class="img-container">
+            <img src="balcony_small.jpg" class="place-img">
+          </div>
           <div class="place-label">
             <div class="place-text">Ban công</div>
             <div class="place-size">S</div>
@@ -115,7 +124,9 @@
           </div>
         </div>
         <div class="places">
-          <img src="garden_small.jpg" class="place-img">
+          <div class="img-container">
+            <img src="garden_small.jpg" class="place-img">
+          </div>
           <div class="place-label">
             <div class="place-text">Sân nhà</div>
             <div class="place-size">S</div>
@@ -135,25 +146,22 @@
       <div id="screen6" class="screens">
         <div id="place-title">Gợi ý cây trồng phù hợp</div>
         <div class="marginal">
-          <div class="vegies" name="Rau dền" level="Dễ" image="terrace_small.jpg">
-            <img src="terrace_small.jpg" class="vegie-img">
+          <div class="vegies" name="Rau dền" image="rauden.jpg">
+            <img src="rauden.jpg" class="vegie-img">
             <div class="vegie-label">
               <div class="vegie-text1">Rau dền</div>
-              <div class="vegie-text2">Mức độ: Dễ</div>
             </div>
           </div>
-          <div class="vegies" name="Cải mầm" level="Dễ" image="terrace_small.jpg">
-            <img src="terrace_small.jpg" class="vegie-img">
+          <div class="vegies" name="Cải mầm" image="caimam.jpg">
+            <img src="caimam.jpg" class="vegie-img">
             <div class="vegie-label">
               <div class="vegie-text1">Cải mầm</div>
-              <div class="vegie-text2">Mức độ: Dễ</div>
             </div>
           </div>
-          <div class="vegies" name="Cải ngọt" level="Khó" image="terrace_small.jpg">
-            <img src="terrace_small.jpg" class="vegie-img">
+          <div class="vegies" name="Cải ngọt" image="caingot.jpg">
+            <img src="caingot.jpg" class="vegie-img">
             <div class="vegie-label">
               <div class="vegie-text1">Cải ngọt</div>
-              <div class="vegie-text2">Mức độ: Khó</div>
             </div>
           </div>
         </div>
@@ -214,6 +222,18 @@
         <img src="fb.jpg" id="fbimg">
         <div id="fbback"></div>
       </div>
+      <div id="screenhome" class="screens">
+        <div id="chaoten">
+          <div id="xinchaophay">Xin chào,</div>
+          <div id="xinchaoten">Quang Nguyên</div>
+        </div>
+        <div id="ngay">Hôm nay là chủ nhật, 24 tháng 11</div>
+        <div class="titles">Nhiệm vụ</div>
+        <div id="nhiemvu">Hiện không có nhiệm vụ nào cho bạn.</div>
+        <div class="titles">Mách bạn</div>
+        <div class="tip">Cách làm phân bón tại nhà</div>
+        <div class="tip">Cửa hàng nông nghiệp xanh</div>
+      </div>
       <div id="process">
         <div class="pdot"></div>
         <div class="pdot"></div>
@@ -224,10 +244,16 @@
       <div id="bottommenu">
         <div id="menu-round"></div>
         <div class="menu-box">
-          <img src="setting.png" class="menu-icon">
+          <img src="home.png" class="menu-icon">
         </div>
         <div class="menu-box">
           <img src="global.png" class="menu-icon">
+        </div>
+        <div class="menu-box">
+          <img src="award.png" class="menu-icon">
+        </div>
+        <div class="menu-box">
+          <img src="setting.png" class="menu-icon">
         </div>
       </div>
       <div id="icon2"></div>
@@ -268,8 +294,9 @@ q('#lennext').onclick = () => {
 q('#lenskip').onclick = () => {
   q('#screen4').classList.remove('move-in');
   q('#screen4').classList.add('move-away');
-  q('#screenmain').classList.add('move-in');
+  q('#screenhome').classList.add('move-in');
   q('#process').classList.remove('process-show');
+  q('#xinchaoten').innerHTML = q('#ten').value;
   setTimeout(() => {
     q('#bottommenu').classList.add('move-up');
     q('#icon2').classList.add('move-down');
@@ -318,10 +345,6 @@ q('#vegienext').onclick = () => {
   q('#screen7').classList.add('move-in');
   q('.pdot:nth-of-type(5)').classList.add('filled');
 }
-
-[...document.querySelectorAll('.main-tree')].forEach(e => e.onclick = () => {
-  e.classList.toggle('active');
-});
   
 [...document.querySelectorAll('.quantity-up')].forEach(e => e.onclick = () => {
   e.parentElement.querySelector('input').value++;
@@ -341,7 +364,8 @@ q('#screen7 #vegieback').onclick = () => {
 q('#screen7 #vegienext').onclick = () => {
   q('#screen7').classList.remove('move-in');
   q('#screen7').classList.add('move-away');
-  q('#screenmain').classList.add('move-in');
+  q('#screenhome').classList.add('move-in');
+  q('#xinchaoten').innerHTML = q('#ten').value;
   q('#process').classList.remove('process-show');
   setTimeout(() => {
     q('#bottommenu').classList.add('move-up');
@@ -354,16 +378,31 @@ q('#screen7 #vegienext').onclick = () => {
       diva.classList.add('main-tree');
       diva.innerHTML = mainTree(
         e.attributes.image.value,
-        e.attributes.name.value,
-        e.attributes.level.value
+        e.attributes.name.value
       );
-      diva.addEventListener('click', () => diva.classList.toggle('active'));
+      diva.addEventListener('click', () => {
+        if (diva.classList.contains('active')) {
+          diva.classList.remove('active');
+          setTimeout(() => {
+            diva.querySelector('.main-label').style.display = '';
+            diva.querySelector('.main-label').classList.remove('not-shown');
+          }, 300);
+        } else {
+          diva.querySelector('.main-label').classList.add('not-shown');
+          setTimeout(() => {
+            diva.classList.add('active');
+            diva.querySelector('.main-label').style.display = 'none';
+          }, 300);
+        }
+      });
       q('#screenmain .marginal').appendChild(diva);
     }
   })
 };
 
 document.querySelectorAll('.menu-box')[1].onclick = () => {
+  q('#screenhome').classList.remove('move-in');
+  q('#screenhome').classList.add('move-away');
   q('#screenmain').classList.remove('move-in');
   q('#screenmain').classList.add('move-away');
   q('#screenfb').classList.remove('move-away-right');
@@ -372,20 +411,39 @@ document.querySelectorAll('.menu-box')[1].onclick = () => {
   q('#icon2').classList.remove('icon-show');
 };
 
+document.querySelectorAll('.menu-box')[0].onclick = () => {
+  q('#screenmain').classList.remove('move-in');
+  q('#screenmain').classList.add('move-away');
+  q('#screenhome').classList.remove('move-away-right');
+  q('#screenhome').classList.add('move-in');
+}
+
+q('#menu-round').onclick = () => {
+  q('#screenhome').classList.remove('move-in');
+  q('#screenhome').classList.add('move-away-right');
+  q('#screenmain').classList.add('move-in');
+};
+
 q('#fbback').onclick = () => {
   q('#screenfb').classList.remove('move-in');
   q('#screenfb').classList.add('move-away-right');
-  q('#screenmain').classList.add('move-in');
+  q('#screenhome').classList.remove('move-away-right');
+  q('#screenhome').classList.add('move-in');
   q('#bottommenu').classList.add('move-up');
   q('#icon2').classList.add('icon-show');
 }
 
-const mainTree = (pic,name,level) => `
+document.querySelectorAll('.slider')[0].oninput = function () {
+  [...this.parentElement.querySelectorAll('img')].forEach(e => e.classList.add('not-shown'));
+  this.parentElement.querySelectorAll('img')[this.value - 1].classList.remove('not-shown');
+}
+
+const mainTree = (pic,name) => `
   <img src="${pic}" class="main-img">
   <div class="main-label">
     <div class="main-text1">${name}</div>
-    <div class="main-text2">Mức độ: ${level}</div>
   </div>
+  <br>
   <img src="dirt.png" class="demon">
   <img src="veg2.png" class="demon">
   <div class="process-bar stripes">
@@ -393,7 +451,7 @@ const mainTree = (pic,name,level) => `
   </div>
   <div class="instruct">
     Nguyên liệu
-    Cách làm
+    <br>Cách làm
   </div>
   <div class="finnish">Hoàn thành</div>
   <div class="eradicate">Huỷ cây</div>`;
