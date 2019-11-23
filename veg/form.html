@@ -135,24 +135,24 @@
       <div id="screen6" class="screens">
         <div id="place-title">Gợi ý cây trồng phù hợp</div>
         <div class="marginal">
-          <div class="vegies">
+          <div class="vegies" name="Rau dền" level="Dễ" image="terrace_small.jpg">
             <img src="terrace_small.jpg" class="vegie-img">
             <div class="vegie-label">
-              <div class="vegie-text1">Cây cọ</div>
+              <div class="vegie-text1">Rau dền</div>
               <div class="vegie-text2">Mức độ: Dễ</div>
             </div>
           </div>
-          <div class="vegies">
+          <div class="vegies" name="Cải mầm" level="Dễ" image="terrace_small.jpg">
             <img src="terrace_small.jpg" class="vegie-img">
             <div class="vegie-label">
-              <div class="vegie-text1">Cây cỏ</div>
+              <div class="vegie-text1">Cải mầm</div>
               <div class="vegie-text2">Mức độ: Dễ</div>
             </div>
           </div>
-          <div class="vegies">
+          <div class="vegies" name="Cải ngọt" level="Khó" image="terrace_small.jpg">
             <img src="terrace_small.jpg" class="vegie-img">
             <div class="vegie-label">
-              <div class="vegie-text1">Cây cần</div>
+              <div class="vegie-text1">Cải ngọt</div>
               <div class="vegie-text2">Mức độ: Khó</div>
             </div>
           </div>
@@ -188,11 +188,11 @@
       </div>
       <div id="screenmain" class="screens">
         <div class="marginal">
-          <div class="main-tree">
+          <!--<div class="main-tree">
             <img src="terrace_small.jpg" class="main-img">
             <div class="main-label">
-              <div class="main-text1">Cây cọ</div>
-              <div class="main-text2">Mức độ: Dễ</div>
+              <div class="main-text1">Example</div>
+              <div class="main-text2">Mức độ: Ex</div>
             </div>
             <img src="dirt.png" class="demon">
             <img src="veg2.png" class="demon">
@@ -205,43 +205,9 @@
               <br>Hai trang giấy
               <br>Ba quả đồi
             </div>
-          </div>
-          <div class="main-tree">
-            <img src="terrace_small.jpg" class="main-img">
-            <div class="main-label">
-              <div class="main-text1">Cây cọ</div>
-              <div class="main-text2">Mức độ: Dễ</div>
-            </div>
-            <img src="dirt.png" class="demon">
-            <img src="veg2.png" class="demon">
-            <div class="process-bar stripes">
-              <span class="process-bar-inner">45%</span>
-            </div>
-            <div class="instruct">
-              Bước 1: Nguyên liệu
-              <br>Một hộp màu
-              <br>Hai trang giấy
-              <br>Ba quả đồi
-            </div>
-          </div>
-          <div class="main-tree">
-            <img src="terrace_small.jpg" class="main-img">
-            <div class="main-label">
-              <div class="main-text1">Cây cọ</div>
-              <div class="main-text2">Mức độ: Dễ</div>
-            </div>
-            <img src="dirt.png" class="demon">
-            <img src="veg2.png" class="demon">
-            <div class="process-bar stripes">
-              <span class="process-bar-inner">45%</span>
-            </div>
-            <div class="instruct">
-              Bước 1: Nguyên liệu
-              <br>Một hộp màu
-              <br>Hai trang giấy
-              <br>Ba quả đồi
-            </div>
-          </div>
+            <div class="finnish">Hoàn thành</div>
+            <div class="eradicate">Huỷ cây</div>
+          </div>-->
         </div>
       </div>
       <div id="screenfb" class="screens">
@@ -299,6 +265,17 @@ q('#lennext').onclick = () => {
   q('#screen5').classList.add('move-in');
   q('.pdot:nth-of-type(3)').classList.add('filled');
 }
+q('#lenskip').onclick = () => {
+  q('#screen4').classList.remove('move-in');
+  q('#screen4').classList.add('move-away');
+  q('#screenmain').classList.add('move-in');
+  q('#process').classList.remove('process-show');
+  setTimeout(() => {
+    q('#bottommenu').classList.add('move-up');
+    q('#icon2').classList.add('move-down');
+    setTimeout(q('#screenmain .marginal').classList.add('process-show'), 2000);
+  }, 1000);
+};
 [...document.querySelectorAll('.places')].forEach(e => e.onclick = () => {
   e.classList.toggle('big-place');
 });
@@ -307,7 +284,7 @@ q('#lennext').onclick = () => {
   e.oninput = () => {
     e.parentElement.querySelector('.place-size').innerHTML = ['S', 'M', 'L'][e.value - 1];
   };
-  e.onclick = f => {
+  e.onclick = e.ontouchstart = f => {
     e.parentNode.classList.add('place-chosen');
   };
 });
@@ -371,6 +348,19 @@ q('#screen7 #vegienext').onclick = () => {
     q('#icon2').classList.add('move-down');
     setTimeout(q('#screenmain .marginal').classList.add('process-show'), 2000);
   }, 1000);
+  [...document.querySelectorAll('#screen6 .vegies')].forEach(e => {
+    if (e.classList.contains('vegie-chosen')) {
+      let diva = document.createElement('div');
+      diva.classList.add('main-tree');
+      diva.innerHTML = mainTree(
+        e.attributes.image.value,
+        e.attributes.name.value,
+        e.attributes.level.value
+      );
+      diva.addEventListener('click', () => diva.classList.toggle('active'));
+      q('#screenmain .marginal').appendChild(diva);
+    }
+  })
 };
 
 document.querySelectorAll('.menu-box')[1].onclick = () => {
@@ -389,6 +379,26 @@ q('#fbback').onclick = () => {
   q('#bottommenu').classList.add('move-up');
   q('#icon2').classList.add('icon-show');
 }
+
+const mainTree = (pic,name,level) => `
+  <img src="${pic}" class="main-img">
+  <div class="main-label">
+    <div class="main-text1">${name}</div>
+    <div class="main-text2">Mức độ: ${level}</div>
+  </div>
+  <img src="dirt.png" class="demon">
+  <img src="veg2.png" class="demon">
+  <div class="process-bar stripes">
+    <span class="process-bar-inner">45%</span>
+  </div>
+  <div class="instruct">
+    Bước 1: Nguyên liệu
+    <br>Một hộp màu
+    <br>Hai trang giấy
+    <br>Ba quả đồi
+  </div>
+  <div class="finnish">Hoàn thành</div>
+  <div class="eradicate">Huỷ cây</div>`;
 </script>
 </body>
 </html>
