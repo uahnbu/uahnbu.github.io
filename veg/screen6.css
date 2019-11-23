@@ -21,20 +21,23 @@
 .vegie-img {
   margin-left: 16px;
   margin-top: 16px;
-  width: 156px;
+  width: 200px;
   height: 146px;
   display: inline-block;
 }
 
 .vegie-label {
   display: inline-block;
-  height: 146px;
+  height: 130px;
+  width: 192px;
+  box-sizing: border-box;
   vertical-align: top;
   margin-top: 32px;
-  margin-left: 52px;
+  margin-left: 16px;
   text-align: center;
+  padding-top: 32px;
 }
-.vegie-text1, .vegie-text2 {
+.vegie-text1 {
   font-size: 32px;
   margin-top: 16px;
 }
