@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="container">
+  <div id="story"></div>
+  <input type="number">
+  <div id="results"><span></span></div>
+</div>
+<script>
+let words;
+(async () => {
+  let data = await fetch('Viet74K.txt');
+  let text = await data.text();
+  words = text.split('\n');
+  console.log('Data loaded');
+})();
+const vowels = [
+  'a', 'á', 'à', 'ả', 'ã', 'ạ',
+  'ă', 'ắ', 'ằ', 'ẳ', 'ẵ', 'ặ',
+  'â', 'ấ', 'ầ', 'ẩ', 'ẫ', 'ậ',
+  'e', 'é', 'è', 'ẻ', 'ẽ', 'ẹ',
+  'ê', 'ế', 'ề', 'ể', 'ễ', 'ệ',
+  'i', 'í', 'ì', 'ỉ', 'ĩ', 'ị',
+  'o', 'ó', 'ò', 'ỏ', 'õ', 'ọ',
+  'ô', 'ố', 'ồ', 'ổ', 'ỗ', 'ộ',
+  'ơ', 'ớ', 'ờ', 'ở', 'ỡ', 'ợ',
+  'u', 'ú', 'ù', 'ủ', 'ũ', 'ụ',
+  'ư', 'ứ', 'ừ', 'ử', 'ữ', 'ự',
+  'y', 'ý', 'ỳ', 'ỷ', 'ỹ', 'ỵ'
+];
+const link = (axis, ...addents) => {
+  const position = vowels.indexOf(addents[axis]);
+  for (let i = position; i <= position + 5 ; i++) {
+    let polyphthong = [...addents];
+    polyphthong[axis] = vowels[i];
+    vowels.push(polyphthong.join(''));
+  }
+}
+link(0, 'a', 'i');
+link(0, 'a', 'o');
+link(0, 'a', 'u');
+link(0, 'â', 'u');
+link(0, 'e', 'o');
+link(0, 'ê', 'u');
+link(0, 'i', 'a');
+link(1, 'i', 'ê');
+link(1, 'i', 'ê', 'u');
+link(1, 'o', 'a');
+link(1, 'o', 'a', 'i');
+link(1, 'o', 'ă');
+link(1, 'o', 'e');
+link(0, 'o', 'i');
+link(0, 'ô', 'i');
+link(1, 'u', 'a');
+link(1, 'u', 'â');
+link(1, 'u', 'ê');
+link(0, 'u', 'i');
+link(1, 'u', 'ô');
+link(0, 'ư', 'a');
+link(1, 'ư', 'ơ');
+link(1, 'ư', 'ơ', 'i');
+link(1, 'uy', 'ê');
+vowels.push('uỷu', 'uya');
+const vowelsRegExp = '(' + vowels.join('|') + ')';
+const consonants = [
+  ['k', 'kh', ''],
+  ['v', 'ph', 'c'],
+  ['h', 'th', 'n'],
+  ['b', 'm'],
+  ['qu', 'nh'],
+  ['l', 'ch'],
+  ['s', 'x', 'p'],
+  ['d', 'đ', 't'],
+  ['g', 'gi', 'ng'],
+  ['r', 'tr', 'y', 'ý', 'ỳ', 'ỷ', 'ỹ', 'ỵ']
+];
+const consonantsRegExp = consonants.map(digit => '(' + digit.join('|') + ')');  
+
+const digitsToWords = digits => {
+  let string = '^';
+  for (let i = 0; i < digits.length; i++) {
+    string += consonantsRegExp[digits[i]];
+    string += i % 2 ? (i === digits.length - 1 ? '' : ' ') : vowelsRegExp
+  }
+  string += '$';
+  let regexp = new RegExp(string);
+  return words.filter(word => regexp.test(word));
+};
+
+document.querySelector('input').oninput = function () {
+  const diva = document.querySelector('#results');
+  const words = digitsToWords(this.value);
+  diva.innerHTML = '';
+  if (!words.length) {words.push(''); }
+  for (let word of words) {
+    const span = document.createElement('span');
+    span.innerHTML = word;
+    span.onclick = function () {
+      const story = document.querySelector('#story');
+      const tag = document.createElement('div');
+      tag.classList.add('tag');
+      tag.innerHTML = word;
+      tag.onclick = function () {
+        story.removeChild(this);
+      }
+      story.appendChild(tag);
+    };
+    diva.appendChild(span);
+  }
+};
+</script>
+</body>
+</html>
