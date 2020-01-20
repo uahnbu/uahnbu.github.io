@@ -51,6 +51,18 @@ body, html {
   cursor: pointer;
 }
 
+tag:before {
+  content: attr(beef);
+}
+
+.tag:hover:before {
+  content: '';
+}
+
+.tag:hover:after {
+  content: attr(afft);
+}
+
 input {
   width: 80%;
   height: 6vh;
