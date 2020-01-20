@@ -23,10 +23,6 @@ body, html {
   overflow: auto;
 }
 
-#story:after {
-  content: '';
-}
-
 #story::-webkit-scrollbar {
   width: 1%;
 }
@@ -49,9 +45,10 @@ body, html {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  user-select: none;
 }
 
-tag:before {
+.tag:before {
   content: attr(beef);
 }
 
