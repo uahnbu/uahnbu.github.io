@@ -90,9 +90,9 @@ const digitsToWords = digits => {
   return words.filter(word => regexp.test(word));
 };
 
-document.querySelector('input').oninput = function () {
+document.querySelector('input').oninput = e =>  {
   const diva = document.querySelector('#results');
-  const words = digitsToWords(this.value);
+  const words = digitsToWords(e.target.value);
   diva.innerHTML = '';
   if (!words.length) {words.push(''); }
   for (let word of words) {
