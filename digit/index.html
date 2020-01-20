@@ -102,7 +102,8 @@ document.querySelector('input').oninput = function () {
       const story = document.querySelector('#story');
       const tag = document.createElement('div');
       tag.classList.add('tag');
-      tag.innerHTML = word;
+      tag.setAttribute('beef', word);
+      tag.setAttribute('afft', e.target.value);
       tag.onclick = function () {
         story.removeChild(this);
       }
