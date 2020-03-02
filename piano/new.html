@@ -116,7 +116,7 @@ body {
 .black:last-child {
   margin-right: 2.5vw;
 }
-.black.hidden {
+.black.blank {
   visibility: hidden;
 }
 .whiteActive {
@@ -398,7 +398,7 @@ const addKey = (key, side, color, note) => {
     div.onmouseup = () => div.classList.remove('whiteActive');
   } else {
     div.classList.add('black');
-    if (key === ' ') {div.classList.add('hidden'); }
+    if (key === ' ') {div.classList.add('blank'); }
     div.onmousedown = () => {
       playNote(keys[side].octave * 12 + note);
       div.classList.add('blackActive');
