@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#keyboards-container {
+  margin-top: 1vh;
+  width: 90%;
+  height: 50vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.keyboard {
+  height: 100%;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: #000;
+  box-shadow: 6px 6px 32px -16px #000,
+              inset 0 24px 32px -24px #fff,
+              inset 0 -12px 24px -16px #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.screen {
+  margin-top: 5vh;
+  width: 15vw;
+  height: 10vh;
+  background: #7f8c8d;
+  border-radius: 6px;
+  box-shadow: inset 0 0 20px 0 #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bdc3c7;
+  font-size: 2.5vw;
+  font-family: Courier;
+  font-weight: bold;
+  overflow: hidden;
+}
+.pad {
+  margin-top: auto;
+  width: 98%;
+  height: 7%;
+  background: #000;
+  box-shadow: inset 0 16px 6px -8px #222,
+              inset 0 -16px 6px -8px #222;
+}
+.keys-container {
+  margin-bottom: 2vh;
+  width: 98%;
+  height: 50%;
+}
+.white-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.black-container {
+  position: relative;
+  top: -100%;
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.white, .black {
+  box-sizing: border-box;
+  font-family: Consolas;
+  font-size: 2vw;
+  cursor: pointer;
+  user-select: none;
+  transition: all .1s ease-out;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1vh;
+}
+.white {
+  width: 4vw;
+  height: 100%;
+  border-left: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  border-radius: 0 0 6px 6px;
+  box-shadow: -1px 0 0 rgba(255,255,255,.8) inset,
+              0 0 5px #ccc inset,
+              0 0 3px rgba(0,0,0,.2);
+  background: linear-gradient(to bottom,#eee 0%,#fff 100%);
+  color: #000;
+  font-weight: bold;
+  pointer-events: auto;
+}
+.black {
+  width: 3vw;
+  height: 100%;
+  border: 1px solid #000;
+  border-radius: 0 0 3px 3px;
+  box-shadow: -1px -1px 2px rgba(255,255,255,.2) inset,
+              0 -5px 2px 3px rgba(0,0,0,.6) inset,
+              0 2px 4px rgba(0,0,0,.5);
+  background: linear-gradient(45deg,#222 0%,#555 100%);
+  color: #fff;
+  pointer-events: all;
+}
+.black:first-child {
+  margin-left: 2.5vw;
+}
+.black:last-child {
+  margin-right: 2.5vw;
+}
+.black.hidden {
+  visibility: hidden;
+}
+.whiteActive {
+  box-shadow: 2px 0 3px rgba(0,0,0,.1) inset, 
+              -5px 5px 20px rgba(0,0,0,.2) inset,
+              0 0 3px rgba(0,0,0,.2);
+  background: linear-gradient(to bottom,#fff 0%,#e9e9e9 100%);
+}
+.blackActive {
+  box-shadow: -1px -1px 2px rgba(255,255,255,.2) inset,
+              0 -2px 2px 3px rgba(0,0,0,.6) inset,
+              0 1px 2px rgba(0,0,0,.5);
+  background: linear-gradient(to right,#444 0%,#222 100%);
+  color: #48dbfb;
+}
+#configs-container {
+  margin-top: 3vh;
+  width: 90%;
+  height: 5vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#tempo {
+  width: 5%;
+  height: 100%;
+  padding-left: 2%;
+  border: none;
+  border-radius: 16px;
+  box-sizing: border-box;
+  color: #2ee590;
+  font-family: 'Roboto', sans-serif;
+  font-size: 2vh;
+  font-weight: bold;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+#play, #record, #save {
+  width: 30%;
+  height: 100%;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+  font-size: 2vh;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+#play {
+  height: 100%;
+  border: none;
+  border-radius: 45px;
+}
+#play:hover {
+  background: #2ee59D;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+}
+#play.stop {
+  background: #bdc3c7;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  color: #ecf0f1;
+}
+#record.active {
+  background: #e74c3c;
+  color: #ecf0f1;
+}
+#save:hover {
+  background: #2ee59D;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+}
+#sheet-container {
+  position: relative;
+  margin-top: 3vh;
+  width: 90%;
+  height: auto;
+  max-height: 35vh;
+  border-radius: 12px;
+  box-sizing: border-box;
+  box-shadow: 6px 6px 32px -16px #000,
+              inset 0 24px 32px -24px #fff,
+              inset 0 -12px 24px -16px #fff;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+#sheet {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  font-family: monospace;
+  font-size: 2em;
+  user-select: none;
+}
+#sheet .note-box {
+  display: inline-block;
+  height: 100%;
+  width: auto;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: monospace;
+  font-size: 32px;
+  cursor: pointer;
+}
+#sheet .note-box.select {
+  background: #48dbfb;
+}
+#sheet .note-box.active {
+  background: #2ee59D;
+}
+.note-box .rest {
+  float: right;
+  border: solid 1px #7f8c8d;
+  border-radius: 4px;
+  color: #7f8c8d;
+  font-size: .5em;
+  text-align: center;
+}
+#nav-left, #nav-right, #nav-question {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  height: 32px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+#nav-right {
+  right: 32px;
+}
+#nav-left {
+  right: 64px;
+}
+#cheatsheet {
+  position: absolute;
+  top: 10%;
+  width: 90%;
+  height: 80vh;
+  border-radius: 26px;
+  background: #ecf0f1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.95;
+  overflow: auto;
+  cursor: pointer;
+  transition: .5s;
+}
+#cheatsheet.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.command {
+  margin-top: 3vh;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: #7f8c8d;
+  font-size: 2vw;
+  font-family: Helvetica;
+}
+.command span{
+  width: 40%;
+  text-align: center;
+}
+.button-container {
+  width: 60%; 
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.button {
+  margin-right: 5px;
+  padding-left: 5%;
+  padding-right: 5%;
+  height: 5vw;
+  box-sizing: border-box;
+  border: solid 3px #7f8c8d;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+<input type="hidden" value="A20A32C4#2E42C4#2A32C4#2E42C4#2A32C4#2E42C4#2A32C4#2E42C4#2G2#0G3#2C4#2E42C4#2G3#2C4#2E42C4#2G3#2C4#2E42C4#2G3#2C4#2E42C4#2F2#0F3#2C4#2F4#2C4#2F3#2C4#2F4#2C4#2F3#2C4#2F4#2C4#2F3#2C4#2F4#2C4#2D20A32D42F4#2D42A32D42F4#2D42A32D42F4#2D42A30E52D42F4#2D42A20A32C4#2E40C5#2C4#2A32C4#2E42C4#2A32C4#2E42C4#2A30B42C4#0A42E42C4#2G2#0G3#2C4#2E42C4#2G3#0E52C4#0E52E42C4#0C5#2G3#2C4#2E42C4#2G3#0B42C4#0A42E42C4#2F2#0F3#2C4#2F4#2C4#2F3#0E52C4#2F4#0E52C4#0C5#2F3#2C4#2F4#2C4#2F3#0B42C4#0A42F4#2C4#2D20A32D42F4#2D42A30E52D40E52F4#2D40C5#2A32D42F4#2D40B42A32D42F4#2D40A42A20A32C4#2E42C4#2A30E52C4#2E42C4#0C5#2A32C4#2E42C4#2A30B42C4#0A42E42C4#2G2#0G3#0F5#2C4#2E42C4#2G3#0C5#2C4#2E42C4#2G3#0A42C4#2E42C4#2G3#2C4#0B42E42C4#0B42F2#0F3#0C5#2C4#2F4#2C4#0A42F3#2C4#2F4#2C4#2F3#2C4#2F4#2C4#2F3#2C4#0F4#2F4#2C4#0F4#2D20A30B42D40A42F4#0B42D42A32D42F4#0C5#2D42A32D42F4#2D42A32D42F4#2D42A20A30E52C4#2E42C4#2A30C5#2C4#2E42C4#2A32C4#2E42C4#2A30F5#2C4#0E52E40E52C4#0E52G2#0G3#2C4#2E42C4#0E52G3#0C5#2C4#2E42C4#2G3#2C4#2E42C4#2G3#0C5#2C4#0C5#2E42C4#2F2#0F3#0F4#2C4#2F4#2C4#0A42F3#2C4#2F4#2C4#0F4#2F3#2C4#2F4#2C4#2F3#2C4#0A42F4#2C4#2D20A30B42D42F4#2D42A32D40B42F4#0A42D40B42A32D42F4#0C5#2D42A32D42F4#2D40B42E20F3#0C5#2G3#0C5#2E40C5#2G3#0C5#2F3#2G3#0B42E40B42G3#0A42F2#0F3#0B42A32E40B42A30A42F3#0B42A30A42E40A42A30A42D20F3#2A32D40B42A30A42F3#0B42A30A42D40B42A32F3#2A30A42D40B42A30A42F3#0B42A30A42D40A42A30A42E20F3#0B42G3#0C5#2E40C5#2G3#0C5#2F3#0C5#2G3#2E42G3#0B42F2#0F3#0B42A30A42E40B42A30A42F3#0B42A30A42E40B42A30C5#2D20F3#0F4#2A32F4#2A32F3#2A30A42F4#0B42A30A42F3#0B42G3#2E42G3#2F3#0C5#2G3#2E42G3#2F3#2A32F4#2A32F3#2A32F4#2A32A20A32C4#0A52A40A52C4#0A52A32C4#0A52A42C4#0G5#2E20G3#2B32G4#2B32G3#0G5#2B30G5#2G4#2B30A52F2#0A32C4#0F5#2A42C4#2A32C4#2A42C4#2D20A30F5#2D42A42D42A30F5#2D42A40G5#2D42A20A30A52C4#0E52A42C4#0E52A32C4#0A52A42C4#0G5#2E20G3#2B32G4#2B32G3#2B30A52G4#2B30F5#2F2#0A30F5#2C4#2A42C4#2A32C4#2A42C4#2D20A30A52D42A42D42A30C6#2D42A40C6#2D42A20A30C6#2C4#0C6#2A42C4#2A32C4#0E62A42C4#0C6#2E20G3#2B32G4#2B32G3#0D62B30C6#2G4#0B52B30A52F2#0A30C6#2C4#2A40C6#2C4#2A32C4#0C6#2A42C4#2D20A30B52A52D40F5#2A42D42A30A52D40A52A42D40A52A20A30A52C4#2A42C4#0E52A30E52C4#2A42C4#0E52E20G3#0F5#2B30E52G4#2B30E52G3#0F5#2B32G4#2B30F5#2F2#0A30F5#2C4#2A42C4#2A32C4#2A42C4#2D20A30F5#2D42A42D42A30A52D42A52A42A52D42A20A30A52C4#2A42C4#0E52A30E52C4#2A42C4#0E52E20G3#0E52B30D52G4#2B30C5#2G3#0C5#2B30B42G4#2B30A42F2#0A30A42C4#2A42C4#2A32C4#2A42C4#2D20A30C5#2D42A42D42A32D42A42D42A32D42F4#2D42A32D42F4#2D42">
+<div id="keyboards-container">
+  <div class="keyboard left">
+    <div class="screen">C2-B2</div>
+    <div class="pad"></div>
+    <div class="keys-container">
+      <div class="white-container"></div>
+      <div class="black-container"></div>
+    </div>
+  </div>
+  <div class="keyboard right">
+    <div class="screen">C4-B5</div>
+    <div class="pad"></div>
+    <div class="keys-container">
+      <div class="white-container"></div>
+      <div class="black-container"></div>
+    </div>
+  </div>
+</div>
+<div id="configs-container">
+  <input type="number" id="tempo" value=5 min=0>
+  <button id="play">▶ Play</button>
+  <button id="record" class="active">● Record</button>
+  <button id="save">Save / Load</button>
+</div>
+<div id="sheet-container">
+  <div id="sheet"></div>
+  <div id="nav-left">&lt;</div>
+  <div id="nav-right">></div>
+  <div id="nav-question">?</div>
+</div>
+<div id="cheatsheet" class="hidden">
+</div>
+<script src="notes.js"></script>
+<script>
+const keys = {
+  left: {
+    codes: [90,83,88,68,67,0,86,71,66,72,78,74,77],
+    labels: 'ZSXDC VGBHNJM'.split(''),
+    elements: Array(13),
+    octave: 0
+  },
+  right: {
+    codes: [9,49,81,50,87,0,69,52,82,53,84,54,89,0,85,56,73,57,79,0,80,189,219,187,221,8,220],
+    labels: ['TAB'].concat('1Q2W E4R5T6Y U8I9O P-[=]'.split(''), 'BS', '\\'),
+    elements: Array(27),
+    octave: 2
+  },
+  others: [75,76,186,188,190]
+};
+
+const noteLabels = [];
+for (let i = 2; i <= 6; i++) {
+  ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'].forEach(note => {
+    noteLabels.push(note[1] === '#' ? note[0] + i + '#' : note + i);
+  });
+}
+noteLabels.push('C7');
+
+const sheet = document.querySelector('#sheet');
+let curr = -1;
+
+const playNote = (i, playing) => {
+  if (i > 60) {return; }
+  let audio = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAF1RTU0UAAAANAAADTGF2ZjUxLjEyLjEA//uUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAAcAAA' + notes[i]);
+  audio.onended = () => audio.remove();
+  audio.play();
+  if (!playing && document.querySelector('#record').classList.contains('active')) {addNote(i); }
+};
+
+const addKey = (key, side, color, note) => {
+  let div = document.createElement('div');
+  div.innerHTML = key;
+  if (color === 'white') {
+    div.classList.add('white');
+    div.onmousedown = () => {
+      playNote(keys[side].octave * 12 + note);
+      div.classList.add('whiteActive');
+    };
+    div.onmouseup = () => div.classList.remove('whiteActive');
+  } else {
+    div.classList.add('black');
+    if (key === ' ') {div.classList.add('hidden'); }
+    div.onmousedown = () => {
+      playNote(keys[side].octave * 12 + note);
+      div.classList.add('blackActive');
+    };
+    div.onmouseup = () => div.classList.remove('blackActive');
+  }
+  document.querySelector('.keyboard.' + side + ' .' + color + '-container').appendChild(div);
+  return div;
+};
+
+const addNote = i => {
+  if (curr >= 0) {sheet.querySelectorAll('.note-box')[curr].classList.remove('select'); }
+  let noteBox = document.createElement('div');
+  noteBox.classList.add('note-box', 'select');
+  noteBox.innerHTML = noteLabels[i];
+  noteBox.value = i;
+  noteBox.addEventListener('mousedown', () => {
+    sheet.querySelectorAll('.note-box')[curr].classList.remove('select');
+    noteBox.classList.add('select');
+    curr = [...sheet.querySelectorAll('.note-box')].indexOf(noteBox);
+    document.querySelector('#play').innerHTML = `▶ Play from ${curr + 1}/${sheet.querySelectorAll('.note-box').length}`;
+    event.stopPropagation();
+  });
+  if (curr === sheet.querySelectorAll('.note-box').length - 1) {
+    sheet.appendChild(noteBox);
+    sheet.scrollTo(0, sheet.scrollHeight);
+    curr++;
+  } else {
+    sheet.insertBefore(noteBox, sheet.querySelectorAll('.note-box')[++curr]);
+  }
+  let rest = document.createElement('div');
+  rest.classList.add('rest');
+  rest.innerHTML = document.querySelector('#tempo').value;
+  rest.addEventListener('mousedown', e => {
+    let newRest = prompt('Break: ', rest.innerText);
+    rest.innerHTML = newRest === null ? rest.innerText : newRest;
+    if (rest.innerText < 0 || isNaN(rest.innerText)) {
+      if (noteBox.classList.contains('select')) {
+        if (--curr >= 0) {sheet.querySelectorAll('.note-box')[curr].classList.add('select'); }
+      }
+      sheet.removeChild(noteBox);
+    }
+    event.stopPropagation();
+  });
+  noteBox.appendChild(rest);
+  rest.style.width = rest.offsetHeight - 2 + 'px';
+  scrollSheet();
+};
+
+keys.left.labels.forEach((key, i) => {
+  keys.left.elements[i] = addKey(key, 'left', i % 2 ? 'black' : 'white', i > 4 ? i - 1 : i);
+});
+keys.right.labels.forEach((key, i) => {
+  keys.right.elements[i] = addKey(
+    key, 'right', i % 2 ? 'black' : 'white',
+    i > 4 ? i > 12 ? i > 18 ? i - 3 : i - 2 : i - 1 : i
+  );
+});
+
+document.onkeydown = e => {
+  if (keys.others.includes(e.keyCode)) {
+    let i = keys.others.indexOf(e.keyCode);
+    if (e.shiftKey) {
+      keys.left.octave = i;
+      i += 2;
+      document.querySelector('.keyboard.left .screen').innerHTML = 'C' + i + '-' + 'B' + i;
+    }
+    else {
+      keys.right.octave = i;
+      document.querySelector('.keyboard.right .screen').innerHTML = 'C' + (i + 2) + '-' + 'B' + (i + 3);
+    }
+    return false;
+  }
+  if (keys.left.codes.includes(e.keyCode)) {
+    let i = keys.left.codes.indexOf(e.keyCode);
+    let element = keys.left.elements[i];
+    if (!element.on) {
+      element.on = true;
+      element.classList.add((i % 2 ? 'black' : 'white') + 'Active');
+      playNote(keys.left.octave * 12 + (i > 4 ? i - 1 : i));
+    }
+    return false;
+  }
+  if (keys.right.codes.includes(e.keyCode)) {
+    let i = keys.right.codes.indexOf(e.keyCode);
+    let element = keys.right.elements[i];
+    if (!element.on) {
+      element.on = true;
+      element.classList.add((i % 2 ? 'black' : 'white') + 'Active');
+      playNote(keys.right.octave * 12 + (i > 4 ? i > 12 ? i > 18 ? i - 3 : i - 2 : i - 1 : i));
+    }
+    return false;
+  }
+  if (curr >= 0) {
+    const noteBoxes = sheet.querySelectorAll('.note-box');
+    switch (e.keyCode) {
+      case 27:
+        sheet.removeChild(noteBoxes[curr]);
+        curr = noteBoxes.length - 1 ? Math.max(curr - 1, 0) : -1;
+        if (curr >= 0) {sheet.querySelectorAll('.note-box')[curr].classList.add('select'); }
+        scrollSheet();
+        return;
+      case 37:
+        noteBoxes[curr].classList.remove('select');
+        if (curr > 0) {curr--; } else {curr = noteBoxes.length - 1; }
+        noteBoxes[curr].classList.add('select');
+        scrollSheet();
+        return;
+      case 39:
+        noteBoxes[curr].classList.remove('select');
+        if (curr < noteBoxes.length - 1) {curr++; } else {curr = 0; }
+        noteBoxes[curr].classList.add('select');
+        scrollSheet();
+        return;
+      case 38:
+        noteBoxes[curr].querySelector('.rest').innerHTML++;
+        return;
+      case 40:
+        if (noteBoxes[curr].querySelector('.rest').innerText > 0) {
+          noteBoxes[curr].querySelector('.rest').innerHTML--;
+        }
+        return;
+      case 32:
+        noteBoxes[curr].querySelector('.rest').innerHTML = 0;
+        return;
+      case 13:
+        playAll();
+        return;
+    }
+  }
+  if (e.keyCode === 222) {document.querySelector('#tempo').value++; }
+  if (e.keyCode === 191 && document.querySelector('#tempo').value > 0) {document.querySelector('#tempo').value--; }
+};
+
+document.onkeyup = e => {
+  if (keys.left.codes.includes(e.keyCode)) {
+    let i = keys.left.codes.indexOf(e.keyCode);
+    let element = keys.left.elements[i];
+    element.on = false;
+    element.classList.remove((i % 2 ? 'black' : 'white') + 'Active');
+    return;
+  }
+  if (keys.right.codes.includes(e.keyCode)) {
+    let i = keys.right.codes.indexOf(e.keyCode);
+    let element = keys.right.elements[i];
+    element.on = false;
+    element.classList.remove((i % 2 ? 'black' : 'white') + 'Active');
+  }
+};
+
+document.onmousewheel = e => {
+  if (curr >= 0) {
+    const noteBoxes = sheet.querySelectorAll('.note-box');
+    if (e.shiftKey) {
+      if (noteBoxes[curr].querySelector('.rest').innerText >= Math.sign(e.deltaY)) {
+        noteBoxes[curr].querySelector('.rest').innerHTML -= Math.sign(e.deltaY);
+      }
+    } else {
+      if (e.deltaY > 0) {
+        noteBoxes[curr].classList.remove('select');
+        if (curr > 0) {curr--; } else {curr = noteBoxes.length - 1; }
+      }
+      if (e.deltaY < 0) {
+        noteBoxes[curr].classList.remove('select');
+        if (curr < noteBoxes.length - 1) {curr++; } else {curr = 0; }
+      }
+      noteBoxes[curr].classList.add('select');
+      scrollSheet();
+    }
+  }
+};
+
+const scrollSheet = playing => {
+  if (curr >= 0) {
+    const container = document.querySelector('#sheet-container');
+    let currNote = sheet.querySelectorAll('.note-box')[playing ? playing : curr];
+    if (sheet.offsetHeight - currNote.offsetTop < container.offsetHeight) {
+      sheet.style.top = container.offsetHeight - sheet.offsetHeight + 'px';
+    } else {
+      sheet.style.top = -currNote.offsetTop + 'px';
+    }
+  }
+  document.querySelector('#play').innerHTML = (
+    playing === 0 || playing ? '■ Stop at ' + (playing + 1) : '▶ Play from ' + (curr + 1)
+  ) + '/' + sheet.querySelectorAll('.note-box').length;
+};
+
+document.querySelector('#play').onclick = () => playAll();
+
+document.querySelector('#record').onclick = function () {this.classList.toggle('active'); }
+
+document.querySelector('#save').onclick = () => {
+  let oldData = [...sheet.querySelectorAll('.note-box')].map(note => note.innerText.split('\n').join('')).join('');
+  console.log(oldData);
+  let newData = prompt('Copy the data below or paste saved data to load.', oldData);
+  if (newData !== oldData && newData.length > 0) {
+    sheet.innerHTML = '';
+    curr = -1;
+    newData.match(/\w\d#?\d+/g).forEach(note => {
+      addNote(noteLabels.indexOf(note.match(/\w\d#?/)[0]));
+      [...sheet.querySelectorAll('.note-box')].slice(-1)[0].querySelector('.rest').innerHTML =
+        note.match(/(?<=[\d#])\d+/)[0];
+    });
+  };
+};
+
+document.querySelector('#nav-left').onclick = () => {
+  const noteBoxes = sheet.querySelectorAll('.note-box');
+  noteBoxes[curr].classList.remove('select');
+  if (curr > 0) {curr--; } else {curr = noteBoxes.length - 1; }
+  noteBoxes[curr].classList.add('select');
+  scrollSheet();
+};
+
+document.querySelector('#nav-right').onclick = () => {
+  const noteBoxes = sheet.querySelectorAll('.note-box');
+  noteBoxes[curr].classList.remove('select');
+  if (curr < noteBoxes.length - 1) {curr++; } else {curr = 0; }
+  noteBoxes[curr].classList.add('select');
+  scrollSheet();
+};
+
+document.querySelector('#nav-question').onclick = () => {
+  document.querySelector('#cheatsheet').classList.remove('hidden');
+};
+
+const playAll = () => {
+  const noteBoxes = sheet.querySelectorAll('.note-box');
+  const play = document.querySelector('#play');
+  if (play.innerText.startsWith('▶ Play')) {
+    play.innerHTML = '■ Stop';
+    play.classList.add('stop');
+    let step = curr === sheet.querySelectorAll('.note-box').length - 1 ? 0 : curr;
+    let loop = () => {
+      if (step > 0) {
+        noteBoxes[step - 1].classList.remove('active');
+      }
+      if (play.innerText.startsWith('■ Stop')) {
+        if (step < noteBoxes.length) {
+          noteBoxes[step].classList.add('active');
+          scrollSheet(step);
+          playNote(noteBoxes[step].value, true);
+        }
+        if (++step <= noteBoxes.length) {
+          setTimeout(loop, noteBoxes[step - 1].querySelector('.rest').innerText * 100);
+        } else {
+          play.classList.remove('stop');
+          scrollSheet();
+        }
+      }
+    };
+    loop();
+  } else {
+    play.classList.remove('stop');
+    scrollSheet();
+  }
+};
+
+(() => {
+  const cheatsheet = document.querySelector('#cheatsheet');
+  cheatsheet.onclick = () => cheatsheet.classList.add('hidden');
+  [
+    ['k', 'l', ';', ',', '.', 'Switch between octaves for right keyboard'],
+    ['K', 'L', ':', '<', '>', 'Switch between octaves for left keyboard'],
+    ['ESC', 'Remove highlighted note'],
+    ['\'', '/', 'Alter default rest value'],
+    ['←', '→', 'Navigate between notes'],
+    ['↑', '↓', 'Alter highlighted rest value'],
+    ['SPACE', 'Set highlighted rest value to 0'],
+    ['MOUSE WHEEL', 'Navigate between notes'],
+    ['SHIFT + MOUSE WHEEL', 'Alter highlighted rest value'],
+    ['BONUS', 'Import pre-made online chords with function convert()']
+  ].forEach(cheat => {
+    let command = document.createElement('div');
+    command.classList.add('command');
+    cheatsheet.appendChild(command);
+    let buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
+    command.appendChild(buttonContainer);
+    for (let key of cheat.slice(0, cheat.length - 1)) {
+      let button = document.createElement('div');
+      button.classList.add('button');
+      button.innerHTML = key;
+      buttonContainer.appendChild(button);
+    }
+    let span = document.createElement('span');
+    span.innerHTML = cheat.slice(-1)[0];
+    command.appendChild(span);
+  });
+})();
+
+const convert = notes => {
+  const others = '1!2@34$5%6^78*9(0qQwWeErtTyYuiIoOpPasSdDfgGhHjJklLzZxcCvVbBnm';
+  sheet.innerHTML = '';
+  curr = -1;
+  notes.match(/(?<=^|\W)[\w!@#$%^&*(]+(?=\W|$)/g).forEach(chord => {
+    if (chord.length > 1) {
+      chord.slice(0, -1).split('').forEach(note => {
+        addNote(others.indexOf(note));
+        [...sheet.querySelectorAll('.note-box')].slice(-1)[0].querySelector('.rest').innerHTML = 0;
+      });
+    }
+    addNote(others.indexOf(chord.slice(-1)));
+    [...sheet.querySelectorAll('.note-box')].slice(-1)[0].querySelector('.rest').innerHTML = document.querySelector('#tempo').value;    
+  });
+};
+</script>
+</body>
+</html>
