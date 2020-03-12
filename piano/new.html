@@ -198,6 +198,7 @@ body {
   margin-top: 3vh;
   width: 90%;
   height: auto;
+  min-height: 1vh;
   max-height: 35vh;
   border-radius: 12px;
   box-sizing: border-box;
@@ -514,15 +515,16 @@ document.onkeydown = e => {
         scrollSheet();
         return;
       case 38:
-        noteBoxes[curr].querySelector('.rest').innerHTML++;
+        noteBoxes[curr].querySelector('.rest').innerHTML += e.shiftKey + 1;
         return;
       case 40:
-        if (noteBoxes[curr].querySelector('.rest').innerText > 0) {
-          noteBoxes[curr].querySelector('.rest').innerHTML--;
+        noteBoxes[curr].querySelector('.rest').innerHTML -= e.shiftKey + 1;
+        if (noteBoxes[curr].querySelector('.rest').innerText < 0) {      
+          noteBoxes[curr].querySelector('.rest').innerHTML = 0;
         }
         return;
       case 32:
-        noteBoxes[curr].querySelector('.rest').innerHTML = 0;
+        document.querySelector('#record').classList.toggle('active');
         return;
       case 13:
         playAll();
