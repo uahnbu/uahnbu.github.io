@@ -515,7 +515,10 @@ document.onkeydown = e => {
         scrollSheet();
         return;
       case 38:
-        noteBoxes[curr].querySelector('.rest').innerHTML += e.shiftKey + 1;
+        noteBoxes[curr].querySelector('.rest').innerHTML++;
+        if (e.shiftKey) {
+          noteBoxes[curr].querySelector('.rest').innerHTML++;
+        }
         return;
       case 40:
         noteBoxes[curr].querySelector('.rest').innerHTML -= e.shiftKey + 1;
