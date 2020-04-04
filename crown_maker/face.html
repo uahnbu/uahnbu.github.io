@@ -17,7 +17,7 @@ document.querySelector('input').onchange = async e => {
   const room = canvas.getContext('2d');
   const crown = new Image();
   await new Promise(resolve => (crown.src = 'crown.png', crown.onload = () => resolve()));
-  const people = faceapi.bufferToImage(e.target.files[0]);
+  const people = await faceapi.bufferToImage(e.target.files[0]);
   
   canvas.width = people.width;
   canvas.height = people.height;
