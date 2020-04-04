@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style> .hidden { display: none } </style>
-<script src="ml5.min.js"></script>
+<script src="https://unpkg.com/ml5@0.5.0/dist/ml5.min.js"></script>
 </head>
 <body>
 <canvas></canvas>
@@ -48,11 +48,7 @@ document.querySelector('input').onchange = async e => {
 const faceAPI = async image => {
   const face = await ml5.faceApi({
     withLandmarks: false,
-    withDescriptors: false,
-    MODEL_URLS: {
-      Mobilenetv1Model: 'ssd_mobilenetv1_model-weights_manifest.json',
-      FaceRecognitionModel: 'face_recognition_model-weights_manifest.json',
-    }
+    withDescriptors: false
   });
   console.info('Model loaded.');
   return await face.detect(image);
