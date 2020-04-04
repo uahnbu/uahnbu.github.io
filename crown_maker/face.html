@@ -13,20 +13,11 @@
 })();
 
 document.querySelector('input').onchange = async e => {
-  const fileReader = new FileReader();
-  await new Promise(resolve => {
-    fileReader.onload = () => resolve();
-    fileReader.readAsDataURL(e.target.files[0]);
-  });
-  
   const canvas = document.querySelector('canvas');
   const room = canvas.getContext('2d');
-  const people = new Image();
   const crown = new Image();
-  await Promise.all([
-    new Promise(resolve => (people.src = fileReader.result, people.onload = () => resolve())),
-    new Promise(resolve => (crown.src = 'crown.png', crown.onload = () => resolve()))
-  ]);
+  await new Promise(resolve => (crown.src = 'crown.png', crown.onload = () => resolve()));
+  const people = faceapi.bufferToImage(e.target.files[0]);
   
   canvas.width = people.width;
   canvas.height = people.height;
