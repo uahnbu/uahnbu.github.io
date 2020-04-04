@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="face-api.js"></script>
+</head>
+<body>
+<canvas></canvas>
+<input type="file">
+<script>
+(async () => {
+  await faceapi.nets.ssdMobilenetv1.loadFromUri('./ssd_mobilenetv1_model-weights_manifest.json');
+  console.info('Model loaded.');
+})();
+
+document.querySelector('input').onchange = async e => {
+  const fileReader = new FileReader();
+  await new Promise(resolve => {
+    fileReader.onload = () => resolve();
+    fileReader.readAsDataURL(e.target.files[0]);
+  });
+  
+  const canvas = document.querySelector('canvas');
+  const room = canvas.getContext('2d');
+  const people = new Image();
+  const crown = new Image();
+  await Promise.all([
+    new Promise(resolve => (people.src = fileReader.result, people.onload = () => resolve())),
+    new Promise(resolve => (crown.src = 'crown.png', crown.onload = () => resolve()))
+  ]);
+  
+  canvas.width = people.width;
+  canvas.height = people.height;
+  room.drawImage(people, 0, 0);
+  console.info('Image loaded.');
+  
+  const timer = performance.now();  
+  const faces = await faceapi.detectAllFaces(canvas);
+  console.log(faces);
+
+  for (const { box } of faces) {
+    const { x, y, width, height } = box;
+    const crown_height = crown.height / crown.width * width;
+    room.drawImage(crown, x, y - crown_height, width, crown_height);
+  }
+  
+  alert('Done. Elapsed time: ' + ((performance.now() - timer) / 1000 | 0) + 's');
+};
+</script>
+</body>
+</html>
