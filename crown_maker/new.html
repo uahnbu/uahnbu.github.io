@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style> .hidden { display: none } </style>
+<script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+</head>
+<body>
+<canvas></canvas>
+<input type="file">
+<div>
+  <span class="hidden">Image loaded.</span>
+  <span class="hidden">Model loaded.</span>
+</div>
+<script>
+document.querySelector('input').onchange = async e => {
+  const fileReader = new FileReader();
+  await new Promise(resolve => {
+    fileReader.onload = () => resolve();
+    fileReader.readAsDataURL(e.target.files[0]);
+  });
+  
+  
+  const canvas = document.querySelector('canvas');
+  const room = canvas.getContext('2d');
+  const people = new Image();
+  const crown = new Image();
+  await Promise.all([
+    new Promise(resolve => (people.src = fileReader.result, people.onload = () => resolve())),
+    new Promise(resolve => (crown.src = 'crown.png', crown.onload = () => resolve()))
+  ]);
+  
+  canvas.width = people.width;
+  canvas.height = people.height;
+  room.drawImage(people, 0, 0);
+  console.info('Image loaded.');
+  
+  const timer = performance.now();  
+  const faces = await faceAPI(canvas);
+  console.log(faces);
+
+  for (const { _box } of faces) {
+    const [x, y, width, height] = Object.values(_box);
+    const crown_height = crown.height / crown.width * width;
+    room.drawImage(crown, x, y - crown_height, width, crown_height);
+  }
+  
+  alert('Done. Elapsed time: ' + ((performance.now() - timer) / 1000 | 0) + 's');
+};
+
+const faceAPI = async image => {
+  const face = await ml5.faceApi({
+    withLandmarks: false,
+    withDescriptors: false,
+    MODEL_URLS: {
+      Mobilenetv1Model: 'ssd_mobilenetv1_model-weights_manifest.json',
+      FaceRecognitionModel: 'face_recognition_model-weights_manifest.json',
+    }
+  });
+  console.info('Model loaded.');
+  return await face.detect(image);
+};
+</script>
+</body>
+</html>
