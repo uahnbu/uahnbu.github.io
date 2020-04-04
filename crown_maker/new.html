@@ -4,15 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style> .hidden { display: none } </style>
-<script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+<script src="ml5.min.js"></script>
 </head>
 <body>
 <canvas></canvas>
 <input type="file">
-<div>
-  <span class="hidden">Image loaded.</span>
-  <span class="hidden">Model loaded.</span>
-</div>
 <script>
 document.querySelector('input').onchange = async e => {
   const fileReader = new FileReader();
