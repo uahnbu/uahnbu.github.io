@@ -93,17 +93,5 @@ Phenology also helps to drive home messages about climate change. "Because the p
   <h1>Answers:</h1>
   <div id=answer></div>
 </div>
-<script>
-document.querySelector('#search').onclick = async () => {
- const model = await qna.load();
- const passage = document.querySelector('#passage').innerText;
- const question = document.querySelector('#question').value;
- const answers = await model.findAnswers(question, passage);
- console.log(answers);
-  document.querySelector('#answer').innerHTML = answers
-   .map(answer => answer.text + ' (score =' + answer.score + ')')
-   .join('<br>');
-};
-</script>
 </body>
 </html>
