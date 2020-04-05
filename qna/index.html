@@ -91,19 +91,18 @@ Phenology also helps to drive home messages about climate change. "Because the p
   <input id=question type=text value="Why do a lot of scientists discredit the data collected by amateurs?">
   <button id=search>Search</button>
   <h1>Answers:</h1>
-  <div id=answer>asdf<br>
-  asdf</div>
+  <div id=answer></div>
 </div>
 <script>
 document.querySelector('#search').onclick = async () => {
-//  const model = await qna.load();
-//  const passage = document.querySelector('#passage').value;
-//  const question = document.querySelector('#question').value;
-//  const answers = await model.findAnswers(question, passage);
-//  console.log(answers);
-  document.querySelector('#answer').innerHTML = '123<br>asdfasdf'// answers
-//    .map(answer => answer.text + ' (score =' + answer.score + ')')
-//    .join('<br>');
+ const model = await qna.load();
+ const passage = document.querySelector('#passage').value;
+ const question = document.querySelector('#question').value;
+ const answers = await model.findAnswers(question, passage);
+ console.log(answers);
+  document.querySelector('#answer').innerHTML = answers
+   .map(answer => answer.text + ' (score =' + answer.score + ')')
+   .join('<br>');
 };
 </script>
 </body>
