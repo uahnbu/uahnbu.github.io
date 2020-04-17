@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<style>
+body, html {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.red { color: #ff7675 }
+.blue { color: #81ecec }
+p { display: inline-block }
+#decoded {
+  overflow-y: auto;
+  width: 100%;
+  word-wrap: break-word;
+  background: #2d3436;
+  color: #fff;
+  font-family: Droid Sans Mono;
+  font-weight: bold;
+  flex-grow: 1;
+}
+</style>
+</head>
+<body>
+<div><input type=file><p>0</p></div>
+<div id=decoded>ds</div>
+<script>
+const specials = 'BSTBETESENHMLFUPDNRTINDL'.match(/../g).map(key => '[' + key + ']');
+const display = passage => document.querySelector('#decoded').innerHTML = passage
+  .replace(/[¡¢£¤¥¦§¨©ª«]/g, e => `<span class=blue>${specials[e.charCodeAt(0) - 161]}</span>`)
+  .replace(/[­®¯°±²³´µ¶·]/g, e => `<span class=blue>${String.fromCharCode(e.charCodeAt(0) - 61)}</span>`)
+  .replace(/¹/g, '<span class=blue>[C+A]</span>')
+  .replace(/¾/g, '<span class=blue>[C+Z]</span>')
+  .replace(/¿.*?¿/g, e => `<span class=blue>×${e.slice(1, -1)}</span>`)
+  .replace(/À.*?À/g, e => `<span class=red>${e.slice(1, -1)}</span>`);
+let text, pointer = 0, wrapper = 5000;
+document.querySelector('input').onchange = async e => {
+  const reader = new FileReader();
+  reader.readAsText(e.target.files[0]);
+  await new Promise(resolve => reader.onload = e => {
+    text = e.target.result;
+    resolve();
+  });
+  display(text.slice(0, wrapper + 1));
+  document.querySelector('p').innerHTML = '0 - ' + wrapper + ' / ' + text.length;
+};
+document.onkeydown = e => {
+  if (e.keyCode === 37) {
+    (pointer -= wrapper) < 0 && (pointer = (text.length / wrapper | 0) * wrapper);
+    const end = Math.min(text.length, pointer + wrapper + 1);
+    let c1 = 0, c2 = 0;
+    for (let i = 0; i < pointer; i++) { text[i] === 'À' && c1++; text[i] === '¿' && c2++ }
+    display(
+      (c1 & 1 ? 'À' : '') + (c2 & 1 ? '¿' : '')
+      + text.slice(pointer, end + 1)
+    );
+    document.querySelector('p').innerHTML = (
+      pointer + ' - ' + end + ' / ' + text.length
+    );
+  }
+  if (e.keyCode === 39) {
+    (pointer += wrapper) > text.length && (pointer = 0);
+    const end = pointer + wrapper;
+    let c1 = 0, c2 = 0;
+    for (let i = 0; i < pointer; i++) { text[i] === 'À' && c1++; text[i] === '¿' && c2++ }
+    display(
+      (c1 & 1 ? 'À' : '') + (c2 & 1 ? '¿' : '')
+      + text.slice(pointer, end + 1)
+    );
+    document.querySelector('p').innerHTML = (
+      pointer + ' - ' + (end) + ' / ' + text.length
+    );
+  }
+};
+</script>
+</body>
+</html>
