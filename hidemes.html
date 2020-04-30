@@ -4,24 +4,24 @@
 <meta charset="utf-8">
 </head>
 <body>
-<input id=context><input=message><button id=hide>HIDE MESSAGE</button><br>
+<input id=context><input id=message><button id=hide>HIDE MESSAGE</button><br>
 <input id=text><button id=show>SHOW MESSAGE</button>
 <div id=result></div>
 <script>
-document.querySelector('#hide').onclick = function {
-  const context = document.querySelector('#context').value;
-  const message = document.querySelector('message').value;
-  if (!/^[a-z ]*$/.test(message)) throw 'Invalid Input';
-  var d = '⁤⁤⁪⁤⁢⁭⁯⁢⁫⁭⁫⁣⁬⁬⁪⁮⁮⁮⁭⁣⁫⁪⁢⁬⁣⁯', p = '⁯͏⁡⁡⁯⁡⁡⁡⁯͏͏⁡⁡⁯⁯⁡͏⁯⁯⁯⁡͏͏͏͏͏', s = 'charCodeAt';
-  document.querySelector('#result').innerHTML = context.slice(0, context.length / 2) + (
-    message.split('').map((c, i) => c == ' ' ? '⁯' : ((i = p[c[s](0) - 97]) == '⁯' ? '' : i) + d[c[s](0) - 97]).join('')
+document.getElementById("hide").onclick = function () {
+  var context = document.getElementById("context").value;
+  var message = document.getElementById("message").value;
+  if (!/^[a-z ]*$/.test(message)) throw "Invalid Input";
+  var d = "⁤⁤⁪⁤⁢⁭⁯⁢⁫⁭⁫⁣⁬⁬⁪⁮⁮⁮⁭⁣⁫⁪⁢⁬⁣⁯", p = "⁯͏⁡⁡⁯⁡⁡⁡⁯͏͏⁡⁡⁯⁯⁡͏⁯⁯⁯⁡͏͏͏͏͏", s = "charCodeAt";
+  document.getElementById("result").innerHTML = context.slice(0, context.length / 2) + (
+    message.split("").map((c, i) => c == " " ? "⁯" : ((i = p[c[s](0) - 97]) == "⁯" ? "" : i) + d[c[s](0) - 97]).join("")
   ) + context.slice(context.length / 2);
-}
-document.querySelector('#show').onclick = function {
-  const text = document.querySelector('#text').value;
-  var a = ['etaoinsr ', 'hldcumfpg', 'wybvkxjqz'], d = '⁢⁣⁤⁪⁫⁬⁭⁮⁯', r = 0;
-  document.querySelector('#result').innerHTML = text.match(/[͏⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯]/g).map(c => c === '⁡' ? (r = 1, '') : c === '͏' ? (r = 2, '') : (c = a[r][d.indexOf(c)], r = 0, c)).join('')
-}
+};
+document.getElementById("show").onclick = function () {
+  var text = document.getElementById("text").value;
+  var a = ["etaoinsr ", "hldcumfpg", "wybvkxjqz"], d = "⁢⁣⁤⁪⁫⁬⁭⁮⁯", r = 0;
+  document.getElementById("result").innerHTML = text.match(/[͏⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯]/g).map(c => c === "⁡" ? (r = 1, "") : c === "͏" ? (r = 2, "") : (c = a[r][d.indexOf(c)], r = 0, c)).join("")
+};
 </script>
 </body>
 </html>
