@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+::placeholder {
+  color: #ccd;
+}
+body, html {
+  font-family: Helvetica;
+  font-size: 2vh;
+
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+
+  color: #336;
+  background: #eef;
+
+  align-items: center;
+}
+#mode {
+  z-index: 4;
+
+  overflow: hidden;
+
+  width: 80%;
+  height: 20%;
+  margin-top: 3%;
+
+  user-select: none;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+              -10px -10px 30px #fff;
+}
+#mode input {
+  display: none;
+}
+#mode label {
+  display: flex;
+  overflow: hidden;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: 33.33%;
+  padding-right: 3%;
+  padding-left: 3%;
+
+  cursor: pointer;
+  transition: .2s;
+
+  align-items: center;
+}
+#mode .chosen {
+  box-shadow: inset 10px 10px 30px #ccd,
+              inset -10px -10px 30px #fff;
+}
+#main {
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+  width: 80%;
+  margin-top: 3%;
+  padding: 2%;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+              -10px -10px 30px #fff;
+
+  flex-grow: 1;
+  align-items: center;
+  justify-content: space-between;
+}
+#main label {
+  margin-bottom: 1%;
+  margin-left: 1%;
+
+  user-select: none;
+  transition: .2s;
+
+  align-self: flex-start;
+}
+#main label[for='ctx'].disabled {
+  color: #ccd;
+}
+#main textarea {
+  font-size: 1.8vh;
+
+  overflow-y: scroll;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  padding: 12px;
+
+  resize: none;
+  transition: .2s;
+
+  color: #336;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: none;
+  box-shadow: inset 10px 10px 20px #ccd,
+              inset -10px -10px 20px #fff;
+
+  flex: 1;
+}
+#main textarea:not(:last-of-type) {
+  margin-bottom: 1%;
+}
+#main textarea::-webkit-scrollbar-track {
+  border-radius: 8px;
+}
+#main textarea::-webkit-scrollbar {
+  background: none;
+}
+#main textarea::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #fff, #dde);
+}
+#main #ctx.disabled {
+  opacity: 0;
+}
+#opera {
+  z-index: 2;
+
+  display: flex;
+
+  width: 80%;
+  height: 7%;
+  margin-top: 3%;
+
+  justify-content: space-between;
+}
+#opera > div {
+  font-weight: bold;
+
+  position: relative;
+
+  display: flex;
+  overflow: hidden;
+
+  width: 30%;
+  height: 100%;
+
+  cursor: pointer;
+  user-select: none;
+  transition: background 1s;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+  -10px -10px 30px #fff;
+
+  align-items: center;
+  justify-content: center;
+}
+#opera > div div {
+  position: absolute;
+  top: -100%;
+  left: -100%;
+
+  width: 200%;
+  height: 200%;
+
+  transition: .3s;
+  pointer-events: none;
+
+  background: linear-gradient(145deg, #dde, #fff, #dde);
+}
+#opera > div:active div {
+  transform: translateX(50%) translateY(50%);
+}
+#opera label {
+  z-index: 0;
+  
+  pointer-events: none;
+}
+#result {
+  z-index: 1;
+
+  display: flex;
+  overflow: hidden;
+  flex-direction: row;
+
+  width: 80%;
+  height: 12%;
+  margin-top: 3%;
+  margin-bottom: 3%;
+
+  user-select: none;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+              -10px -10px 30px #fff;
+
+  align-items: center;
+}
+#result #scrypt {
+  font-size: 1.8vh;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+  width: calc(100% - 8vh);
+  height: 100%;
+  padding: 3%;
+
+  resize: none;
+  word-wrap: break-word;
+
+  color: #336;
+  border: none;
+  outline: none;
+  background: none;
+}
+#result #length {
+  display: flex;
+
+  box-sizing: border-box;
+  width: 8vh;
+  height: 8vh;
+  margin-right: 2vh;
+
+  border-radius: 16px;
+  box-shadow: 5px 5px 15px #ccd,
+              -5px -5px 15px #fff;
+
+  align-items: center;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+<div id=mode>
+  <input id=option1 type=radio value=ASCII name=mode>
+  <label for=option1>Support ASCII (keyboard's 127 characters)</label>
+  <input id=option2 type=radio value=VN name=mode>
+  <label for=option2>Hỗ trợ tiếng Việt (90 kí tự và dấu cách)</label>
+  <input id=option3 type=radio value="" name=mode checked>
+  <label for=option3 class=chosen>Support all UTF-8 65536 characters (x2 in length)</label>
+  </div>
+<div id=main>
+  <label for=ctx>Context</label>
+  <textarea id=ctx spellcheck=false placeholder="What a peaceful day 🙏🙏"></textarea>
+  <label>Message</label>
+  <textarea id=msg spellcheck=false placeholder="☠☠ The attack is launching in 2 days ☠☠"></textarea>
+  <label>Key</label>
+  <textarea id=key spellcheck=false placeholder="Fortrezz T34M"></textarea>
+</div>
+<div id=opera>
+  <div id=hide><div></div><label>HIDE</label></div>
+  <div id=show><div></div><label>SHOW</label></div>
+  <div id=copy><div></div><label>COPY</label></div>
+</div>
+<div id=result>
+  <textarea id=scrypt spellcheck=false disabled></textarea>
+  <div id=length>0</div>
+</div>
+<script>
+const zero = ((R,F,M,S,C,T) => ({
+  d:'⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯',b:"abcdeghiklmnopqrstuvxy{",v:"iếaiiêaoầu"[M](/../g)[C]("ừựỏởĩèủãặửểỷẳõýẫỹỵẵẽỳũỉằẩữỗễỡẻẹóơộốảíầấệàưạđáếêôâợụòúềùéứổăắồậờịọớì "[S]``),e:"yholaeuperipeuivibelorabikubosapusycygidepovukudakebodaqyraxeeavuvixopiqobesadymucotugohagociraaehahicigihitutacuhaturegecalulasyteaogeteiilisar{"[M](/..?/g),
+  hideASCII:function(ctx, msg, key = " ", n = ctx.length + 1 >> 1){if(!/^[ -~]+$/.test(msg)){alert`Message contains invalid characters`;return}var j="join",l="length",a="charCodeAt",z=ctx;return(z[l]?(z=z[M](R(`.{1,${n}}`,'g')),z[l]==1?[''][C](z):z):['',''])[j](msg[S]``[T]((c,i)=>c==' '?'‪':c=='e'?'‬':c=='t'?'‭':((c[a](0)+key[a](i%key[l])-64)%95+'').padStart(2,'0')[S]``[T](c=>this.D[c])[j]``)[j]``)},
+  showASCII:function(enc, key = " "){var r,i=0,f="indexOf";return[...new Set(enc[M](/[‪⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯‬‭]+/g))][T](m=>m[S]``[T](c=>c=='‪'?(r=0,i++,' '):c=='‬'?(r=0,i++,'e'):c=='‭'?(r=0,i++,'t'):!r?(r=c,''):(c=F(32+(''+this.D[f](r)+this.D[f](c)-key.charCodeAt(i++%key.length)+32+95)%95),r=0,c)).join``).join`\n`},
+  hideVN:function(ctx, msg, key = "a", n = ctx.length + 1 >> 1){if(!R('['+this.v.join``+'a-z]+').test(msg)){alert`Thư mật chứa kí tự không hỗ trợ`;return}var g=this,f="indexOf",j="join",l="length",a="charCodeAt",t=msg.toLowerCase().replace(R(g.v[j]`|`,'g'),c=>g.e[g.v[f](c)]),z=ctx,d='⁫⁪⁤⁬⁡‬⁪⁡⁣‬⁭‪⁭‪⁮⁣⁯⁯⁢⁢⁬⁫‬⁮⁤',p='‬‭‬‭‭‬‬‬‬‬‭‭‬‬‬‭‭‬‭‬‬‭‬‭‭';return(z[l]?(z=z[M](R(`.{1,${n}}`,'g')),z[l]==1?[''][C](z):z):['',''])[j](t[S]``[T]((c,i,s)=>(s=g.b[(g.b[f](c)+g.b[f](key[i%key[l]]))%23],s=='{'?'‬':((i=p[s[a](0)-97])=='‬'?'':i)+d[s[a](0)-97]))[j]``)},
+  showVN:function(enc, key = "a"){var g=this,f="indexOf",j="join",a=["nhticgaumor","lespybvdkxq"],d='‪⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯',r=0;return[...new Set(enc[M](/[‪⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯‬‭]+/g))][T](m=>m[S]``[T](c=>c=='‬'?'{':c=='‭'?(r=1,''):(c=a[r][d[f](c)],r=0,c))[j]``[S]``[T]((c,i)=>g.b[(g.b[f](c)-g.b[f](key[i%key.length])+23)%23])[j]``.replace(R(g.e[j]`|`,'g'),c=>g.v[g.e[f](c)]))[j]``},
+  hide:(ctx, msg, key = F(0), n = ctx.length + 1 >> 1)=>{var j="join",l="length",a="charCodeAt",z=ctx;return(z[l]?(z=z[M](R(`.{1,${n}}`,'g')),z[l]==1?[''][C](z):z):['',''])[j](msg[S]``[T]((c,i)=>(c=(c[a](0)+key[a](i%key[l]))%65536+10+'',['‪','','‬','‭'][c[l]-2]+c[S]``[T](d=>'⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯'[d])[j]``))[j]``)},
+  show:(enc, key = F(0))=>[...new Set(enc[M](/[‪‬‭⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯]+/g))][T](m=>m[M](/‭.{5}|‬....|.../g)[T]((n,i)=>F((n=n[S]``[T](d=>(d='⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯‪‬‭'.indexOf(d))>9?'a':d).join``,(+n[0]?n:n.slice(1))-key.charCodeAt(i%key.length)+65526))).join``).join`\n`
+}))(RegExp,String.fromCharCode,"match","split","concat","map");
+document.querySelectorAll('#mode input').forEach(radio => radio.onchange = () => (
+  document.querySelectorAll('#mode label').forEach(label => (
+    label.getAttribute('for') === radio.id && (label.classList.add('chosen'), 1) || label.classList.remove('chosen')
+  ))
+));
+document.querySelector('#show').onmouseover = () => (
+  document.querySelector('#ctx').classList.add('disabled'),
+  document.querySelector('#main label[for="ctx"]').classList.add('disabled')
+);
+document.querySelector('#show').onmouseleave = () => (
+  document.querySelector('#ctx').classList.remove('disabled'),
+  document.querySelector('#main label[for="ctx"]').classList.remove('disabled')
+);
+document.querySelector('#hide').onclick = () => (
+  document.querySelector('#length').innerHTML = (
+    document.querySelector('#scrypt').innerHTML = zero['hide' + (
+      [...document.querySelectorAll('#mode input')].filter(radio => radio.checked)[0].value
+    )](
+      document.querySelector('#ctx').value,
+      document.querySelector('#msg').value,
+      document.querySelector('#key').value || undefined
+    )
+  ).length
+);
+document.querySelector('#show').onclick = () => (
+  document.querySelector('#length').innerHTML = (
+    document.querySelector('#scrypt').innerHTML = zero['show' + (
+      [...document.querySelectorAll('#mode input')].filter(radio => radio.checked)[0].value
+    )](
+      document.querySelector('#msg').value,
+      document.querySelector('#key').value || undefined
+    )
+  ).length
+);
+document.querySelector('#copy').onclick = () => (
+  document.querySelector('#scrypt').disabled = false,
+  document.querySelector('#scrypt').select(),
+  document.execCommand('copy'),
+  document.querySelector('#scrypt').disabled = true
+);
+</script>
+</body>
+</html>
