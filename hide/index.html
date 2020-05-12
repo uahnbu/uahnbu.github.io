@@ -2,8 +2,10 @@
 <html>
 <head>
 <style>
-body,
-html {
+::placeholder {
+  color: #ccd;
+}
+body, html {
   font-family: Helvetica;
   font-size: 2vh;
 
@@ -137,10 +139,13 @@ html {
 
   justify-content: space-between;
 }
-#opera div {
+#opera > div {
   font-weight: bold;
 
+  position: relative;
+
   display: flex;
+  overflow: hidden;
 
   width: 30%;
   height: 100%;
@@ -150,15 +155,32 @@ html {
   transition: background 1s;
 
   border-radius: 16px;
-  background: linear-gradient(145deg, #fff, #dde);
   box-shadow: 10px 10px 30px #ccd,
-              -10px -10px 30px #fff;
+  -10px -10px 30px #fff;
 
   align-items: center;
   justify-content: center;
 }
-#opera div:active {
-  background: linear-gradient(145deg, #dde, #fff);
+#opera > div div {
+  position: absolute;
+  top: -100%;
+  left: -100%;
+
+  width: 200%;
+  height: 200%;
+
+  transition: .3s;
+  pointer-events: none;
+
+  background: linear-gradient(145deg, #dde, #fff, #dde);
+}
+#opera > div:active div {
+  transform: translateX(50%) translateY(50%);
+}
+#opera label {
+  z-index: 0;
+  
+  pointer-events: none;
 }
 #result {
   z-index: 1;
@@ -226,16 +248,16 @@ html {
   </div>
 <div id=main>
   <label for=ctx>Context</label>
-  <textarea id=ctx spellcheck=false></textarea>
+  <textarea id=ctx spellcheck=false placeholder="What a peaceful day 🙏🙏"></textarea>
   <label>Message</label>
-  <textarea id=msg spellcheck=false></textarea>
+  <textarea id=msg spellcheck=false placeholder="☠☠ The attack is launching in 2 days ☠☠"></textarea>
   <label>Key</label>
-  <textarea id=key spellcheck=false></textarea>
+  <textarea id=key spellcheck=false placeholder="Fortrezz T34M"></textarea>
 </div>
 <div id=opera>
-  <div id=hide>HIDE</div>
-  <div id=show>SHOW</div>
-  <div id=copy>COPY</div>
+  <div id=hide><div></div><label>HIDE</label></div>
+  <div id=show><div></div><label>SHOW</label></div>
+  <div id=copy><div></div><label>COPY</label></div>
 </div>
 <div id=result>
   <textarea id=scrypt spellcheck=false disabled></textarea>
