@@ -240,11 +240,9 @@ body, html {
 <body>
 <div id=mode>
   <input id=option1 type=radio value=ASCII name=mode>
-  <label for=option1>Support ASCII (keyboard's 127 characters)</label>
-  <input id=option2 type=radio value=VN name=mode>
-  <label for=option2>Hỗ trợ tiếng Việt (90 kí tự và dấu cách)</label>
+  <label for=option1>Support keyboard's 127 ASCII chars</label>
   <input id=option3 type=radio value="" name=mode checked>
-  <label for=option3 class=chosen>Support all UTF-8 65536 characters (x2 in length)</label>
+  <label for=option3 class=chosen>Support all 65536 UTF-8 chars (x2 in length)</label>
   </div>
 <div id=main>
   <label for=ctx>Context for hiding</label>
@@ -266,8 +264,8 @@ body, html {
 <script>
 const zero = ((R,F,M,S,C,T) => ({
   d:'⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯',b:"abcdeghiklmnopqrstuvxy{",v:"iếaiiêaoầu"[M](/../g)[C]("ừựỏởĩèủãặửểỷẳõýẫỹỵẵẽỳũỉằẩữỗễỡẻẹóơộốảíầấệàưạđáếêôâợụòúềùéứổăắồậờịọớì "[S]``),e:"yholaeuperipeuivibelorabikubosapusycygidepovukudakebodaqyraxeeavuvixopiqobesadymucotugohagociraaehahicigihitutacuhaturegecalulasyteaogeteiilisar{"[M](/..?/g),
-  hideASCII:function(ctx, msg, key = " ", n = ctx.length + 1 >> 1){if(!/^[ -~]+$/.test(msg)){alert`Message contains invalid characters`;return}var j="join",l="length",a="charCodeAt",z=ctx;return(z[l]?(z=z[M](R(`.{1,${n}}`,'g')),z[l]==1?[''][C](z):z):['',''])[j](msg[S]``[T]((c,i)=>c==' '?'‪':c=='e'?'‬':c=='t'?'‭':((c[a](0)+key[a](i%key[l])-64)%95+'').padStart(2,'0')[S]``[T](c=>this.D[c])[j]``)[j]``)},
-  showASCII:function(enc, key = " "){var r,i=0,f="indexOf";return[...new Set(enc[M](/[‪⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯‬‭]+/g))][T](m=>m[S]``[T](c=>c=='‪'?(r=0,i++,' '):c=='‬'?(r=0,i++,'e'):c=='‭'?(r=0,i++,'t'):!r?(r=c,''):(c=F(32+(''+this.D[f](r)+this.D[f](c)-key.charCodeAt(i++%key.length)+32+95)%95),r=0,c)).join``).join`\n`},
+  hideASCII:function(ctx, msg, key = " ", n = ctx.length + 1 >> 1){if(!/^[ -~]+$/.test(msg)){alert`Message contains invalid characters`;return}var j="join",l="length",a="charCodeAt",z=ctx;return(z[l]?(z=z[M](R(`.{1,${n}}`,'g')),z[l]==1?[''][C](z):z):['',''])[j](msg[S]``[T]((c,i)=>c==' '?'‪':c=='e'?'‬':c=='t'?'‭':((c[a](0)+key[a](i%key[l])-64)%95+'').padStart(2,'0')[S]``[T](c=>this.d[c])[j]``)[j]``)},
+  showASCII:function(enc, key = " "){var r,i=0,f="indexOf";return[...new Set(enc[M](/[‪⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯‬‭]+/g))][T](m=>m[S]``[T](c=>c=='‪'?(r=0,i++,' '):c=='‬'?(r=0,i++,'e'):c=='‭'?(r=0,i++,'t'):!r?(r=c,''):(c=F(32+(''+this.d[f](r)+this.d[f](c)-key.charCodeAt(i++%key.length)+32+95)%95),r=0,c)).join``).join`\n`},
   hideVN:function(ctx, msg, key = "a", n = ctx.length + 1 >> 1){if(!R('['+this.v.join``+'a-z]+').test(msg)){alert`Thư mật chứa kí tự không hỗ trợ`;return}var g=this,f="indexOf",j="join",l="length",a="charCodeAt",t=msg.toLowerCase().replace(R(g.v[j]`|`,'g'),c=>g.e[g.v[f](c)]),z=ctx,d='⁫⁪⁤⁬⁡‬⁪⁡⁣‬⁭‪⁭‪⁮⁣⁯⁯⁢⁢⁬⁫‬⁮⁤',p='‬‭‬‭‭‬‬‬‬‬‭‭‬‬‬‭‭‬‭‬‬‭‬‭‭';return(z[l]?(z=z[M](R(`.{1,${n}}`,'g')),z[l]==1?[''][C](z):z):['',''])[j](t[S]``[T]((c,i,s)=>(s=g.b[(g.b[f](c)+g.b[f](key[i%key[l]]))%23],s=='{'?'‬':((i=p[s[a](0)-97])=='‬'?'':i)+d[s[a](0)-97]))[j]``)},
   showVN:function(enc, key = "a"){var g=this,f="indexOf",j="join",a=["nhticgaumor","lespybvdkxq"],d='‪⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯',r=0;return[...new Set(enc[M](/[‪⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯‬‭]+/g))][T](m=>m[S]``[T](c=>c=='‬'?'{':c=='‭'?(r=1,''):(c=a[r][d[f](c)],r=0,c))[j]``[S]``[T]((c,i)=>g.b[(g.b[f](c)-g.b[f](key[i%key.length])+23)%23])[j]``.replace(R(g.e[j]`|`,'g'),c=>g.v[g.e[f](c)]))[j]``},
   hide:(ctx, msg, key = F(0), n = ctx.length + 1 >> 1)=>{var j="join",l="length",a="charCodeAt",z=ctx;return(z[l]?(z=z[M](R(`.{1,${n}}`,'g')),z[l]==1?[''][C](z):z):['',''])[j](msg[S]``[T]((c,i)=>(c=(c[a](0)+key[a](i%key[l]))%65536+10+'',['‪','','‬','‭'][c[l]-2]+c[S]``[T](d=>'⁡⁢⁣⁤⁪⁫⁬⁭⁮⁯'[d])[j]``))[j]``)},
