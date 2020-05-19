@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<body>
+<style>body, html { margin: 0; width: 100%; height: 100% }</style>
+<canvas></canvas>
+<script>
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.drag = false;
+  }
+  drag() {
+    
+  }
+  draw() { room.fillStyle = 'gold'; room.point(this.x, this.y) }
+}
+class Image {
+  constructor(src, ...points) {
+    this.src = src;
+    this.vertices = [...Array(points.length >> 1)].map((_, i) => (
+      new Point(points[2 * i], points[2 * i + 1])
+    ));
+  }
+  get xs() { return this.vertices.map(point => point.x) }
+  get ys() { return this.vertices.map(point => point.y) }
+  get bounds() {
+    const { min, max } = Math, { xs, ys } = this;
+    return [min(...xs), min(...ys), max(...xs), max(...ys)];
+  }
+  pointOnLine(a, b, x, y) {
+    const { xs, ys } = this; 
+    return y
+      ? xs[--a] + (y - ys[a]) * (xs[--b] - xs[a]) / (ys[b] - ys[a])
+      : ys[--a] + (x - xs[a]) * (ys[--b] - ys[a]) / (xs[b] - xs[a]);
+  }
+  retort(x, y) {
+    const o1 = this.pointOnLine(1, 4, 0, y), o2 = this.pointOnLine(1, 2, x);
+    const [bx1, by1, bx2, by2] = this.bounds;
+    return [
+      bx1 + (x - o1) / (this.pointOnLine(2, 3, 0, y) - o1) * (bx2 - bx1),
+      by1 + (y - o2) / (this.pointOnLine(3, 4, x) - o2) * (by2 - by1)
+    ];
+  }
+  draw() {
+    const { width, height } = room.canvas, [bx1, by1, bx2, by2] = this.bounds;
+    this.vertices.forEach(point => point.draw());
+    room.strokeStyle = '#fff';
+    room.line(bx1, 0, bx1, height); room.line(0, by1, width, by1);
+    room.line(bx2, 0, bx2, height); room.line(0, by2, width, by2);
+    room.strokeStyle = 'gold';
+    room.line(bx1, this.pointOnLine(1, 2, bx1), bx2, this.pointOnLine(1, 2, bx2));
+    room.line(bx1, this.pointOnLine(3, 4, bx1), bx2, this.pointOnLine(3, 4, bx2));
+    room.line(this.pointOnLine(1, 4, 0, by1), by1, this.pointOnLine(1, 4, 0, by2), by2);
+    room.line(this.pointOnLine(2, 3, 0, by1), by1, this.pointOnLine(2, 3, 0, by2), by2);
+  }
+}
+
+const room = document.querySelector('canvas').getContext('2d');
+const image = new Image('', 300, 300, 800, 200, 900, 700, 200, 600);
+
+room.line = function (x1, y1, x2, y2) { const r = room; r.beginPath(); r.moveTo(x1, y1); r.lineTo(x2, y2); r.stroke() }
+room.point = function (x, y) { const r = room; r.beginPath(); r.arc(x, y, 5, 0, Math.PI * 2); r.fill() }
+room.canvas.width = window.innerWidth;
+room.canvas.height = window.innerHeight;
+
+(room.draw = function (mx, my) {
+  room.fillStyle = '#333';
+  room.beginPath();
+  room.fillRect(0, 0, room.canvas.width, room.canvas.height);
+  image.draw();
+  room.point(mx, my);
+  room.fillStyle = 'lightblue';
+  room.point(...image.retort(mx, my));
+})();
+
+room.canvas.onmousemove = (e) => room.draw(e.offsetX, e.offsetY);
+</script>
+</body>
+</html>
