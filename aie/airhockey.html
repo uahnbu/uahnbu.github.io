@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/planck-js/0.3.0-rc.2/planck.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/poly-decomp@0.2.1/build/decomp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<style>
+body, html {
+  margin: 0
+}
+canvas {
+  border-radius: 50px;
+}
+</style>
+</head>
+<body>
+<canvas></canvas>
+<canvas width=800 height=800></canvas>
+<script src="pixie.js"></script>
+<script src="matrix.js"></script>
+<script src="neuralnetwork.js"></script>
+<script src="population.js"></script>
+<script src="zoo.js"></script>
+<script src="paddle.js"></script>
+<script>
+const room = document.querySelector('canvas').getContext('2d');
+room.height = room.canvas.height = window.innerHeight / 1.1;
+room.width = room.canvas.width = Math.floor(room.height / 19 * 9);
+room.strokeStyle = '#c8d6e5';
+room.lineWidth = 2;
+room.font = 'bold 32px Courier';
+room.textAlign = 'center';
+
+const w = room.width;
+const h = room.height;
+const m = w * 0.05;
+const r = w * 0.1;
+const g = w * 0.4;
+const s = 5;
+
+document.querySelector('canvas:nth-of-type(2)').style.display = 'inline';
+document.querySelector('canvas:nth-of-type(2)').width = h;
+document.querySelector('canvas:nth-of-type(2)').height = h;
+const chart = new Chart(document.querySelector('canvas:nth-of-type(2)'), {
+  type: 'bar',
+  data: {
+    datasets: [
+      {
+        label: 'Fitnesses',
+        type: 'line',
+        backgroundColor: '#2980b933',
+        color: '#2980b9'
+      }, {
+        label: 'Distribution',
+        backgroundColor: '#8e44ad99',
+        color: '#8e44ad'
+      }
+    ],
+    labels: Array(480).fill().map((_, i) => i)
+  },
+  options: {
+    title: { display: true },
+    responsive: false,
+    elements: {
+      point: { radius: 0 }
+    },
+    tooltips: { enabled: false }
+  }
+});
+
+const population = new Population(480);
+
+(room.loop = () => {
+  room.fillStyle = '#222f3e';
+  room.beginPath();
+  room.fillRect(0, 0, room.canvas.width, room.canvas.height);
+  population.step();
+  population.draw();
+  requestAnimationFrame(room.loop);
+})();
+</script>
+</body>
+</html>
