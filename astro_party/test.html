@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas width=640 height=640></canvas>
+<script>
+const room = document.querySelector`canvas`.getContext`2d`;
+const RAD = Math.PI / 180;
+const ranInt = (min,max) => parseInt(Math.random() * (max-min+1) + min);
+const keyDown = key => room.keys[key] > 0;
+const keyPressed = key => room.keys[key] === 1;
+const keyReleased = key => room.keys[key] === -1;
+document.onkeydown = e => {
+  if (room.keys[e.keyCode] <= 0) {room.keys[e.keyCode] = 1; }
+}
+document.onkeyup = e => {
+  if (room.keys[e.keyCode] > 0) {room.keys[e.keyCode] = -1; }
+}
+
+room.sprites = [];
+room.objects = {ball:[], wall:[]};
+room.width = room.canvas.width;
+room.height = room.canvas.height;
+room.keys = Array(256).fill(0);
+room.lineWidth = 3;
+
+class Ball {
+  constructor(x,y,r,m,mode) {
+    this.x = x; this.y = y;
+    this.vX = 0; this.vY = 0;
+    this.aX = 0; this.aY = 0;
+    this.ang = 0;
+    this.r = r;
+    this.m = m;
+    this.mode = mode;
+    this.type = 'ball';
+  }
+  step() {
+    if (!room.objects['ball'].indexOf(this)) {
+      if (keyDown(37)) {this.ang -= 5 * RAD; }
+      if (keyDown(39)) {this.ang += 5 * RAD; }
+      if (keyDown(38)) {
+        this.vX += .5 * Math.cos(this.ang);
+        this.vY += .5 * Math.sin(this.ang);
+      }
+    }
+    this.vX /= 1.05; this.vY /= 1.05;
+    this.x += this.vX;
+    this.y += this.vY;
+    if (this.x > room.width) {this.x -= room.width; }
+    if (this.x < 0) {this.x = room.width + this.x; }
+    if (this.y > room.height) {this.y -= room.height; }
+    if (this.y < 0) {this.y = room.height - this.y; }
+    this.checkCollide();
+  }
+    checkCollide() {
+      Object.values(room.objects).forEach(clan => clan.forEach(obj => {
+        if (obj !== this) {
+          if (obj.type === 'ball') {
+            if ((this.x - obj.x)**2 + (this.y - obj.y)**2 <= (this.r + obj.r)**2) {
+              this.collideBall(obj, 0, 0);
+            }
+            if ((this.x + room.width - obj.x)**2 + (this.y - obj.y)**2 <= (this.r + obj.r)**2) {
+              this.collideBall(obj, 1, 0);
+            }
+            if ((this.x - obj.x)**2 + (this.y + room.height - obj.y)**2 <= (this.r + obj.r)**2) {
+              this.collideBall(obj, 0, 1);
+            }
+            if ((this.x + room.width - obj.x)**2 + (this.y + room.height - obj.y)**2 <= (this.r + obj.r)**2) {
+              this.collideBall(obj, 1, 1);
+            }
+          }
+          if (obj.type === 'wall') {
+            let line1X = obj.x2 - obj.x1,
+                line1Y = obj.y2 - obj.y1,
+                edge = line1X ** 2 + line1Y ** 2,
+                min = Infinity,
+                minX = 0, minY = 0,
+                moveX = 0, moveY = 0;
+            [this.x - room.width, this.x, this.x + room.width].forEach((x,i) => {
+              [this.y - room.height, this.y, this.y + room.height].forEach((y,j) => {
+                let line2X = x - obj.x1,
+                    line2Y = y - obj.y1,
+                    t = Math.max(0, Math.min(edge, line1X * line2X + line1Y * line2Y)) / edge,
+                    closestX = obj.x1 + t * line1X,
+                    closestY = obj.y1 + t * line1Y;
+                if ((x - closestX)**2 + (y - closestY)**2 <= (this.r + obj.r)**2) {
+                  min = (x - closestX)**2 + (y - closestY)**2;
+                  minX = closestX; minY = closestY;
+                  moveX = i - 1; moveY = j - 1;
+                }
+              });
+            });
+            if (min <= (this.r + obj.r)**2) {
+              let fake = new Ball(minX, minY, obj.r, this.m, 'static');
+              this.collideBall(fake, moveX, moveY);
+            }
+          }
+        }
+      }));
+    }
+    collideBall(target,moveX,moveY) {
+      let nX = target.x - this.x - moveX * room.width,
+          nY = target.y - this.y - moveY * room.height,
+          dist = Math.sqrt(nX ** 2 + nY ** 2),
+          overlap = dist - this.r - target.r;
+      nX /= dist; nY /= dist;
+      if (target.mode === 'static') {
+        this.x += overlap * nX;
+        this.y += overlap * nY;
+      } else if (this.mode === 'static') {
+        target.x -= overlap * nX;
+        target.y -= overlap * nY;
+      } else {
+        this.x += overlap * nX * target.m / (this.m + target.m);
+        this.y += overlap * nY * target.m / (this.m + target.m);
+        target.x -= overlap * nX * this.m / (this.m + target.m);
+        target.y -= overlap * nY * this.m / (this.m + target.m);
+      }
+      nX = target.x - this.x - moveX * room.width;
+      nY = target.y - this.y - moveY * room.height;
+      dist = Math.sqrt(nX ** 2 + nY ** 2);
+      nX /= dist; nY /= dist;
+      let p = 2 * (nX * (this.vX - target.vX) + nY * (this.vY - target.vY)) / (this.m + target.m);
+      if (this.mode !== 'static') {
+        this.vX -= p * target.m * nX;
+        this.vY -= p * target.m * nY;
+      }
+      if (target.mode !== 'static') {
+        target.vX += p * this.m * nX;
+        target.vY += p * this.m * nY;
+      }
+    }
+  draw() {
+    const drawAt = (x,y) => {
+      room.strokeStyle = '#27ae60';
+      room.beginPath();
+      room.arc(x, y, this.r, 0, Math.PI*2);
+      room.stroke();
+      if (!room.objects['ball'].indexOf(this)) {
+        let pow = this.vX ** 2 + this.vY ** 2,
+            ang = Math.atan2(this.vY, this.vX);
+        room.strokeStyle = '#f1c40f';
+        room.beginPath();
+        room.moveTo(x, y);
+        room.lineTo(
+          x + (this.r + pow) * Math.cos(this.ang),
+          y + (this.r + pow) * Math.sin(this.ang)
+        );
+        room.stroke();
+      }
+    }
+    [room.width - this.x - this.r, this.x - this.r, -1].forEach((x,i) => {
+      [room.height - this.y - this.r, this.y - this.r, -1].forEach((y,j) => {
+        if (x < 0 && y < 0) {drawAt(
+          [this.x - room.width, this.x + room.width, this.x][i],
+          [this.y - room.height, this.y + room.height, this.y][j]
+        ); }
+      })
+    });
+  }
+}
+
+class Wall {
+  constructor(x1,y1,x2,y2,r,breakable) {
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.r = r;
+    let nX = this.x2 - this.x1,
+        nY = this.y2 - this.y1,
+        d = this.r / Math.sqrt(nX ** 2 + nY ** 2);
+    nX *= d; nY *= d;
+    this.x1 += nX; this.y1 += nY;
+    this.x2 -= nX; this.y2 -= nY;
+    this.type = 'wall';
+    this.breakable = breakable;
+  }
+  draw() {
+    let nX = this.x2 - this.x1,
+        nY = this.y2 - this.y1,
+        d = this.r / Math.sqrt(nX ** 2 + nY ** 2),
+        tX = -nY * d,
+        tY = nX * d;
+    nX *= d; nY *= d;
+    if (this.type === null) {
+      nX /= this.r; nY /= this.r;
+      let ang = Math.atan2(this.y2 - this.y1, this.x2 - this.x1);
+      for (let i = 1; i < this.r / d; i += this.r / d / 10) {room.objects['sparkle'].push(
+        new Sparkle(
+          this.x1 + nX * i + tX, this.y1 + nY * i + tY,
+          ang + 90 * RAD, Math.random(), 100, '#f1c40f'
+        ),
+        new Sparkle(
+          this.x1 + nX * i - tX, this.y1 + nY * i - tY,
+          ang - 90 * RAD, Math.random(), 100, '#f1c40f'
+        )
+      ); }
+      for (let i = -90; i <= 90; i += 10) {room.objects['sparkle'].push(
+        new Sparkle(
+          this.x1 - this.r * Math.cos(ang + i * RAD),
+          this.y1 - this.r * Math.sin(ang + i * RAD),
+          ang + (i + 180) * RAD, Math.random(), 100, '#f1c40f'
+        ),
+        new Sparkle(
+          this.x2 + this.r * Math.cos(ang + i * RAD),
+          this.y2 + this.r * Math.sin(ang + i * RAD),
+          ang + i * RAD, Math.random(), 100, '#f1c40f'
+        )
+      ); }
+      room.objects['wall'].splice(room.objects['wall'].indexOf(this), 1);
+      return;
+    }
+    room.strokeStyle = this.breakable ? '#f1c40f' : '#2ecc71';
+    room.beginPath();
+    room.moveTo(this.x1 - tX, this.y1 - tY);
+    room.arcTo(this.x1 - tX - nX, this.y1 - tY - nY, this.x1 - nX, this.y1 - nY, this.r);
+    room.arcTo(this.x1 + tX - nX, this.y1 + tY - nY, this.x1 + tX, this.y1 + tY, this.r);
+    room.lineTo(this.x2 + tX, this.y2 + tY);
+    room.arcTo(this.x2 + tX + nX, this.y2 + tY + nY, this.x2 + nX, this.y2 + nY, this.r);
+    room.arcTo(this.x2 - tX + nX, this.y2 - tY + nY, this.x2 - tX, this.y2 - tY, this.r);
+    room.closePath();
+    room.stroke();
+  }
+}
+
+room.draw = () => {
+  room.fillStyle = '#2c3e50';
+  room.beginPath();
+  room.fillRect(0, 0, room.width, room.height);
+  Object.values(room.objects).forEach(clan => clan.forEach(obj => obj.draw()));
+};
+
+room.step = () => {
+  Object.values(room.objects).forEach(clan => clan.forEach(obj => {
+    if (obj.step) {obj.step(); }
+  }));
+  room.draw();
+  while (room.keys.includes(-1)) {room.keys[room.keys.indexOf(-1)] = 0; }
+  while (room.keys.includes(1)) {room.keys[room.keys.indexOf(1)] = 2; }
+};
+
+(room.setup = () => {
+  room.objects['ball'].push(new Ball(100, 64, 32, 32, 'dynamic'));
+  for (let i = 0; i < 3; i++) {
+    room.objects['ball'].push(
+      new Ball(ranInt(0, room.width), ranInt(0, room.height), 32, 32, 'dynamic')
+    );
+  }
+  room.objects['wall'].push(
+    new Wall(room.width - 32, room.height - 32, 32, 32, 32, false)
+  );
+  setInterval(room.step, 20);
+})();
+</script>
+</body>
+</html>
