@@ -18,21 +18,23 @@ document.onkeyup = e => {
 }
 
 room.sprites = [];
-room.objects = {others:[], wall:[], man:[], bullet:[], ship:[]};
+room.objects = {others:[], wall:[], man:[], damg:[], ship:[], powerup:[]};
 room.width = room.canvas.width;
 room.height = room.canvas.height;
 room.keys = Array(256).fill(0);
 
 room.load = {
   sprites: [
-    ['ship'      , 1 , false],
-    ['fuel'      , 6 , false],
-    ['bullet'    , 1 , false],
-    ['spark'     , 1 , false],
-    ['man_head'  , 1 , false],
-    ['man_suit'  , 4 , false],
-    ['invincible', 10, false],
-    ['powerup'   , 10, false]
+    ['ship'       , 1 , false],
+    ['fuel'       , 6 , false],
+    ['bullet'     , 1 , false],
+    ['spark'      , 1 , false],
+    ['man_head'   , 1 , false],
+    ['man_suit'   , 4 , false],
+    ['invincible' , 10, false],
+    ['powerup'    , 10, false],
+    ['sword'      , 7 , false],
+    ['powup_sword', 1 , false]
   ],
   loaded:0
 };
@@ -162,6 +164,7 @@ room.setup = () => {
     ));
   }
   room.objects['man'].length = 2;
+  room.objects['powerup'].push(new PickUp(cX, cY, 0));
   setInterval(room.step, 20);
 };
 </script>

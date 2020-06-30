@@ -237,19 +237,25 @@ class Ship extends Ball {
     this.invincible = 100 - 100;
   }
   step() {
-    if (keyPressed(this.keys[0]) && this.ammo.includes(this.ammoReload)) {
-      room.objects['bullet'].push(new Bullet(
-        this.x + 64 * this.scale * Math.cos(this.ang),
-        this.y + 64 * this.scale * Math.sin(this.ang),
-        this.ang, this
-      ));
-      room.objects['others'].push(
-        new Cartridge(this.x, this.y, this.ang + 90 * RAD, 5)
-      );
-      this.ammo[this.ammo.indexOf(this.ammoReload)] = 0;
-      this.sparkIdx = 1;
-      this.vX -= Math.cos(this.ang);
-      this.vY -= Math.sin(this.ang);
+    if (keyPressed(this.keys[0])) {
+      if (this.powerup === 'sword') {
+        room.objects['damg'].push(new PowerUp(0, this));
+        this.powerup = '';
+        this.flashIdx = 0;
+      } else if (this.ammo.includes(this.ammoReload)) {
+        room.objects['damg'].push(new Bullet(
+          this.x + 64 * this.scale * Math.cos(this.ang),
+          this.y + 64 * this.scale * Math.sin(this.ang),
+          this.ang, this
+        ));
+        room.objects['others'].push(
+          new Cartridge(this.x, this.y, this.ang + 90 * RAD, 5)
+        );
+        this.ammo[this.ammo.indexOf(this.ammoReload)] = 0;
+        this.sparkIdx = 1;
+        this.vX -= Math.cos(this.ang);
+        this.vY -= Math.sin(this.ang);
+      }
     }
     if (!keyDown(this.keys[1])) {
       this.vX += .5 * Math.cos(this.ang);
@@ -313,6 +319,9 @@ class Ship extends Ball {
       room.drawExt('ship', x, y, -40, -44, this.ang, this.scale, 0, 1, 40, 44);
       if (this.invincible) {
         room.drawExt('invincible', x, y, -40, -44, this.ang, this.scale, this.flashIdx, this.flashFPI, 40, 44);
+      }
+      if (this.powerup) {
+        room.drawExt('powerup', x, y, -40, -44, this.ang, this.scale, this.flashIdx, this.flashFPI, 40, 44);
       }
       room.fillStyle = '#fff';
       this.ammo.forEach((ammo,i) => {if (ammo === this.ammoReload) {
@@ -519,7 +528,7 @@ class Bullet {
       });
     }
     if (collided) {
-      room.objects['bullet'].splice(room.objects['bullet'].indexOf(this), 1);
+      room.objects['damg'].splice(room.objects['damg'].indexOf(this), 1);
       for (let i = 0; i < 5; i++) {
         room.objects['others'].push(
           new Sparkle(this.x, this.y, ranInt(0, 360) * RAD, Math.random() * 2, 100, '#f1c40f')
@@ -531,6 +540,62 @@ class Bullet {
   }
   draw() {
     room.drawExt('bullet', this.x, this.y, -8, -8, false, .7, 0, 1, 8, 8);
+  }
+}
+
+class PickUp {
+  constructor(x,y,type) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    this.scale = .3;
+  }
+  step() {
+    room.objects['ship'].forEach(ship => {
+      let d = Math.sqrt((this.x - ship.x)**2 + (this.y - ship.y)**2);
+      if (d < 128) {
+        if (d < 16) {
+          ship.powerup = 'sword';
+          room.objects['powerup'].splice(room.objects['powerup'].indexOf(this), 1);
+        }
+        let ang = Math.atan2(ship.y - this.y, ship.x - this.x);
+        this.x += 3 * (1 - d / 128) * Math.cos(ang);
+        this.y += 3 * (1 - d / 128) * Math.sin(ang);
+      }
+    });
+  }
+  draw() {
+    room.drawExt(
+      ['powup_sword'][this.type],
+      this.x, this.y, -40, -32, 45 * RAD, this.scale, 0, 1, 40, 32
+    );
+  }
+}
+
+class PowerUp {
+  constructor(type,prn) {
+    this.type = type;
+    this.prn = prn;
+    this.x = prn.x;
+    this.y = prn.y;
+    this.ang = prn.ang;
+    this.scale = .4;
+    this.idx = 0;
+    this.FPI = 2;
+  }
+  step() {
+    if (['sword'][this.type] === 'sword') {
+      this.x = this.prn.x;
+      this.y = this.prn.y;
+      this.ang = this.prn.ang;
+      if (this.idx < this.FPI * room.sprites['sword'].images.length - 1) {this.idx++; }
+    }
+  }
+  draw() {
+    room.drawExt(
+      ['sword'][this.type],
+      this.x, this.y, -48, -52, this.ang, this.scale, this.idx, this.FPI, 48, 52
+    );
   }
 }
 
