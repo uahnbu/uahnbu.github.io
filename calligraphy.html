@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+::placeholder {
+  color: #ccd;
+}
+body, html {
+  font-family: Helvetica;
+
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+
+  color: #336;
+  background: #eef;
+
+  align-items: center;
+}
+
+#content-ctn {
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+  width: 80%;
+  margin-top: 3%;
+  padding: 2%;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+              -10px -10px 30px #fff;
+
+  flex: 2;
+  align-items: center;
+  justify-content: space-between;
+}
+#content-ctn label, #result label {
+  margin-bottom: 1%;
+  margin-left: 1%;
+
+  user-select: none;
+  transition: .2s;
+
+  align-self: flex-start;
+}
+#content-ctn textarea {
+  overflow-y: scroll;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  padding: 12px;
+
+  resize: none;
+  transition: .2s;
+
+  color: #336;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: none;
+  box-shadow: inset 10px 10px 20px #ccd,
+              inset -10px -10px 20px #fff;
+
+  flex: 1;
+}
+textarea::-webkit-scrollbar-track {
+  border-radius: 8px;
+}
+textarea::-webkit-scrollbar {
+  background: none;
+}
+textarea::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #fff, #dde);
+}
+
+#mode {
+  display: flex;
+  
+  z-index: 4;
+
+  overflow: hidden;
+
+  width: 80%;
+  margin-top: 3%;
+
+  user-select: none;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+              -10px -10px 30px #fff;
+  
+  flex: 1;
+}
+#mode input {
+  display: none;
+}
+#mode label {
+  display: flex;
+  overflow: hidden;
+
+  box-sizing: border-box;
+  box-shadow: inset -10px -10px 30px #ccd,
+              inset 10px 10px 30px #fff;
+  padding-right: 3%;
+  padding-left: 3%;
+
+  cursor: pointer;
+  transition: .2s;
+
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+#mode .chosen {
+  box-shadow: inset 10px 10px 30px #ccd,
+              inset -10px -10px 30px #fff;
+}
+
+#result-ctn {
+  z-index: 1;
+
+  display: flex;
+  overflow: hidden;
+  flex-direction: row;
+
+  width: 80%;
+  margin-top: 3%;
+
+  user-select: none;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+              -10px -10px 30px #fff;
+
+  flex: 2;
+  align-items: center;
+}
+#result {
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+  width: calc(100% - 8vh);
+  height: 100%;
+  padding: 2%;
+}
+#result textarea {
+  resize: none;
+  word-wrap: break-word;
+
+  color: #336;
+  border: none;
+  outline: none;
+  background: none;
+  
+  flex: 1;
+}
+#result-ctn #length {
+  display: flex;
+
+  box-sizing: border-box;
+  width: 8vh;
+  height: 8vh;
+  margin-right: 2vh;
+
+  border-radius: 16px;
+  box-shadow: 5px 5px 15px #ccd,
+              -5px -5px 15px #fff;
+
+  align-items: center;
+  justify-content: center;
+}
+
+#opera {
+  z-index: 2;
+
+  display: flex;
+
+  width: 80%;
+  margin-top: 3%;
+  margin-bottom: 3%;
+
+  justify-content: space-between;
+  
+  flex: 1
+}
+#opera > div {
+  font-weight: bold;
+
+  position: relative;
+
+  display: flex;
+  overflow: hidden;
+
+  height: 100%;
+
+  cursor: pointer;
+  user-select: none;
+  transition: background 1s;
+
+  border-radius: 16px;
+  box-shadow: 10px 10px 30px #ccd,
+  -10px -10px 30px #fff;
+
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+#opera > div div {
+  position: absolute;
+  top: -100%;
+  left: -100%;
+
+  width: 200%;
+  height: 200%;
+
+  transition: .3s;
+  pointer-events: none;
+
+  background: linear-gradient(145deg, #dde, #fff, #dde);
+}
+#opera > div:active div {
+  transform: translateX(50%) translateY(50%);
+}
+#opera label {
+  z-index: 0;
+  
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div id=content-ctn>
+  <label for=content>Content</label>
+  <textarea id=content spellcheck=false placeholder="What a peaceful day 🙏🙏"></textarea>
+</div>
+<div id=mode>
+  <input id=option1 type=radio value=zalgo name=mode>
+  <label for=option1>Zalgo</label>
+  <input id=option2 type=radio value=script name=mode checked>
+  <label for=option2 class=chosen>Script</label>
+  </div>
+<div id=result-ctn>
+  <div id=result>
+    <label for=strypt>Styled text</label>
+    <textarea id=strypt spellcheck=false disabled></textarea>
+  </div>
+  <div id=length>0</div>
+</div>
+<div id=opera>
+  <div id=copy><div></div><label>COPY</label></div>
+</div>
+<script>
+const zalgo=(t,n,m,...a)=>(a.t=['00010203040507101114585972', '495153','262728323334434445464769808687'].map(t=>t.match(/../g).map(t=>String.fromCharCode(+t+768)).join``),a.c=Math.random,t.split``.map(t=>t+a.reduce((t,e,c)=>t+(e?Array(0|(1==c?2*a.c():a.c()*(m-n+1)+n)).fill().map(e=>a.t[c][a.c()*[13,5,46][c]|0]).join``:''),'')).join``);
+const script=(...t)=>(t.c=['ℯℊℴ','𝒶𝒷𝒸𝒹𝒻𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩ℯ̂ℴ̂ℴ̛ℯ́ℯ̀ℯ̉ℯ̃ℯ̣ℴ́ℴ̀ℴ̉ℴ̃ℴ̣','𝓓̶𝒶̆𝒶̂𝒹̄𝓊̛𝒶́𝒶̀𝒶̉𝒶̃𝒶̣𝒾́𝒾̀𝒾̉𝒾̃𝒾̣𝓊́𝓊̀𝓊̉𝓊̃𝓊̣𝓎́𝓎̀𝓎̉𝓎̃𝓎̣𝓐̣𝓔̣𝓘̣𝓞̣𝓤̣𝓨̣𝓞̕𝓤̕ℯ̂́ℯ̂̀ℯ̂̉ℯ̂̃ℯ̣̂ℴ̂́ℴ̂̀ℴ̂̉ℴ̂̃ℴ̣̂ℴ̛́ℴ̛̀ℴ̛̉ℴ̛̃ℴ̛̣','𝒶̆́𝒶̆̀𝒶̆̉𝒶̆̃𝒶̣̆𝒶̂́𝒶̂̀𝒶̂̉𝒶̂̃𝒶̣̂𝓊̛́𝓊̛̀𝓊̛̉𝓊̛̃𝓊̛̣𝓐̍́𝓐̍̀𝓐̍̉𝓐̍̃𝓔̍́𝓔̍̀𝓔̍̉𝓔̍̃𝓘̍́𝓘̍̀𝓘̍̉𝓘̍̃𝓞̍́𝓞̍̀𝓞̍̉𝓞̍̃𝓤̍́𝓤̍̀𝓤̍̉𝓤̍̃𝓨̍́𝓨̍̀𝓨̍̉𝓨̍̃𝓐̍̆𝓐̍̂𝓔̍̂𝓞̍̂𝓞̣̕𝓤̣̕','𝓐̍̆́𝓐̍̆̀𝓐̍̆̉𝓐̍̆̃𝓐̣̍̆𝓐̍̂́𝓐̍̂̀𝓐̍̂̉𝓐̍̂̃𝓐̣̍̂𝓔̍̂́𝓔̍̂̀𝓔̍̂̉𝓔̍̂̃𝓔̣̍̂𝓞̍̂́𝓞̍̂̀𝓞̍̂̉𝓞̍̂̃𝓞̣̍̂𝓞̍́̕𝓞̍̀̕𝓞̍̉̕𝓞̍̃̕𝓤̍́̕𝓤̍̀̕𝓤̍̉̕𝓤̍̃̕'].map((g,i)=>g.match(RegExp(`.{${i+1}}`,'g'))).flat(),t[0].split``.map(c=>t.c['egoabcdfhijklmnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZêôơéèẻẽẹóòỏõọĐăâđưáàảãạíìỉĩịúùủũụýỳỷỹỵẠẸỊỌỤỴƠƯếềểễệốồổỗộớờởỡợắằẳẵặấầẩẫậứừửữựÁÀẢÃÉÈẺẼÍÌỈĨÓÒỎÕÚÙỦŨÝỲỶỸĂÂÊÔỢỰẮẰẲẴẶẤẦẨẪẬẾỀỂỄỆỐỒỔỖỘỚỜỞỠỨỪỬỮ'.indexOf(c)]||c).join``);
+const q = e => document.querySelector(e), qa = e => document.querySelectorAll(e);
+const stylize = q('#content').oninput = e => (
+  q('#length').innerHTML = (
+    q('#strypt').innerHTML = { zalgo, script }[
+      [...qa('#mode input')].filter(radio => radio.checked)[0].value
+    ](e.target.value, 20,20,1,1,1)
+  ).length - e.target.value.length
+);
+qa('#mode input').forEach(radio => radio.onchange = () => (
+  qa('#mode label').forEach(label => (
+    label.getAttribute('for') === radio.id && (label.classList.add('chosen'), 1) || label.classList.remove('chosen')
+  )),
+  stylize({target:q('#content')})
+));
+q('#copy').onclick = () => (
+  q('#strypt').disabled = false,
+  q('#strypt').select(),
+  document.execCommand('copy'),
+  q('#strypt').disabled = true
+);
+</script>
+</body>
+</html>
