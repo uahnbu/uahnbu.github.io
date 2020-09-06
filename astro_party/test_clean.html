@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<body>
+<style>
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden }
+</style>
+<script>
+Math.ranInt = (min, max) => Math.round(Math.random() * (max - min + 1) + min);
+Math.RAD = Math.PI / 180;
+
+class Room {
+  constructor(width, height) {
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = width;
+    this.canvas.height = height;
+    document.body.appendChild(this.canvas);
+    this.room = this.canvas.getContext('2d');
+    this.room.lineWidth = 3;
+    this.sprites = [];
+    this.objects = {};
+  }
+  draw() {
+    const { width, height } = this.canvas;
+    const room = this.room;
+    room.fillStyle = '#2c3e50';
+    room.beginPath();
+    room.fillRect(0, 0, width, height);
+    Object.values(this.objects).forEach(clan => clan.forEach(obj => obj.draw(width, height, room)));
+  }
+  step() {
+    const { width, height } = this.canvas;
+    const objects = this.objects;
+    Object.values(objects).forEach(clan => clan.forEach(obj => obj.step && obj.step(width, height, objects)));
+    this.draw();
+    requestAnimationFrame(this.step.bind(this));
+  }
+}
+
+class Keyboard {
+  constructor() {
+    this.STATE_UP = 1;
+    this.STATE_DOWN = 2;
+    this.STATE_RELEASE = 4;
+    this.STATE_PRESS = 8;
+    this.keys = Array(256).fill(this.STATE_UP);
+    document.onkeydown = this.handleKeyDown.bind(this);
+    document.onkeyup = this.handleKeyUp.bind(this);
+  }
+  step() {
+    for (let i = 0; i < this.keys.length; i++) {
+      (this.keys[i] & this.STATE_PRESS) && (this.keys[i] ^= this.STATE_PRESS);
+      (this.keys[i] & this.STATE_RELEASE) && (this.keys[i] ^= this.STATE_RELEASE);
+    }
+  }
+  isUp(key)     { return this.keys[key] & this.STATE_UP }
+  isDown(key)   { return this.keys[key] & this.STATE_DOWN }
+  released(key) { return this.keys[key] & this.STATE_RELEASE }
+  pressed(key)  { return this.keys[key] & this.STATE_PRESS }
+  handleKeyDown({keyCode: c}) {
+    !(this.keys[c] & this.STATE_DOWN) && (this.keys[c] = this.STATE_DOWN | this.STATE_PRESS);
+  }
+  handleKeyUp({keyCode: c}) {
+    !(this.keys[c] & this.STATE_UP) && (this.keys[c] = this.STATE_UP | this.STATE_RELEASE);
+  }
+}
+
+class Mouse {
+  constructor() {
+    this.initX = this.initY = this.x = this.y = null;
+    document.onmousedown = this.handleMouseDown.bind(this);
+    document.onmouseup = this.handleMouseUp.bind(this);
+    document.onmousemove = this.handleMouseMove.bind(this);
+  }
+  isDown() { return this.initX }
+  dist() { return this.initX ? Math.sqrt((this.x - this.initX) ** 2 + (this.y - this.initY) ** 2) : null }
+  angle() { return this.initX ? Math.atan2(this.y - this.initY, this.x - this.initX) : null }
+  handleMouseDown({offsetX, offsetY}) { this.initX = offsetX; this.initY = offsetY }
+  handleMouseUp() { this.initX = null; this.initY = null }
+  handleMouseMove({offsetX, offsetY}) { this.x = offsetX; this.y = offsetY }
+  draw(room) {
+    const r = Math.min(128, this.dist());
+    const ang = this.angle();
+    room.strokeStyle = '#f1c40f';
+    room.beginPath();
+    room.arc(this.initX, this.initY, r, 0, Math.PI * 2);
+    room.stroke();
+    room.fillStyle = '#f1c40f';
+    room.beginPath();
+    room.arc(this.initX + r * Math.cos(ang), this.initY + r * Math.sin(ang), 16, 0, Math.PI * 2);
+    room.fill();
+    
+  }
+}
+
+class Ball {
+  constructor(x, y, r, m, mode) {
+    this.x = x; this.y = y; this.r = r; this.m = m;
+    this.vX = this.vY = this.ang = 0;
+    this.mode = mode;
+    this.type = 'ball';
+  }
+  step(roomW, roomH, objects) {
+    this.x += this.vX /= 1.05;
+    this.y += this.vY /= 1.05;
+    this.x > roomW && (this.x -= roomW);
+    this.x < 0 && (this.x = roomW + this.x);
+    this.y > roomH && (this.y -= roomH);
+    this.y < 0 && (this.y = roomH - this.y);
+    this.checkCollide(roomW, roomH, objects);
+  }
+  checkCollide(roomW, roomH, objects) {
+    const { x: mx, y: my, r, m} = this;
+    Object.values(objects).forEach(clan => clan.forEach(obj => {
+      if (obj !== this) {
+        if (obj.type === 'ball') {
+          const { x: ox, y: oy, r: or } = obj;
+          (mx - ox) ** 2 + (my - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 0, 0, roomW, roomH);
+          (mx + roomW - ox) ** 2 + (my - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 1, 0, roomW, roomH);
+          (mx - ox) ** 2 + (my + roomH - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 0, 1, roomW, roomH);
+          (mx + roomW - ox) ** 2 + (my + roomH - oy) ** 2 <= (r + or) ** 2 && this.collideBall(obj, 1, 1, roomW, roomH);
+        }
+        if (obj.type === 'wall') {
+          const { x1, y1, x2, y2, r: or } = obj;
+          const line1X = x2 - x1;
+          const line1Y = y2 - y1;
+          const edge = line1X ** 2 + line1Y ** 2;
+          let min = Infinity;
+          let minX = 0, minY = 0;
+          let moveX = 0, moveY = 0;
+          [mx - roomW, mx, mx + roomW].forEach((x, i) => [my - roomH, my, my + roomH].forEach((y, j) => {
+            const line2X = x - x1;
+            const line2Y = y - y1;
+            const t = Math.max(0, Math.min(edge, line1X * line2X + line1Y * line2Y)) / edge;
+            const closestX = x1 + t * line1X;
+            const closestY = y1 + t * line1Y;
+            (x - closestX) ** 2 + (y - closestY) ** 2 <= (r + or) ** 2 && (
+              min = (x - closestX) ** 2 + (y - closestY) ** 2,
+              minX = closestX, minY = closestY,
+              moveX = i - 1, moveY = j - 1
+            );
+          }));
+          if (min <= (r + or) ** 2) {
+            const fake = new Ball(minX, minY, or, m, 'static');
+            this.collideBall(fake, moveX, moveY, roomW, roomH);
+          }
+        }
+      }
+    }));
+  }
+  collideBall(target, moveX, moveY, roomW, roomH) {
+    const m = this.m, om = target.m;
+    let nX = target.x - this.x - moveX * roomW;
+    let nY = target.y - this.y - moveY * roomH;
+    let dist = Math.sqrt(nX ** 2 + nY ** 2);
+    const overlap = dist - this.r - target.r;
+    nX /= dist; nY /= dist;
+    if (target.mode === 'static') { this.x += overlap * nX; this.y += overlap * nY }
+    else if (this.mode === 'static') { target.x -= overlap * nX; target.y -= overlap * nY }
+    else {
+      this.x += overlap * nX * om / (m + om);
+      this.y += overlap * nY * om / (m + om);
+      target.x -= overlap * nX * m / (m + om);
+      target.y -= overlap * nY * m / (m + om);
+    }
+    nX = target.x - this.x - moveX * roomW;
+    nY = target.y - this.y - moveY * roomH;
+    dist = Math.sqrt(nX ** 2 + nY ** 2);
+    nX /= dist; nY /= dist;
+    const p = 2 * (nX * (this.vX - target.vX) + nY * (this.vY - target.vY)) / (m + om);
+    this.mode !== 'static' && (this.vX -= p * om * nX, this.vY -= p * om * nY);
+    target.mode !== 'static' && (target.vX += p * m * nX, target.vY += p * m * nY);
+  }
+  draw(roomW, roomH, room) {
+    const { x: mx, y: my, r } = this;
+    [roomW - mx - r, mx - r, -1].forEach((x, i) => [roomH - my - r, my - r, -1].forEach((y, j) => {
+      x < 0 && y < 0 && (
+        this.drawSingle(room, [mx - roomW, mx + roomW, mx][i], [my - roomH, my + roomH, my][j], r)
+      );
+    }));
+  }
+  drawSingle(room, x, y, r) {
+    room.strokeStyle = '#27ae60';
+    room.beginPath();
+    room.arc(x, y, r, 0, Math.PI * 2);
+    room.stroke();
+  }
+}
+
+class Wall {
+  constructor(x1, y1, x2, y2, r) {
+    this.x1 = x1; this.y1 = y1;
+    this.x2 = x2; this.y2 = y2;
+    this.r = r;
+    let nX = this.x2 - this.x1;
+    let nY = this.y2 - this.y1;
+    const d = this.r / Math.sqrt(nX ** 2 + nY ** 2);
+    nX *= d; nY *= d;
+    this.x1 += nX; this.y1 += nY;
+    this.x2 -= nX; this.y2 -= nY;
+    this.type = 'wall';
+  }
+  draw(roomW, roomH, room) {
+    const { x1, y1, x2, y2, r } = this;
+    let nX = x2 - x1, nY = y2 - y1;
+    const d = r / Math.sqrt(nX ** 2 + nY ** 2);
+    const tX = -nY * d, tY = nX * d;
+    nX *= d; nY *= d;
+    room.strokeStyle = '#2ecc71';
+    room.beginPath();
+    room.moveTo(x1 - tX, y1 - tY);
+    room.arcTo(x1 - tX - nX, y1 - tY - nY, x1 - nX, y1 - nY, r);
+    room.arcTo(x1 + tX - nX, y1 + tY - nY, x1 + tX, y1 + tY, r);
+    room.lineTo(x2 + tX, y2 + tY);
+    room.arcTo(x2 + tX + nX, y2 + tY + nY, x2 + nX, y2 + nY, r);
+    room.arcTo(x2 - tX + nX, y2 - tY + nY, x2 - tX, y2 - tY, r);
+    room.closePath();
+    room.stroke();
+  }
+}
+
+class MyRoom extends Room {
+  constructor(width, height) {
+    super(width, height);
+    this.keyboard = new Keyboard;
+    this.mouse = new Mouse;
+    this.setup();
+    this.step();
+  }
+  draw() { super.draw(); this.mouse.isDown() && this.mouse.draw(this.room) }
+  step() { this.keyboard.step(); super.step() }
+  setup() {
+    const roomW = this.canvas.width;
+    const roomH = this.canvas.height;
+    this.objects['ball'] = [];
+    this.objects['wall'] = [];
+    this.objects['ball'].push(new MyBall(100, 64, 8, 8, 'dynamic'));
+    this.objects['ball'][0].keyboard = this.keyboard;
+    this.objects['ball'][0].mouse = this.mouse;
+    const len = Math.ceil(2 ** 0.5);
+    for (let i = 0; i < 2; i++) {
+      this.objects['ball'].push(new Ball((roomW - len * 16) / 2 + i % len * 16, (roomH - len * 16) / 2 + (i / len | 0) * 16, 8, 8, 'dynamic'));
+    }
+    this.objects['wall'].push(new Wall(roomW - 32, roomH - 32, 32, 32, 32));
+  }
+}
+
+class MyBall extends Ball {
+  step(roomW, roomH, objects) {
+    this.keyboard.isDown(37) && (this.ang -= 5 * Math.RAD);
+    this.keyboard.isDown(39) && (this.ang += 5 * Math.RAD);
+    this.keyboard.isDown(38) && (
+      this.vX += .5 * Math.cos(this.ang),
+      this.vY += .5 * Math.sin(this.ang)
+    );
+    this.mouse.isDown() && (
+      this.ang = this.mouse.angle(),
+      this.vX += .5 * Math.cos(this.ang),
+      this.vY += .5 * Math.sin(this.ang)
+    );
+    super.step(roomW, roomH, objects);
+  }
+  drawSingle(room, x, y, r) {
+    super.drawSingle(room, x, y, r);
+    const pow = this.vX ** 2 + this.vY ** 2;
+    const ang = Math.atan2(this.vY, this.vX);
+    room.strokeStyle = '#f1c40f';
+    room.beginPath();
+    room.moveTo(x, y);
+    room.lineTo(x + (r + pow) * Math.cos(this.ang), y + (r + pow) * Math.sin(this.ang));
+    room.stroke();
+  }
+}
+
+const rust = new MyRoom(window.innerWidth, window.innerHeight);
+</script>
+</body>
+</html>
