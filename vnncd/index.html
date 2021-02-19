@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body, html {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+#playlist {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  font-family: Arial;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+iframe {
+  flex: 4;
+}
+</style>
+</head>
+<body>
+<div id="playlist"></div>
+<iframe src="https://www.facebook.com/video/embed?video_id=345944149393402"></iframe>
+<script src="videoss.js"></script>
+<script>
+const videoLabels = videos.map(video => '<a href="https://www.facebook.com/video/embed?video_id=' + (video[1] || '').split('/').slice(-1)[0] + '">' + video[0] + '</a>');
+document.querySelector('#playlist').innerHTML = videoLabels.join('<br>');
+</script>
+</body>
+</html>
