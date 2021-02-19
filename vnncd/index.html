@@ -7,21 +7,41 @@ body, html {
   margin: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  font-family: Arial;
+  font-weight: bold;
 }
 #playlist {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 40%;
-  background: white;
+  height: 50%;
+  background: #111c;
   overflow-y: auto;
   font-family: Arial;
-  font-size: 2rem;
+  font-size: 2vw;
   font-weight: bold;
-  opacity: 0;
 }
-#playlist:hover {
-  opacity: 1;
+#controls {
+  position: absolute;
+  width: 100%;
+  bottom: 50%;
+  background: #000c;
+  font-size: 3vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+#controls div {
+  margin-right: 32px;
+}
+#episode {
+  width: 60%;
+  color: #ff7979;
+  font-size: 2vw;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 iframe {
   position: absolute;
@@ -31,12 +51,40 @@ iframe {
 </style>
 </head>
 <body>
-<iframe src="https://www.facebook.com/video/embed?video_id=345944149393402"></iframe>
+<iframe></iframe>
 <div id="playlist"></div>
-<script src="videoss.js"></script>
+<div id="controls">
+  <div id="episode"></div>
+  <div
+    onclick="location.href='index.html#tap' + prompt('TẬP:',1)"
+    style="color:#dc143c;cursor:pointer">
+    TÌM TẬP
+  </div>
+  <div
+    onclick="document.querySelector('iframe').requestFullscreen()"
+    style="color:#27ae60;cursor:pointer">
+    PHÓNG TO
+  </div>
+</div>
+<script src="videos.js"></script>
 <script>
-const videoLabels = videos.map((video, i) => '<a data-src="https://www.facebook.com/video/embed?video_id=' + (video[1] || '').split('/').slice(-1)[0] + '" onclick="document.querySelector(\'iframe\').src=this.dataset.src" style="color:' + ['black', 'crimson'][i % 2] + '; cursor:pointer">' + video[0] + '</a>');
-document.querySelector('#playlist').innerHTML = videoLabels.join('<br>');
+const videoLabels = videos.map(({ title, link, duration }, i) => (
+  duration = duration.split(':').reverse().reduce((t, e, i) => +e * (59 * i + 1) * 1000 + t, 0),
+  `<a
+    id="tap${i}"
+    data-index="${i}"
+    data-src="https://www.facebook.com/video/embed?video_id=${(link || '').split('/').slice(-1)[0]}"
+    data-duration="${duration}"
+    onclick="playVideo(this)"
+    style="color:${['#fc2', '#bd5'][i % 2]};display:block;cursor:pointer"
+  >${title}</a>`
+));
+document.querySelector('#playlist').innerHTML += videoLabels.join('');
+function playVideo(el) {
+  const { index, src } = el.dataset;
+  document.querySelector('iframe').src = src;
+  document.querySelector('#episode').textContent = el.textContent;
+}
 </script>
 </body>
 </html>
