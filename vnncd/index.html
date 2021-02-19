@@ -7,28 +7,35 @@ body, html {
   margin: 0;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: row;
 }
 #playlist {
-  flex: 1;
-  height: 100%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  background: white;
   overflow-y: auto;
   font-family: Arial;
   font-size: 1.6rem;
   font-weight: bold;
+  opacity: 0;
+}
+#playlist:hover {
+  opacity: 1;
 }
 iframe {
-  flex: 4;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 </style>
 </head>
 <body>
-<div id="playlist"></div>
 <iframe src="https://www.facebook.com/video/embed?video_id=345944149393402"></iframe>
+<div id="playlist"></div>
 <script src="videoss.js"></script>
 <script>
-const videoLabels = videos.map(video => '<a href="https://www.facebook.com/video/embed?video_id=' + (video[1] || '').split('/').slice(-1)[0] + '">' + video[0] + '</a>');
+const videoLabels = videos.map((video, i) => '<a data-src="https://www.facebook.com/video/embed?video_id=' + (video[1] || '').split('/').slice(-1)[0] + '" onclick="document.querySelector(\'iframe\').src=this.dataset.src" style="color:' + ['black', 'crimson'][i % 2] + '; cursor:pointer">' + video[0] + '</a>');
 document.querySelector('#playlist').innerHTML = videoLabels.join('<br>');
 </script>
 </body>
