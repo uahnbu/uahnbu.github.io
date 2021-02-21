@@ -13,19 +13,30 @@ body, html {
 }
 #playlist {
   position: absolute;
-  bottom: 0;
+  top: 32px;
   width: 100%;
   height: 50%;
   background: #111c;
+  box-shadow: 0 0 0 32px #000c;
   overflow-y: auto;
   font-family: Arial;
   font-size: 2vw;
   font-weight: bold;
 }
+#playlist div {
+  display: block;
+}
+#playlist label {
+  cursor: pointer;
+}
+#playlist a {
+  color: #8e44ad;
+}
 #controls {
   position: absolute;
   width: 100%;
-  bottom: 50%;
+  height: 10%;
+  bottom: 0;
   background: #000c;
   font-size: 3vw;
   display: flex;
@@ -36,7 +47,8 @@ body, html {
   margin-right: 32px;
 }
 #episode {
-  width: 60%;
+  margin-left: 32px;
+  flex: 1;
   color: #ff7979;
   font-size: 2vw;
   white-space: nowrap;
@@ -47,12 +59,12 @@ iframe {
   position: absolute;
   width: 100%;
   height: 100%;
+  background: #222;
 }
 </style>
 </head>
 <body>
 <iframe></iframe>
-<div id="playlist"></div>
 <div id="controls">
   <div id="episode"></div>
   <div
@@ -61,28 +73,38 @@ iframe {
     TÌM TẬP
   </div>
   <div
-    onclick="document.querySelector('iframe').requestFullscreen()"
-    style="color:#27ae60;cursor:pointer">
-    PHÓNG TO
+    onclick="iframe.el && playVideo(iframe.el.nextSibling)"
+    style="color:#2980b9;cursor:pointer">
+    TẬP TIẾP
+  </div>
+  <div
+  onclick="iframe.requestFullscreen()"
+  style="color:#27ae60;cursor:pointer">
+  PHÓNG TO
   </div>
 </div>
+<div id="playlist"></div>
 <script src="videos.js"></script>
 <script>
+const iframe = document.querySelector('iframe');
 const videoLabels = videos.map(({ title, link, duration }, i) => (
   duration = duration.split(':').reverse().reduce((t, e, i) => +e * (59 * i + 1) * 1000 + t, 0),
-  `<a
-    id="tap${i}"
-    data-index="${i}"
-    data-src="https://www.facebook.com/video/embed?video_id=${(link || '').split('/').slice(-1)[0]}"
-    data-duration="${duration}"
-    onclick="playVideo(this)"
-    style="color:${['#fc2', '#bd5'][i % 2]};display:block;cursor:pointer"
-  >${title}</a>`
+  videoID = (link || '').split('/').slice(-1)[0],
+  `
+  <div>
+    <label
+      id="tap${i}"
+      data-src="https://www.facebook.com/video/embed?video_id=${videoID}"
+      data-duration="${duration}"
+      onclick="playVideo(this)"
+      style="color:${['#fc2', '#bd5'][i % 2]}"
+    >${title}</label>
+    <a href="https://www.facebook.com/watch/?v=${videoID}" target="_blank">Link gốc</a>
+  </div>`
 ));
 document.querySelector('#playlist').innerHTML += videoLabels.join('');
 function playVideo(el) {
-  const { index, src } = el.dataset;
-  document.querySelector('iframe').src = src;
+  iframe.src = (iframe.el = el).dataset.src;
   document.querySelector('#episode').textContent = el.textContent;
 }
 </script>
