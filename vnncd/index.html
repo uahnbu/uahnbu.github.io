@@ -91,12 +91,12 @@ const videoLabels = videos.map(({ title, link, duration }, i) => (
   duration = duration.split(':').reverse().reduce((t, e, i) => +e * (59 * i + 1) * 1000 + t, 0),
   videoID = (link || '').split('/').slice(-1)[0],
   `
-  <div>
+  <div
+    data-src="https://www.facebook.com/video/embed?video_id=${videoID}"
+    data-duration="${duration}">
     <label
       id="tap${i}"
-      data-src="https://www.facebook.com/video/embed?video_id=${videoID}"
-      data-duration="${duration}"
-      onclick="playVideo(this)"
+      onclick="playVideo(this.parentElement)"
       style="color:${['#fc2', '#bd5'][i % 2]}"
     >${title}</label>
     <a href="https://www.facebook.com/watch/?v=${videoID}" target="_blank">Link gốc</a>
@@ -105,7 +105,7 @@ const videoLabels = videos.map(({ title, link, duration }, i) => (
 document.querySelector('#playlist').innerHTML += videoLabels.join('');
 function playVideo(el) {
   iframe.src = (iframe.el = el).dataset.src;
-  document.querySelector('#episode').textContent = el.textContent;
+  document.querySelector('#episode').textContent = el.querySelector('label').textContent;
 }
 </script>
 </body>
