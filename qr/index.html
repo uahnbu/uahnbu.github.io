@@ -1,0 +1,56 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR code scanner</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css">
+</head>
+<body
+  ondrop ="handleFileDrop(event)"
+  ondragover ="event.preventDefault()"
+  ondragenter="document.body.classList.add('dragover')"
+  ondragleave="document.body.classList.remove('dragover')">
+  <div id="image-area">
+    <div id="image-box" onclick="triggerImageInput(event)">
+      <div id="image-controls-box">
+        <input hidden type="file" accept="image/*" onchange="handleImageInput(event)">
+        <label onkeydown="triggerImageInput(event)" tabindex="0">
+          <span class="fas fa-plus"></span> Select image
+        </label>
+        <p>Or either paste or drag an QR image to this site.</p>
+      </div>
+      <img>
+      <video></video>
+    </div>
+  </div>
+  <div id="result-area">
+    <div id="controls-area">
+      <div id="controls-box">
+        <input type="radio" id="controls-device" name="controls" checked hidden>
+        <input id="controls-camera" type="radio" name="controls" hidden>
+        <label for="controls-device" tabindex="0"
+          onkeydown="switchToDevice(event)"
+          onclick="disableCamera(true)">
+          <span class="fas fa-image"></span>
+        </label>
+        <label for="controls-camera" tabindex="0"
+          onkeydown="switchToCamera(event)"
+          onclick="enableCamera()">
+          <span class="fas fa-camera"></span>
+        </label>
+        <div id="controls-selector"></div>
+      </div>
+    </div>
+    <h1><span class="fas fa-qrcode"></span> QR decoded text</h1>
+    <div id="result-box" contenteditable></div>
+    <div id="copy-area">
+      <button type="button" onclick="copyResult()">
+        <span class="fas fa-check"></span>
+        <span class="fas fa-copy"></span> <span id="copy-text">Copy</span>
+      </button>
+    </div>
+  </div>
+  <script src="qcode-decoder.min.js"></script>
+  <script src="qr-scanner.min.js"></script>
+  <script src="script.js"></script>
+</body>

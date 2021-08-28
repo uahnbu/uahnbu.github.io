@@ -1,0 +1,334 @@
+#copy-area button {
+  transition: color 0.2s;
+}
+
+#copy-area button:hover {
+  color: #fff;
+}
+
+#copy-area button:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200%;
+  height: 100%;
+  background: #b4d6;
+  background: linear-gradient(135deg, #b4d6 50%, #d746);
+  transition: left 0.2s;
+  z-index: -1;
+}
+
+#copy-area button:hover:before {
+  left: -90%;
+}
+
+#controls-device:checked ~ label[for=controls-device] {
+  transition: color 0.2s;
+}
+
+#controls-device:checked ~ label[for=controls-device]:hover {
+  color: #fff;
+}
+
+#controls-selector:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200%;
+  height: 100%;
+  background: #b4d6;
+  background: linear-gradient(135deg, #b4d6 50%, #d746);
+  transition: left 0.2s;
+  z-index: -1;
+}
+
+#controls-device:checked ~ label[for=controls-device]:hover ~ #controls-selector:before {
+  left: -90%;
+}
+
+#controls-camera:checked ~ label[for=controls-camera] {
+  transition: color 0.2s;
+}
+
+#controls-camera:checked ~ label[for=controls-camera]:hover {
+  color: #fff;
+}
+
+#controls-selector:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200%;
+  height: 100%;
+  background: #b4d6;
+  background: linear-gradient(135deg, #b4d6 50%, #d746);
+  transition: left 0.2s;
+  z-index: -1;
+}
+
+#controls-camera:checked ~ label[for=controls-camera]:hover ~ #controls-selector:before {
+  left: -90%;
+}
+
+body {
+  margin: 0;
+  background-color: #44c;
+  background-image: linear-gradient(135deg, #04f 10%, #739 100%);
+  background-attachment: fixed;
+  display: flex;
+}
+body:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: background 0.2s;
+  pointer-events: none;
+}
+body.dragover {
+  pointer-events: auto;
+}
+body.dragover * {
+  pointer-events: none;
+}
+body.dragover:after {
+  background: #b4d2;
+}
+
+#image-area {
+  position: relative;
+  width: 60%;
+  height: 100%;
+}
+
+#image-box {
+  position: absolute;
+  left: 10%;
+  top: 10%;
+  width: 80%;
+  height: 80%;
+  background: #0003;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+#image-box:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: background 0.2s;
+}
+#image-box:hover:after {
+  background: #b4d2;
+}
+#image-box img, #image-box video {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+#image-box video.mirror {
+  transform: rotateY(180deg);
+}
+
+#image-controls-box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fffd;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.3rem;
+  font-size: calc(0.325vw + 0.975rem);
+}
+#image-controls-box label {
+  color: #b4d;
+  cursor: pointer;
+  font-size: 1.7rem;
+  font-size: calc(0.425vw + 1.275rem);
+  font-weight: bold;
+}
+#image-controls-box label span {
+  font-size: 2rem;
+  font-size: calc(0.5vw + 1.5rem);
+  vertical-align: middle;
+}
+
+#result-area {
+  width: 35%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#result-area h1 {
+  color: #b4d;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  font-size: calc(0.5vw + 1.5rem);
+  font-weight: bold;
+}
+
+#controls-area {
+  position: relative;
+  width: 100%;
+  height: 20%;
+}
+
+#controls-box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  background: #0001;
+  border-radius: 999px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  transform: translate(-50%, -50%);
+}
+#controls-box label {
+  padding: 1rem;
+  background: none;
+  border: none;
+  text-align: center;
+  color: #fff6;
+  font-size: 2rem;
+  font-size: calc(0.5vw + 1.5rem);
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+#controls-selector {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  border-radius: 999px;
+  z-index: -1;
+  transition: transform 0.1s;
+  overflow: hidden;
+}
+
+#controls-device:checked ~ label[for=controls-device] {
+  color: #fffd;
+}
+
+#controls-camera:checked ~ #controls-selector {
+  transform: translateX(100%);
+}
+#controls-camera:checked ~ label[for=controls-camera] {
+  color: #fffd;
+}
+
+#result-box {
+  flex: 1;
+  background: #0003;
+  border-radius: 16px;
+  padding: 1rem;
+  color: #fffd;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-size: calc(0.25vw + 0.75rem);
+}
+#result-box span.error {
+  color: #f00;
+}
+#result-box a {
+  color: #0bf;
+}
+
+#copy-area {
+  position: relative;
+  margin-top: auto;
+  height: 20%;
+}
+#copy-area button {
+  padding: 1rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  background: #0001;
+  border-radius: 999px;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fffd;
+  font-size: 1.3rem;
+  font-size: calc(0.325vw + 0.975rem);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  cursor: pointer;
+}
+#copy-area.copied span.fa-copy {
+  visibility: hidden;
+}
+#copy-area.copied span.fa-check {
+  visibility: visible;
+  animation: Spin 0.5s;
+}
+#copy-area span.fa-copy {
+  transition: opacity 0.2s;
+}
+#copy-area span.fa-check {
+  position: absolute;
+  visibility: hidden;
+}
+
+@keyframes Spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    align-items: fl;
+  }
+  body.camera #image-area {
+    height: 100%;
+  }
+  body.camera #image-box {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  body.camera #result-area {
+    margin-top: -20vh;
+  }
+
+  #image-area {
+    width: 100%;
+    height: 60%;
+  }
+
+  #image-box {
+    left: 5%;
+    top: 5%;
+    width: 90%;
+    height: 90%;
+  }
+
+  #result-area {
+    margin-left: 5%;
+    width: 90%;
+  }
+
+  #controls-box {
+    background: #0006;
+  }
+  #controls-box label {
+    color: #fff;
+  }
+
+  #result-box {
+    font-size: 1rem;
+    order: 1;
+  }
+}
