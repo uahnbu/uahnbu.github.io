@@ -13,7 +13,7 @@ const filesToCache = [
 ];
 
 self.addEventListener('install', event => {
-  console.log('Attempting to install service worker and cache static assets');
+  // console.log('Attempting to install service worker and cache static assets');
   event.waitUntil(
     caches.open(STATIC_CACHE_NAME)
       .then(cache => cache.addAll(filesToCache))
@@ -21,11 +21,11 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
-  console.log('Fetch event for ', event.request.url);
+  // console.log('Fetch event for ', event.request.url);
   event.respondWith(
     caches.match(event.request).then(response => {
       if (response) {
-        console.log('Found', event.request.url, 'in cache');
+        // console.log('Found', event.request.url, 'in cache');
         return response;
       }
       return fetch(event.request).then(response => {
@@ -40,7 +40,7 @@ self.addEventListener('fetch', event => {
 
 // Activate the SW
 self.addEventListener('activate', event => {
-  console.log('Activating new service worker...');
+  // console.log('Activating new service worker...');
   const cacheAllowed = [STATIC_CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => Promise.all(
