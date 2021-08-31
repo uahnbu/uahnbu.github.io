@@ -1,56 +1,121 @@
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR code scanner</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A portable QR Code scanner.">
+    <meta name="theme-color" content="#44c">
+    
+    <title>QR code scanner</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/fontawesome.min.css">
+    <link rel="stylesheet" href="styles/fontawesome-solid.min.css">
+    <link rel="icon" type="image/png" sizes="196x196" href="images/favicon-196.png">
+
+    <meta name="msapplication-square70x70logo" content="images/mstile-icon-128.png">
+    <meta name="msapplication-square150x150logo" content="images/mstile-icon-270.png">
+    <meta name="msapplication-square310x310logo" content="images/mstile-icon-558.png">
+    <meta name="msapplication-wide310x150logo" content="images/mstile-icon-558-270.png">
+
+    <link rel="apple-touch-icon" href="images/apple-icon-180.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2048-2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2732-2048.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1668-2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2388-1668.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1536-2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2048-1536.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1668-2224.jpg" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2224-1668.jpg" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1620-2160.jpg" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2160-1620.jpg" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1284-2778.jpg" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2778-1284.jpg" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1170-2532.jpg" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2532-1170.jpg" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1125-2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2436-1125.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1242-2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2688-1242.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-828-1792.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1792-828.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1242-2208.jpg" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-2208-1242.jpg" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-750-1334.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1334-750.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-640-1136.jpg" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="images/apple-splash-1136-640.jpg" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
 </head>
-<body
-  ondrop ="handleFileDrop(event)"
-  ondragover ="event.preventDefault()"
-  ondragenter="document.body.classList.add('dragover')"
-  ondragleave="document.body.classList.remove('dragover')">
-  <div id="image-area">
-    <div id="image-box" onclick="triggerImageInput(event)">
-      <div id="image-controls-box">
-        <input hidden type="file" accept="image/*" onchange="handleImageInput(event)">
-        <label onkeydown="triggerImageInput(event)" tabindex="0">
-          <span class="fas fa-plus"></span> Select image
-        </label>
-        <p>Or either paste or drag an QR image to this site.</p>
-      </div>
-      <img>
-      <video></video>
-    </div>
-  </div>
-  <div id="result-area">
-    <div id="controls-area">
-      <div id="controls-box">
-        <input type="radio" id="controls-device" name="controls" checked hidden>
-        <input id="controls-camera" type="radio" name="controls" hidden>
-        <label for="controls-device" tabindex="0"
-          onkeydown="switchToDevice(event)"
-          onclick="disableCamera(true)">
-          <span class="fas fa-image"></span>
-        </label>
-        <label for="controls-camera" tabindex="0"
-          onkeydown="switchToCamera(event)"
-          onclick="enableCamera()">
-          <span class="fas fa-camera"></span>
-        </label>
-        <div id="controls-selector"></div>
+  <body ondrop="handleFileDrop(event)" ondragover="event.preventDefault()" ondragenter="document.body.classList.add('dragover')" ondragleave="document.body.classList.remove('dragover')">
+    <div id="first-area">
+      <div id="image-box" onclick="triggerImageInput(event)">
+        <div id="image-controls-box">
+          <input hidden="" type="file" accept="image/*" onchange="handleImageInput(event)">
+          <label onkeydown="triggerImageInput(event)" tabindex="0">
+            <span class="fas fa-plus"></span> Select image
+          </label>
+          <p>Or either paste or drag an QR image to this site.</p>
+        </div>
+        <img alt="">
+        <video></video>
       </div>
     </div>
-    <h1><span class="fas fa-qrcode"></span> QR decoded text</h1>
-    <div id="result-box" contenteditable></div>
-    <div id="copy-area">
-      <button type="button" onclick="copyResult()">
-        <span class="fas fa-check"></span>
-        <span class="fas fa-copy"></span> <span id="copy-text">Copy</span>
-      </button>
+    <div id="second-area">
+      <div id="controls-area">
+        <div id="controls-box">
+          <input type="radio" id="controls-device" name="controls" checked="" hidden="">
+          <input id="controls-camera" type="radio" name="controls" hidden="">
+          <label for="controls-device" tabindex="0" onkeydown="switchToDevice(event)" onclick="disableCamera(true)">
+            <span class="fas fa-image"></span>
+          </label>
+          <label for="controls-camera" tabindex="0" onkeydown="switchToCamera(event)" onclick="enableCamera()">
+            <span class="fas fa-camera"></span>
+          </label>
+          <div id="controls-selector"></div>
+        </div>
+      </div>
+      <h1><span class="fas fa-qrcode"></span> QR decoded text</h1>
+      <div id="result-box" contenteditable=""></div>
+      <div id="copy-area">
+        <button type="button" onclick="copyResult()">
+          <span class="fas fa-check"></span>
+          <span class="fas fa-copy"></span> <span id="copy-text">Copy</span>
+        </button>
+      </div>
     </div>
-  </div>
-  <script src="qcode-decoder.min.js"></script>
-  <script src="qr-scanner.min.js"></script>
-  <script src="script.js"></script>
-</body>
+    <div id="hickey">
+      <span class="fas fa-code"></span>&nbsp;
+      <a id="author" href="https://github.com/uahnbu" target="_blank">Nguyên Tr.</a>
+      &nbsp;<span class="fas fa-heart"></span>
+    </div>
+    <div id="install-button" aria-label="Install on Homescreen" onclick="installApp()" hidden>
+      <span class="fas fa-bookmark"></span>
+    </div>
+    <script src="scripts/qcode-decoder.min.js"></script>
+    <script src="scripts/qr-scanner.min.js"></script>
+    <script src="scripts/index.js"></script>
+    <script>
+      window.addEventListener('load', () => {
+        navigator.serviceWorker?.register('sw.js');
+      });
+      
+      let installPrompt;
+      window.addEventListener('beforeinstallprompt', event => {
+        event.preventDefault();
+        installPrompt = event;
+        document.querySelector('#install-button').hidden = false;
+
+      });
+
+      async function installApp() {
+        installPrompt.prompt();
+        const { outcome } = await installPrompt.userChoice;
+        if (outcome !== 'accepted') return;
+        installPrompt = null;
+        document.querySelector('#install-button').hidden = true;
+      }
+    </script>
+  </body>
+</html>
