@@ -67,7 +67,7 @@
         <div id="controls-box">
           <input type="radio" id="controls-device" name="controls" checked="" hidden="">
           <input id="controls-camera" type="radio" name="controls" hidden="">
-          <label for="controls-device" tabindex="0" onkeydown="switchToDevice(event)" onclick="disableCamera(true)">
+          <label for="controls-device" tabindex="0" onkeydown="switchToDevice(event)" onclick="disableCamera(true, true)">
             <span class="fas fa-image"></span>
           </label>
           <label for="controls-camera" tabindex="0" onkeydown="switchToCamera(event)" onclick="enableCamera()">
@@ -97,11 +97,12 @@
     <script src="scripts/qr-scanner.min.js"></script>
     <script src="scripts/index.js"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+      window.addEventListener('load', () => {
+        enableCameraByDefault();
+        if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('sw.js');
-        });
-      }
+        }
+      });
       
       let installPrompt;
       window.addEventListener('beforeinstallprompt', event => {
