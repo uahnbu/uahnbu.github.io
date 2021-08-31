@@ -86,7 +86,6 @@ function readImage(file) {
         return true;
     });
 }
-new QCodeDecoder;
 function readQRCode() {
     QCodeDecoder().decodeFromImage(image, (err, result) => {
         err ? showError('No QR Code found') : showResult(result);
@@ -94,13 +93,13 @@ function readQRCode() {
 }
 function disableCamera(switchMode) {
     var _a;
-    (_a = video.srcObject) === null || _a === void 0 ? void 0 : _a.getTracks().forEach(track => track.stop());
-    video.srcObject = null;
     stream === null || stream === void 0 ? void 0 : stream.stop();
     stream = null;
     if (!switchMode)
         return;
     document.body.classList.remove('camera');
+    (_a = video.srcObject) === null || _a === void 0 ? void 0 : _a.getTracks().forEach(track => track.stop());
+    video.srcObject = null;
     video.hidden = true;
     controls.hidden = false;
 }
