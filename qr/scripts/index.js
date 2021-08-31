@@ -159,8 +159,10 @@ function enableCameraByDefault() {
         const devices = yield navigator.mediaDevices.enumerateDevices();
         const hasEnvironmenMode = devices.some(device => {
             if (device.kind !== 'videoinput')
-                return false;
+                return;
             const videoDevice = device;
+            if (!('getCapabilities' in videoDevice))
+                return;
             const facingModes = videoDevice.getCapabilities().facingMode;
             return facingModes.includes('environment');
         });
