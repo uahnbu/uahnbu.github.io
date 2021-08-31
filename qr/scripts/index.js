@@ -25,7 +25,7 @@ function switchToDevice({ code }) {
     if (code !== 'Enter' && code !== 'Space')
         return;
     document.querySelector('#controls-device').checked = true;
-    disableCamera(true);
+    disableCamera(true, true);
 }
 function switchToCamera({ code }) {
     if (code !== 'Enter' && code !== 'Space')
@@ -91,21 +91,23 @@ function readQRCode() {
         err ? showError('No QR Code found') : showResult(result);
     });
 }
-function disableCamera(switchMode) {
+function disableCamera(willDetachVideo, willHideVideo) {
     var _a;
     stream === null || stream === void 0 ? void 0 : stream.stop();
     stream = null;
-    if (!switchMode)
-        return;
-    document.body.classList.remove('camera');
-    (_a = video.srcObject) === null || _a === void 0 ? void 0 : _a.getTracks().forEach(track => track.stop());
-    video.srcObject = null;
-    video.hidden = true;
-    controls.hidden = false;
+    if (willDetachVideo) {
+        (_a = video.srcObject) === null || _a === void 0 ? void 0 : _a.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+    if (willHideVideo) {
+        document.body.classList.remove('camera');
+        video.hidden = true;
+        controls.hidden = false;
+    }
 }
 function enableCamera() {
     return __awaiter(this, void 0, void 0, function* () {
-        disableCamera();
+        disableCamera(true);
         document.body.classList.add('camera');
         image.hidden = controls.hidden = true;
         video.hidden = false;
@@ -151,4 +153,17 @@ function showError(err) {
     const redError = `<span class="error">${Error(err)}</span>`;
     const fixedError = `<div contenteditable=false>${redError}</div>`;
     resultBox.innerHTML = fixedError;
+}
+function enableCameraByDefault() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const devices = yield navigator.mediaDevices.enumerateDevices();
+        const hasEnvironmenMode = devices.some(device => {
+            if (device.kind !== 'videoinput')
+                return false;
+            const videoDevice = device;
+            const facingModes = videoDevice.getCapabilities().facingMode;
+            return facingModes.includes('environment');
+        });
+        hasEnvironmenMode && enableCamera();
+    });
 }
