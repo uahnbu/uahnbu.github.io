@@ -97,16 +97,17 @@
     <script src="scripts/qr-scanner.min.js"></script>
     <script src="scripts/index.js"></script>
     <script>
-      window.addEventListener('load', () => {
-        navigator.serviceWorker?.register('sw.js');
-      });
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js');
+        });
+      }
       
       let installPrompt;
       window.addEventListener('beforeinstallprompt', event => {
         event.preventDefault();
         installPrompt = event;
         document.querySelector('#install-button').hidden = false;
-
       });
 
       async function installApp() {
