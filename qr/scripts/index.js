@@ -72,7 +72,8 @@ function handleDataTransfer(data) {
             if (!/^https?:\/\//.test(text))
                 return;
             showInfo(text);
-            yield readCORSRequest(text);
+            if (!(yield readCORSRequest(text)))
+                return;
             readQRCode();
         }
     });
@@ -86,33 +87,34 @@ function readImage(file) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         yield new Promise(resolve => reader.onloadend = resolve);
-        resultBox.scrollIntoView();
         image.src = reader.result;
-        image.hidden = false;
-        controls.hidden = true;
         return true;
     });
 }
 function readCORSRequest(url) {
     return __awaiter(this, void 0, void 0, function* () {
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.open('GET', CORS_API_URL + url);
         xhr.responseType = 'blob';
         xhr.send();
-        yield new Promise(resolve => xhr.onload = resolve);
-        const reader = new FileReader();
-        reader.readAsDataURL(xhr.response);
-        yield new Promise(resolve => reader.onloadend = resolve);
-        image.src = reader.result;
-        yield new Promise(resolve => image.onload = resolve);
-        const canvas = document.createElement('canvas');
-        canvas.width = image.width, canvas.height = image.height;
-        canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height);
-        image.src = canvas.toDataURL('image/png');
+        try {
+            yield new Promise((resolve, reject) => {
+                xhr.onload = resolve;
+                xhr.onerror = () => reject('Cannot fetch URL using CORS proxy');
+            });
+            return yield readImage(xhr.response);
+        }
+        catch (err) {
+            showError(err);
+            return false;
+        }
     });
 }
 function readQRCode() {
     return __awaiter(this, void 0, void 0, function* () {
+        resultBox.scrollIntoView();
+        image.hidden = false;
+        controls.hidden = true;
         try {
             showResult(yield QrScanner.scanImage(image));
         }
