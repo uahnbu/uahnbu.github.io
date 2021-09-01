@@ -11,6 +11,7 @@ const image = document.querySelector('#image-box img');
 const video = document.querySelector('#image-box video');
 const controls = document.querySelector('#image-controls-box');
 const resultBox = document.querySelector('#result-box');
+const CORS_API_URL = 'https://cors-anywhere-clone.herokuapp.com/';
 let stream;
 function triggerImageInput(event) {
     if (event.code && event.code !== 'Enter' && event.code !== 'Space')
@@ -61,13 +62,19 @@ document.addEventListener('paste', event => {
 function handleDataTransfer(data) {
     return __awaiter(this, void 0, void 0, function* () {
         const file = data.files[0];
-        if (!file)
-            return;
-        if (!(yield readImage(file)))
-            return;
-        QrScanner.scanImage(image)
-            .then(result => showResult(result))
-            .catch(() => readQRCode());
+        if (file) {
+            if (!(yield readImage(file)))
+                return;
+            readQRCode();
+        }
+        else if ('getData' in data) {
+            const text = data.getData('text/plain');
+            if (!/^https?:\/\//.test(text))
+                return;
+            showInfo(text);
+            yield readCORSRequest(text);
+            readQRCode();
+        }
     });
 }
 function readImage(file) {
@@ -86,9 +93,34 @@ function readImage(file) {
         return true;
     });
 }
+function readCORSRequest(url) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', CORS_API_URL + url);
+        xhr.responseType = 'blob';
+        xhr.send();
+        yield new Promise(resolve => xhr.onload = resolve);
+        const reader = new FileReader();
+        reader.readAsDataURL(xhr.response);
+        yield new Promise(resolve => reader.onloadend = resolve);
+        image.src = reader.result;
+        yield new Promise(resolve => image.onload = resolve);
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width, canvas.height = image.height;
+        canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height);
+        image.src = canvas.toDataURL('image/png');
+    });
+}
 function readQRCode() {
-    QCodeDecoder().decodeFromImage(image, (err, result) => {
-        err ? showError('No QR Code found') : showResult(result);
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            showResult(yield QrScanner.scanImage(image));
+        }
+        catch (_a) {
+            QCodeDecoder().decodeFromImage(image, (err, result) => {
+                err ? showError('No QR Code found') : showResult(result);
+            });
+        }
     });
 }
 function disableCamera(willDetachVideo, willHideVideo) {
@@ -139,11 +171,16 @@ function enableCamera() {
         stream.start().catch(err => showError(err));
     });
 }
+function showInfo(url) {
+    const link = `<a href="${url}" target="_blank">${url}</a>`;
+    const info = `<span class="info">Fetching image from "${link}"...</span>`;
+    resultBox.innerHTML = info;
+}
 function showResult(result) {
     if (/^https?:\/\//.test(result)) {
-        const url = `<a href=${result} target="_blank">${result}</a>`;
-        const fixedUrl = `<div contenteditable="false">${url}</div>`;
-        resultBox.innerHTML = fixedUrl;
+        const link = `<a href=${result} target="_blank">${result}</a>`;
+        const fixedLink = `<div contenteditable="false">${link}</div>`;
+        resultBox.innerHTML = fixedLink;
     }
     else
         resultBox.textContent = result;
