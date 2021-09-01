@@ -244,6 +244,9 @@ body.dragover::after {
 #result-box span.error {
   color: #f00;
 }
+#result-box span.info {
+  color: #fc2;
+}
 #result-box a {
   color: #0bf;
 }
