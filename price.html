@@ -208,10 +208,10 @@
         })
       });
       document.querySelector('#copy-vnd').addEventListener('click', () => {
-        navigator.clipboard.writeText(pricesVND.join('\t'));
+        navigator.clipboard.writeText(pricesVND.map(p => p === 0 ? '' : p).join('\t'));
       });
       document.querySelector('#copy-usd').addEventListener('click', () => {
-        navigator.clipboard.writeText(pricesUSD.join('\t'));
+        navigator.clipboard.writeText(pricesUSD.map(p => p === 0 ? '' : p).join('\t'));
       });
     </script>
   </body>
