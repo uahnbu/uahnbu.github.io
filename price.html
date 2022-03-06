@@ -1,0 +1,206 @@
+<html lang="vi">
+  <head>
+    <style>
+      body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: #c7ecee;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        color: #130f40;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      button, #submit-button {
+        background: #22a6b3;
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+      }
+      #input-container {
+        width: 50%;
+        height: 100%;
+        max-width: 512px;
+        max-height: 640px;
+        font-size: 1.4rem;
+        display: flex;
+        flex-direction: column;
+      }
+      #symbols-container {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+      }
+      #symbols-container b {
+        color: #22a6b3;
+      }
+      #submit-button {
+        flex: 1;
+        margin-left: 16px;
+        padding: 8px 16px;
+      }
+      #custom-regex {
+        float: right;
+        width: .5rem;
+        background: #7ed6df;
+        outline: none;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.2rem;
+        opacity: .5;
+      }
+      #custom-regex:focus {
+        width: 3rem;
+      }
+      #input-container textarea {
+        flex: 1;
+        margin-top: 16px;
+        background: none;
+        border: solid 2px #130f40;
+        border-radius: 16px;
+        padding: 16px;
+        font-size: 1.2rem;
+      }
+      #output-container {
+        width: 50%;
+        height: 100%;
+        max-width: 512px;
+        max-height: 640px;
+        display: flex;
+        flex-direction: column;
+      }
+      #prices-container {
+        flex: 1;
+        overflow: auto;
+        border: solid 2px;
+        border-radius: 16px;
+      }
+      #prices-container table {
+        width: 100%;
+        height: 100%;
+        font-size: 1rem;
+        text-align: center;
+        border-collapse: collapse;
+        border-style: hidden;
+        font-size: 1.2rem;
+      }
+      #prices-container thead {
+        color: #22a6b3;
+        font-weight: bold;
+      }
+      #prices-container td, #prices-container th {
+        border: solid 1px #130f40;
+      }
+      #exchange-rate {
+        width: 6rem;
+        background: none;
+        border-radius: 6px;
+        border: solid 1px;
+        text-align: center;
+        color: #130f40;
+        font-size: 1.2rem;
+      }
+      #controls-board {
+        margin-top: 16px;
+        width: 100%;
+        display: flex;
+      }
+      #controls-board * ~ * {
+        margin-left: 16px;
+      }
+      #controls-board button {
+        flex: 1;
+        padding: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="input-container">
+      <div id="symbols-container">
+        <b>Dấu trước giá:</b>
+        <input type="radio" id="symbol1" name="price-symbol" value="-">
+        <label for="symbol1">-</label>
+        <input type="radio" id="symbol2" name="price-symbol" value="=">
+        <label for="symbol2">=</label>
+        <input type="radio" id="symbol3" name="price-symbol" value=":" checked>
+        <label for="symbol3">:</label>
+        <input type="radio" id="symbol4" name="price-symbol" value=" ">
+        <label for="symbol4">␣</label>
+        <div id="submit-button">Lọc giá<input id="custom-regex" type="text"></div>
+      </div>
+      <textarea spellcheck="false"></textarea>
+    </div>
+    <div id="output-container">
+      <div id="prices-container">
+        <table>
+          <thead>
+            <tr>
+              <td>Size</td>
+              <td>Giá VND</td>
+              <td>Giá USD, E=<input id="exchange-rate" type="number" value="23224"></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">20</th><td></td><td></td></tr>
+            <tr><th scope="row">25</th><td></td><td></td></tr>
+            <tr><th scope="row">30</th><td></td><td></td></tr>
+            <tr><th scope="row">40</th><td></td><td></td></tr>
+            <tr><th scope="row">50</th><td></td><td></td></tr>
+            <tr><th scope="row">60</th><td></td><td></td></tr>
+            <tr><th scope="row">70</th><td></td><td></td></tr>
+            <tr><th scope="row">80</th><td></td><td></td></tr>
+            <tr><th scope="row">90</th><td></td><td></td></tr>
+            <tr><th scope="row">100</th><td></td><td></td></tr>
+            <tr><th scope="row">110</th><td></td><td></td></tr>
+            <tr><th scope="row">120</th><td></td><td></td></tr>
+            <tr><th scope="row">130</th><td></td><td></td></tr>
+            <tr><th scope="row">140</th><td></td><td></td></tr>
+            <tr><th scope="row">150</th><td></td><td></td></tr>
+            <tr><th scope="row">160</th><td></td><td></td></tr>
+            <tr><th scope="row">170</th><td></td><td></td></tr>
+            <tr><th scope="row">180</th><td></td><td></td></tr>
+            <tr><th scope="row">190</th><td></td><td></td></tr>
+            <tr><th scope="row">200</th><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="controls-board">
+        <button id="copy-vnd" type="button">Copy giá VND</button>
+        <button id="copy-usd" type="button">Copy giá USD</button>
+      </div>
+    </div>
+    <script>
+      pricesVND = pricesUSD = [];
+      document.querySelector('#submit-button').addEventListener('click', () => {
+        const rate = document.querySelector('#exchange-rate').value;
+        const customRe = document.querySelector('#custom-regex').value;
+        const input = document.querySelector('#input-container textarea').value;
+        const symbol = document.querySelector('#symbols-container input:checked').value;
+        const sizes = '020025030040050060070080090100110120130140150160170180190200'.match(/.../g).map(c => +c);
+        pricesVND = sizes.map(size => {
+          const re = RegExp(`${size}${customRe || `.*?${symbol}\\s*`}(\\d+)`);
+          const price = input.match(re)?.[1];
+          return price ? price * 1e3 : 0;
+        });
+        pricesUSD = pricesVND.map(price => price / rate);
+        const table = [...document.querySelectorAll('#prices-container tbody tr')];
+        table.forEach((tr, i) => {
+          [...tr.querySelectorAll('td')].forEach((td, j) => {
+            td.textContent = [pricesVND, pricesUSD][j][i].toLocaleString();
+          });
+        })
+      });
+      document.querySelector('#copy-vnd').addEventListener('click', () => {
+        navigator.clipboard.writeText(pricesVND.join('\t'));
+      });
+      document.querySelector('#copy-usd').addEventListener('click', () => {
+        navigator.clipboard.writeText(pricesUSD.join('\t'));
+      });
+    </script>
+  </body>
+</html>
