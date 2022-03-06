@@ -195,7 +195,7 @@
         const symbol = document.querySelector('#symbols-container input:checked').value;
         const sizes = '020025030040050060070080090100110120130140150160170180190200'.match(/.../g).map(c => +c);
         pricesVND = sizes.map(size => {
-          const re = RegExp(`${size}${customRe || `.*?${symbol}\\s*`}(\\d+)`);
+          const re = RegExp(`(?:[^\\d]+|^)${size}${customRe || `[^\\d]*?${symbol}\\s*`}(\\d+)`);
           const price = input.match(re)?.[1];
           return price ? price * 1e3 : 0;
         });
