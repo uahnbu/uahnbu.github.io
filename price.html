@@ -143,6 +143,8 @@
         <label for="symbol3">:</label>
         <input type="radio" id="symbol4" name="price-symbol" value=" ">
         <label for="symbol4">␣</label>
+        <input type="checkbox" id="symbolc" value="c">
+        <label for="symbolc">c</label>
         <div id="submit-button">Lọc giá<input id="custom-regex" type="text"></div>
       </div>
       <textarea spellcheck="false"></textarea>
@@ -195,7 +197,8 @@
         const symbol = document.querySelector('#symbols-container input:checked').value;
         const sizes = '020025030040050060070080090100110120130140150160170180190200'.match(/.../g).map(c => +c);
         pricesVND = sizes.map(size => {
-          const re = RegExp(`(?:[^\\d]+|^)${size}${customRe || `(?!\\d).*?${symbol}\\s*`}(\\d+)`);
+          const c = document.querySelector('#symbolc').checked ? 'c' : '';
+          const re = RegExp(`(?:[^\\d]+|^)${size}${customRe || `${c}(?!\\d).*?${symbol}\\s*`}(\\d+)`);
           const price = input.match(re)?.[1];
           return price ? price * 1e3 : 0;
         });
