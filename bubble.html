@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: #f5f6fa;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#bubble-container {
+  width: 90%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+#bubble-container::-webkit-scrollbar,
+.bubble .content::-webkit-scrollbar {
+  width: 8px;
+}
+
+#bubble-container::-webkit-scrollbar-track {
+  background: hsl(215, 60%, 90%);
+}
+
+#bubble-container::-webkit-scrollbar-thumb {
+  background: hsl(215, 60%, 30%);
+  border-radius: 99px;
+}
+
+.bubble {
+  position: relative;
+  margin-top: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  min-height: 64px;
+  height: 128px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  padding: .5rem;
+  resize: vertical;
+  overflow: hidden;
+}
+
+.bubble .mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  --bg-normal: hsl(var(--bubble-hue), 60%, 80%);
+  --bg-inverse: hsl(var(--bubble-hue), 60%, 75%);
+  background-color: var(--bg-normal);
+  background-position: center;
+  transition: background .5s;
+  cursor: pointer;
+}
+
+.bubble:hover .mask {
+  background:
+    var(--bg-inverse)
+    radial-gradient(circle, transparent 1%, var(--bg-inverse) 1%)
+    center/15000%;
+}
+
+.bubble .mask:active, .bubble .mask:focus {
+  background-color: var(--bg-normal);
+  background-size: 100%;
+  transition: background 0s;
+}
+
+.bubble .content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 90%;
+  height: 90%;
+  background: none;
+  border: none;
+  color: #2f3640;
+  font-size: 1.2rem;
+  overflow: auto;
+  resize: none;
+  transform: translate(-50%, -50%);
+}
+
+.bubble .content:read-only {
+  cursor: pointer;
+  outline: none;
+}
+
+.bubble .content::-webkit-scrollbar-track {
+  background: hsl(var(--bubble-hue), 60%, 60%, .2);
+}
+
+.bubble .content::-webkit-scrollbar-thumb {
+  background: hsl(var(--bubble-hue), 60%, 60%);
+  border-radius: 99px;
+}
+
+.bubble .control-container {
+  margin: 4px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+}
+
+.bubble .control {
+  margin: 2px;
+  width: 48px;
+  height: 48px;
+  --bg-normal: hsla(var(--bubble-hue), 60%, 70%, .5);
+  --bg-inverse: hsla(var(--bubble-hue), 60%, 65%, .8);
+  background-color: var(--bg-normal);
+  background-position: center;
+  transition: background .5s, color .5s;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--bubble-hue), 60%, 30%);
+  cursor: pointer;
+  user-select: none;
+}
+
+.bubble:hover .control {
+  background-color: transparent;
+  color: hsla(var(--bubble-hue), 60%, 30%, .3);
+}
+
+.bubble .control:hover {
+  background:
+    var(--bg-inverse)
+    radial-gradient(circle, transparent 1%, var(--bg-inverse) 1%)
+    center/15000%;
+  color: hsl(var(--bubble-hue), 60%, 30%);
+}
+
+.bubble .control:active {
+  background-color: var(--bg-normal);
+  background-size: 100%;
+  transition: background 0s;
+}
+
+#bubble-resizer {
+  width: min(5%, 48px);
+  height: 128px;
+  min-height: 64px;
+  max-height: 100%;
+  background: hsl(215, 60%, 30%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(215, 60%, 90%);
+  font-size: min(2vw, 1rem);
+  user-select: none;
+  writing-mode: vertical-rl;
+  resize: vertical;
+  overflow: hidden;
+}
+</style>
+</head>
+<body>
+<div id="bubble-container"></div>
+<div id="bubble-resizer"></div>
+<script>
+const board = document.querySelector('#bubble-container');
+const resizer = document.querySelector('#bubble-resizer');
+const children = board.childNodes;
+document.addEventListener('DOMContentLoaded', () => createBubble(null));
+const resizeObserver = new ResizeObserver(entries => {
+  const bubbles = document.querySelectorAll('.bubble');
+  const height = entries[0].contentRect.height;
+  entries[0].target.textContent = height + 'px';
+  bubbles.forEach(el => resizeHeight(el, height, 64, '' + (el.id = -~el.id)));
+});
+resizeObserver.observe(resizer);
+
+function createBubble(neighbor) {
+  const colorPrev = neighbor
+    ? ~~neighbor.previousElementSibling?.getAttribute('color-index')
+    : ~~board.lastElementChild?.getAttribute('color-index');
+  const colorNext = ~~neighbor?.getAttribute('color-index');
+  const colorIndex = -~Math.max(colorPrev, colorNext);
+  const bubble = document.createElement('div');
+  bubble.classList.add('bubble');
+  bubble.setAttribute('color-index', colorIndex);
+  bubble.style.setProperty('--bubble-hue', colorIndex * 160);
+  bubble.style.height = resizer.offsetHeight + 'px';
+  
+  const mask = document.createElement('div')
+  const contentBox = document.createElement('textarea');
+  mask.tabIndex = 1, mask.classList.add('mask', 'button');
+  mask.addEventListener('click', () => copyToClipboard(contentBox));
+  contentBox.addEventListener('click', e => {
+    if (!e.target.readOnly) return;
+    copyToClipboard(contentBox);
+    mask.focus(), mask.blur();
+  });
+  contentBox.addEventListener('focusout', e => e.target.readOnly = true);
+  contentBox.readOnly = true;
+  contentBox.classList.add('content', 'button');
+  bubble.appendChild(mask), bubble.appendChild(contentBox);
+
+  const controlBox = document.createElement('div');
+  controlBox.classList.add('control-container');
+  bubble.appendChild(controlBox);
+  addControl(controlBox, '✎', el => {
+    const contentBox = el.querySelector('.content');
+    contentBox.readOnly = false, contentBox.focus();
+  });
+  addControl(controlBox, '⮟', el => createBubble(el.nextElementSibling));
+  addControl(controlBox, '⮝', el => createBubble(el));
+  addControl(controlBox, '✖', el => ~-children.length && board.removeChild(el));
+  neighbor ? board.insertBefore(bubble, neighbor) : board.appendChild(bubble);
+}
+
+function addControl(parent, content, clickHandler) {
+  const button = document.createElement('div');
+  button.classList.add('control', 'button');
+  button.textContent = content;
+  button.addEventListener('click', e => {
+    const bubble = e.target.parentElement.parentElement;
+    e.stopPropagation(), clickHandler(bubble);
+  });
+  parent.appendChild(button);
+}
+
+function copyToClipboard(el) {
+  el.focus(), el.select();
+  document.execCommand('copy');
+  el.selectionStart = el.selectionEnd;
+}
+
+function resizeHeight(el, height, minHeight, id) {
+  if (id !== el.id || Math.abs(height - el.offsetHeight) < 1e-8) return;
+  const newHeight = el.offsetHeight + (height - el.offsetHeight) * .2;
+  el.style.height = Math.max(newHeight, minHeight) + 'px';
+  requestAnimationFrame(resizeHeight.bind(null, el, height, minHeight, id));
+}
+</script>
+</body>
+</html>
