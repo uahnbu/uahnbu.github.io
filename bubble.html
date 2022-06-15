@@ -86,12 +86,12 @@ html, body {
   border: none;
   color: #2f3640;
   font-size: 1.2rem;
-  overflow: auto;
   resize: none;
   transform: translate(-50%, -50%);
 }
 
 .bubble .content:read-only {
+  overflow: hidden;
   cursor: pointer;
   outline: none;
 }
@@ -206,7 +206,10 @@ function createBubble(neighbor) {
     copyToClipboard(contentBox);
     mask.focus(), mask.blur();
   });
-  contentBox.addEventListener('focusout', e => e.target.readOnly = true);
+  contentBox.addEventListener('focusout', e => {
+    e.target.scrollTop = 0;
+    e.target.readOnly = true;
+  });
   contentBox.readOnly = true;
   contentBox.classList.add('content', 'button');
   bubble.appendChild(mask), bubble.appendChild(contentBox);
