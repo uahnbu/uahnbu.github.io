@@ -8,15 +8,46 @@
       html,
       body {
         margin: 0;
-        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #222f3e;
         font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+      button {
+        margin: 0 auto;
+        border-radius: 8px;
+        background: #0abde3;
+        border: none;
+        padding: 1rem 2rem;
+        color: #222f3e;
+        font-family: sans-serif;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      table {
+        margin-left: 1rem;
+        border-collapse: collapse;
+        row-gap: 1rem;
+      }
+      tr + tr {
+        border-top: 1px solid #48dbfb33;
+      }
+      td {
+        padding: 0.3rem;
+        color: #c8d6e5;
+      }
+      th {
+        color: #48dbfb;
+        text-align: left;
       }
     </style>
   </head>
   <body>
-    <button type="button" onclick="generateEmployee()">
-      Generate Employee
-    </button>
+    <button onclick="generateEmployee()">Generate Employee</button>
     <div id="result"></div>
     <script src="https://chancejs.com/chance.min.js"></script>
     <script>
@@ -107,28 +138,28 @@
         /* _ */ { label: 'Current' }
       ]
 
-      const ageBoundaries = [21, 26, 31, 41, 51].reverse()
-      const ageCategories = [
-        '21-25',
-        '26-30',
-        '31-40',
-        '41-50',
-        '51-60'
-      ].reverse()
-      const ageProbabilities = [0.1, 0.4, 0.2, 0.2, 0.1].reverse()
+      const ageBoundaries = [21, 26, 31, 41, 51]
+      const ageCategories = ['21-25', '26-30', '31-40', '41-50', '51-60']
+      const ageProbabilities = [0.1, 0.4, 0.2, 0.2, 0.1]
 
-      generateEmployee()
+      const PERSONNEL = 1
+      const employees = []
 
-      function generateEmployee() {
+      for (let i = 0; i < PERSONNEL; ++i) employees.push(...buildEmployee())
+
+      function buildEmployee() {
         const data = []
 
+        const gender = choose(['Male', 'Female'], [0.7, 0.3])
         const name = chance.name({
           middle: Math.random() > 0.5,
-          nationality: 'en'
+          nationality: 'en',
+          gender: gender.toLowerCase()
         })
         const jobFlow = generateJobFlow()
 
-        if (jobFlow[0].label === 'Internship') {
+        const isInternship = jobFlow[0].label === 'Internship'
+        if (isInternship) {
           ageCategories.length = ageProbabilities.length = 2
           ageProbabilities[0] = ageProbabilities[1] = 0.5
         }
@@ -138,24 +169,19 @@
         let age = Math.floor(
           Math.random() * (ageLimitMax - ageLimitMin + 1) + ageLimitMin
         )
-        const gender = choose(['Male', 'Female'])
 
-        let { division, businessUnit, department } = generateUnit({})
-        let { country, province, city } = generateLocation({})
+        let { division, businessUnit, department } = generateUnit({
+          isInternship
+        })
+        let { country, province, city } = generateLocation()
         let workingTime = 'Full-time'
         let union = 'No'
         let salary = choose(['Bi-weekly', 'Monthly'])
 
-        let jobLevel = choose([
-          'Internship',
-          'Entry',
-          'Mid',
-          'Senior',
-          'Manager'
-        ])
+        let jobLevel = choose(['Entry', 'Mid', 'Senior'])
 
-        for (let j = 0; j < jobFlow.length; ++j) {
-          const { label, date, action, reason } = jobFlow[j]
+        for (let i = 0; i < jobFlow.length; ++i) {
+          const { label, date, action, reason } = jobFlow[i]
           const entry = { name, gender, age }
           data.push(entry)
 
@@ -163,11 +189,13 @@
           entry.actionName = action
           entry.actionReason = reason
 
-          entry.ageCategory = ageCategories.find(
-            (_, i) => age >= ageBoundaries[i]
-          )
+          for (let i = ageCategories.length - 1; i >= 0; --i) {
+            if (age < ageBoundaries[i]) continue
+            entry.ageCategory = ageCategories[i]
+            break
+          }
           age += Math.floor(
-            ((jobFlow[j + 1]?.date || Date.now()) - date) / 31536e6
+            ((jobFlow[i + 1]?.date || Date.now()) - date) / 31536e6
           )
 
           if (label === 'Transfer') {
@@ -205,6 +233,8 @@
           if (label === 'Promotion') {
             const levels = ['Entry', 'Mid', 'Senior', 'Manager']
             const index = levels.indexOf(jobLevel)
+            // Too many promotions there is no going back
+            if (index >= levels.length) return buildEmployee()
             jobLevel = levels[index + 1]
           }
 
@@ -212,11 +242,102 @@
           entry.salary = salary
           entry.union = union
           entry.jobLevel = jobLevel
+          entry.jobPosition = generatePosition(department, jobLevel)
         }
 
-        document.getElementById('result').innerHTML = ''
-        const table = buildHtmlTable(data)
-        document.getElementById('result').appendChild(table)
+        return data
+      }
+
+      console.log(employees)
+
+      function generatePosition(department, level) {
+        return switcher(level + ' ' + department, {
+          'Internship Sales': ['Sales Clerk Intern', 'Sales Support Intern'],
+          'Internship Marketing': [
+            'Research Assistant Intern',
+            'Marketing Intern'
+          ],
+          'Internship HR': ['Project Assistant'],
+          'Internship IT': ['Software Developer Intern', 'Data Analyst Intern'],
+          'Internship Supply Chain': [
+            'Supply Chain Intern',
+            'Quality Control Intern'
+          ],
+
+          'Entry Sales': [
+            'Sales Clerk',
+            'Sales Support',
+            'Sales Analytics Assistant'
+          ],
+          'Entry Marketing': [
+            'Research Assistant',
+            'Marketing Assistant',
+            'Public Relations Assistant'
+          ],
+          'Entry HR': [
+            'HR Assistant',
+            'HR Coordinator',
+            'HR Analyst Assistant'
+          ],
+          'Entry Health & Safety': ['Health & Safety Assistant'],
+          'Entry IT': ['Software Developer', 'System Analyst', 'Data Analyst'],
+          'Entry Supply Chain': ['Supply Chain Analyst', 'Quality Control'],
+          'Entry Finance': ['Accounting Assistant'],
+          'Entry Corporate': ['Project Assistant', 'Operations Assistant'],
+
+          'Mid Sales': ['Sales Representative', 'Sales Analytics Specialist'],
+          'Mid Marketing': [
+            'Marketing Specialist',
+            'Public Relations Specialist'
+          ],
+          'Mid HR': ['HR Coordinator', 'HR Analyst'],
+          'Mid Health & Safety': ['Health & Safety Coordinator'],
+          'Mid IT': ['Software Developer', 'System Analyst', 'Data Analyst'],
+          'Mid Supply Chain': [
+            'Supply Chain Specialist',
+            'Quality Control Specialist',
+            'Quality Assurance Specialist'
+          ],
+          'Mid Finance': ['Accountant', 'Financial Analyst'],
+          'Mid Corporate': [
+            'Project Management Specialist',
+            'Operations Management Specialist',
+            'Business Analytics Specialist'
+          ],
+
+          'Senior Sales': ['Sales Operations Strategist'],
+          'Senior Marketing': [
+            'Marketing Strategist',
+            'Marketing Consultant',
+            'Public Relations Strategist'
+          ],
+          'Senior HR': ['HR Coordinator', 'HR Analyst'],
+          'Senior Health & Safety': ['Health & Safety Coordinator'],
+          'Senior IT': ['System Strategist'],
+          'Senior Supply Chain': [
+            'Supply Chain Management Strategist',
+            'Quality Control Strategist',
+            'Quality Assurance Strategist'
+          ],
+          'Senior Finance': ['Accountant', 'Financial Strategist'],
+          'Senior Corporate': [
+            'Project Manager',
+            'Operations Strategist',
+            'Business Strategist'
+          ],
+
+          'Manager Sales': ['Sales Manager'],
+          'Manager Marketing': ['Marketing Manager', 'Brand Manager'],
+          'Manager HR': ['HR Manager'],
+          'Manager Health & Safety': ['Health & Safety Manager'],
+          'Manager IT': ['System Manager', 'IT Manager'],
+          'Manager Supply Chain': [
+            'Planning Manager',
+            'Quality Control Manager'
+          ],
+          'Manager Finance': ['Finance Manager', 'Treasury Manager'],
+          'Manager Corporate': ['Operations Manager', 'Development Manager']
+        })
       }
 
       function generateTransfer({
@@ -226,37 +347,42 @@
         country,
         province,
         city
-      }) {
-        const target = choose(
-          [
-            'division',
-            'business unit',
-            'department',
-            'city',
-            'province',
-            'country'
-          ],
-          [0.2, 0.2, 0.05, 0.3, 0.2, 0.05]
-        )
+      } = {}) {
+        const targetChoices = [
+          'business unit',
+          'division',
+          'department',
+          'city',
+          'province',
+          'country'
+        ]
+        const targetProbabilities = [0.2, 0.2, 0.05, 0.3, 0.2, 0.05]
+
+        if (['Food', 'Shipbuilding'].includes(division)) {
+          targetChoices.shift()
+          targetProbabilities.shift()
+        }
+
+        const target = choose(targetChoices, targetProbabilities)
         const actionReason = 'Change of ' + target
 
+        const unit = generateUnit
+        const loc = generateLocation
         switcher(target, {
           'division': [
-            () => ({ division, businessUnit } = generateUnit({ department }))
+            () => ({ division, businessUnit } = unit({ department }, division))
           ],
           'business unit': [
-            () => ({ businessUnit } = generateUnit({ division, department }))
+            () =>
+              ({ businessUnit } = unit({ division, department }, businessUnit))
           ],
           'department': [
-            () => ({ department } = generateUnit({ division, businessUnit }))
+            () =>
+              ({ department } = unit({ division, businessUnit }, department))
           ],
-          'city': [() => ({ city } = generateLocation({ country, province }))],
-          'province': [
-            () => ({ province, city } = generateLocation({ country }))
-          ],
-          'country': [
-            () => ({ country, province, city } = generateLocation({}))
-          ]
+          'city': [() => ({ city } = loc({ country, province }, city))],
+          'province': [() => ({ province, city } = loc({ country }, province))],
+          'country': [() => ({ country, province, city } = loc({}, country))]
         })()
 
         return {
@@ -270,93 +396,101 @@
         }
       }
 
-      function generateUnit({ division, businessUnit, department }) {
-        division ||= choose(
-          [
-            'Agriculture',
-            'Construction',
-            'Consumer Products',
-            'Food',
-            'Forestry',
-            'Retail',
-            'Shipbuilding',
-            'Transportation'
-          ],
-          [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.3]
-        )
-
-        businessUnit ||= switcher(division, {
-          'Agriculture': ['Cavendish Agri', 'Juniper'],
-          'Construction': ['Wallboard', 'CFM', 'Gulf', 'Kent Homes', 'Pumps'],
-          'Consumer Products': ['Tissue', 'Personal Care'],
-          'Food': ['Cavendish'],
-          'Forestry': ['Woodlands', 'Pulp & Paper', 'Lake Utopia', 'Lumber'],
-          'Retail': [
+      function generateUnit(
+        { division, businessUnit, department, isInternship } = {},
+        original
+      ) {
+        while (!division || division === original)
+          division = choose(
             [
-              'Chandler',
-              'Kent',
-              'Truck & Trailer',
-              'Plasticraft',
-              'Atlas',
-              'ICS'
-            ]
-          ],
-          'Shipbuilding': ['JDI Shipbuilding'],
-          'Transportation': [
-            'Midland',
-            'RST',
-            'Sunbury',
-            'NBM',
-            'Kent Line',
-            'JDI Logistics',
-            'Habour Development'
-          ]
-        })
+              'Agriculture',
+              'Construction',
+              'Consumer Products',
+              'Food',
+              'Forestry',
+              'Retail',
+              'Shipbuilding',
+              'Transportation'
+            ],
+            [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.3]
+          )
 
-        department ||= choose([
-          'Corporate',
-          'HR',
-          'Finance',
-          'Health & Safety',
-          'Supply chain',
-          'IT',
+        while (!businessUnit || businessUnit === original)
+          businessUnit = switcher(division, {
+            'Agriculture': ['Cavendish Agri', 'Juniper'],
+            'Construction': ['Wallboard', 'CFM', 'Gulf', 'Kent Homes', 'Pumps'],
+            'Consumer Products': ['Tissue', 'Personal Care'],
+            'Food': ['Cavendish'],
+            'Forestry': ['Woodlands', 'Pulp & Paper', 'Lake Utopia', 'Lumber'],
+            'Retail': [
+              [
+                'Chandler',
+                'Kent',
+                'Truck & Trailer',
+                'Plasticraft',
+                'Atlas',
+                'ICS'
+              ]
+            ],
+            'Shipbuilding': ['JDI Shipbuilding'],
+            'Transportation': [
+              'Midland',
+              'RST',
+              'Sunbury',
+              'NBM',
+              'Kent Line',
+              'JDI Logistics',
+              'Habour Development'
+            ]
+          })
+
+        const departments = [
           'Sales',
-          'Marketing'
-        ])
+          'Marketing',
+          'Supply Chain',
+          'IT',
+          'HR',
+          'Health & Safety',
+          'Finance',
+          'Corporate'
+        ]
+
+        if (isInternship) departments.length -= 4
+        while (!department || department === original)
+          department = choose(departments)
 
         return { division, businessUnit, department }
       }
 
-      function generateLocation({ country, province, city }) {
-        country ||= choose(['Canada', 'US'])
+      function generateLocation({ country, province, city } = {}, original) {
+        while (!country || country === original)
+          country = choose(['Canada', 'US'])
 
-        province ||= switcher(country, {
-          'Canada': [
-            ['New Brunswick', 'Nova Scotia', 'Ontario', 'Prince Edward Island']
-          ],
-          'US': ['Maine', 'New York', 'Georgia', 'California']
-        })
-
-        city ||= switcher(province, {
-          'New Brunswick': [
-            [
-              'Moncton',
-              'Saint John',
-              'Fredericton',
-              'Halifax',
-              'Sussex',
-              'Utopia'
+        while (!province || province === original)
+          province = switcher(country, {
+            'Canada': [
+              'New Brunswick',
+              'Nova Scotia',
+              'Ontario',
+              'Prince Edward Island'
             ],
-            [0.2, 0.3, 0.2, 0.1, 0.1, 0.1]
-          ],
-          'Nova Scotia': ['Vanghan'],
-          'Ontario': ['Toronto'],
-          'Prince Edward Island': ['Charlottetown'],
-          'Maine': ['Portland'],
-          'New York': ['New York City'],
-          'Georgia': ['Atlanta'],
-          'California': ['Los Angeles', 'San Francisco']
-        })
+            'US': ['Maine', 'New York', 'Georgia', 'California']
+          })
+
+        while (!city || city === original)
+          city = switcher(province, {
+            'New Brunswick': [
+              ['Moncton', 'Saint John', 'Fredericton', 'Sussex', 'Utopia'],
+              [0.3, 0.3, 0.2, 0.1, 0.1]
+            ],
+            'Nova Scotia': ['Vanghan', 'Dartmouth', 'Halifax'],
+            'Ontario': ['Toronto', 'Ottawa', 'London', 'Sudbury'],
+            'Prince Edward Island': ['Charlottetown', 'Summerside'],
+            'Maine': ['Portland', 'Bangor'],
+            'New York': ['New York City', 'Buffalo'],
+            'Georgia': ['Atlanta', 'Savannah'],
+            'California': ['Los Angeles', 'San Francisco']
+          })
 
         return { country, province, city }
       }
@@ -389,7 +523,7 @@
             path[j].action = prev.actions?.[index] || path[j].label
             path[j].reason = prev.reasons?.[index] || ''
             if (path[j].action === 'Discontinuance' && !path[j].reason) {
-              path[j].reason = choose(['Terminate', 'Resignation'])
+              path[j].reason = choose(['Termination', 'Resignation'])
             }
 
             delete path[j].index
@@ -415,6 +549,16 @@
           ? groups[group]
           : [groups[group]]
         return choose(choices, probabilities)
+      }
+    </script>
+    <script>
+      generateEmployee()
+
+      function generateEmployee() {
+        const data = buildEmployee()
+        const result = document.getElementById('result')
+        result.innerHTML = ''
+        result.appendChild(buildHtmlTable(data))
       }
 
       function buildHtmlTable(df) {
