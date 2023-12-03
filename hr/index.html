@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Generator</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="control-container">
+      <button onclick="generateEmployee()">Generate Employee</button>
+      <button onclick="copyDataframe()">
+        <input id="count" type="number" inputmode="numeric" value="100" />
+        <span style="margin-left: 1rem">Copy Dataframe</span>
+      </button>
+    </div>
+    <div id="result"></div>
+    <script src="https://chancejs.com/chance.min.js"></script>
+    <script src="employee.js"></script>
+    <script src="system.js"></script>
+  </body>
+</html>
