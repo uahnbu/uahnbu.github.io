@@ -16,8 +16,11 @@
         flex-direction: column;
         justify-content: space-around;
       }
+      #control-container {
+        display: flex;
+        justify-content: space-around;
+      }
       button {
-        margin: 0 auto;
         border-radius: 8px;
         background: #0abde3;
         border: none;
@@ -27,6 +30,13 @@
         font-size: 1rem;
         font-weight: bold;
         cursor: pointer;
+        transition: background 0.2s;
+      }
+      button:hover {
+        background: #0891b0;
+      }
+      input {
+        width: 5rem;
       }
       table {
         margin-left: 1rem;
@@ -47,7 +57,13 @@
     </style>
   </head>
   <body>
-    <button onclick="generateEmployee()">Generate Employee</button>
+    <div id="control-container">
+      <button onclick="generateEmployee()">Generate Employee</button>
+      <button onclick="copyDataframe()">
+        <input id="count" type="number" inputmode="numeric" value="100" />
+        <span style="margin-left: 1rem">Copy Dataframe</span>
+      </button>
+    </div>
     <div id="result"></div>
     <script src="https://chancejs.com/chance.min.js"></script>
     <script>
@@ -141,11 +157,6 @@
       const ageBoundaries = [21, 26, 31, 41, 51]
       const ageCategories = ['21-25', '26-30', '31-40', '41-50', '51-60']
       const ageProbabilities = [0.1, 0.4, 0.2, 0.2, 0.1]
-
-      const PERSONNEL = 1
-      const employees = []
-
-      for (let i = 0; i < PERSONNEL; ++i) employees.push(...buildEmployee())
 
       function buildEmployee() {
         const data = []
@@ -247,8 +258,6 @@
 
         return data
       }
-
-      console.log(employees)
 
       function generatePosition(department, level) {
         return switcher(level + ' ' + department, {
@@ -559,6 +568,34 @@
         const result = document.getElementById('result')
         result.innerHTML = ''
         result.appendChild(buildHtmlTable(data))
+      }
+
+      function copyDataframe() {
+        if (
+          !confirm(
+            'Are you sure you want to copy the Dataframe to the Clipboard?'
+          )
+        )
+          return
+
+        const data = []
+        const count = document.getElementById('count').valueAsNumber
+        for (let i = 0; i < count; ++i) {
+          data.push(...buildEmployee())
+        }
+        data.sort((a, b) => b.date.localeCompare(a.date))
+
+        const table = [Object.keys(data[0])]
+        data.forEach((entry) => table.push(table[0].map((key) => entry[key])))
+
+        const text = table.map((row) => row.join('\t')).join('\n')
+        const input = document.createElement('textarea')
+        input.value = text
+        document.body.appendChild(input)
+        input.select()
+        document.execCommand('copy')
+        input.remove()
+        alert('Copied to clipboard')
       }
 
       function buildHtmlTable(df) {
