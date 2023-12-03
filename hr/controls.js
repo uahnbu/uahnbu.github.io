@@ -1,3 +1,6 @@
+document.getElementById('count').addEventListener('click', (e) => {
+  e.stopPropagation()
+})
 generateEmployee()
 
 function generateEmployee() {
@@ -22,8 +25,9 @@ function copyDataframe() {
   }
   data.sort((a, b) => b.date.localeCompare(a.date))
 
-  const table = [Object.keys(data[0]).map(camelToCapital)]
+  const table = [Object.keys(data[0])]
   data.forEach((entry) => table.push(table[0].map((key) => entry[key])))
+  table[0] = table[0].map(camelToCapital)
 
   const text = table.map((row) => row.join('\t')).join('\n')
   const input = document.createElement('textarea')
@@ -32,7 +36,6 @@ function copyDataframe() {
   input.select()
   document.execCommand('copy')
   input.remove()
-  alert('Copied to clipboard')
 }
 
 function buildHtmlTable(df) {
