@@ -34,14 +34,14 @@ const nodes /** @type {JobFlowNode} */ = [
   /* 2 */ {
     label: 'Permanent',
     choices: [4, 7, 9, 10],
-    probabilities: [0.2, 0.2, 0.2, 0.4],
+    probabilities: [0.2, 0.2, 0.1, 0.6],
     minYears: [3],
     maxYears: [5, 2]
   },
   /* 3 */ {
     label: 'Contractual',
     choices: [2, 3, 9, 10],
-    probabilities: [0.1, 0.4, 0.3, 0.2],
+    probabilities: [0.1, 0.4, 0.2, 0.3],
     actions: ['Hire', 'Hire', 'Discontinuance'],
     reasons: ['Transition to Permanent', 'Recontract', 'Contract End'],
     minYears: [1, 1, 1],
@@ -50,34 +50,34 @@ const nodes /** @type {JobFlowNode} */ = [
   /* 4 */ {
     label: 'Promotion',
     choices: [5, 8, 9, 10],
-    probabilities: [0.2, 0.1, 0.2, 0.5],
+    probabilities: [0.2, 0.1, 0.1, 0.7],
     minYears: [5],
     maxYears: [8, 2]
   },
   /* 5 */ {
     label: 'Promotion',
     choices: [6, 9, 10],
-    probabilities: [0.1, 0.2, 0.7],
+    probabilities: [0.05, 0.05, 0.9],
     minYears: [5],
     maxYears: [8]
   },
   /* 6 */ {
     label: 'Promotion',
     choices: [9, 10],
-    probabilities: [0.3, 0.7],
+    probabilities: [0.01, 0.99],
     minYears: [5]
   },
   /* 7 */ {
     label: 'Transfer',
     choices: [4, 8, 9, 10],
-    probabilities: [0.2, 0.1, 0.2, 0.5],
+    probabilities: [0.1, 0.1, 0.1, 0.7],
     minYears: [3],
     maxYears: [5, 2]
   },
   /* 8 */ {
     label: 'Transfer',
     choices: [6, 9, 10],
-    probabilities: [0.1, 0.5, 0.4],
+    probabilities: [0.05, 0.2, 0.75],
     minYears: [5],
     maxYears: [8]
   },
@@ -89,10 +89,6 @@ const nodes /** @type {JobFlowNode} */ = [
   /* _ */ { label: 'Current' }
 ]
 
-const ageBoundaries = [21, 26, 31, 41, 51]
-const ageCategories = ['21-25', '26-30', '31-40', '41-50', '51-60']
-const ageProbabilities = [0.1, 0.4, 0.2, 0.2, 0.1]
-
 const PERSONNEL = 1
 const employees = []
 
@@ -101,49 +97,41 @@ for (let i = 0; i < PERSONNEL; ++i) employees.push(...buildEmployee())
 function buildEmployee() {
   const data = []
 
-  const gender = choose(['Male', 'Female'], [0.7, 0.3])
+  const jobFlow = generateJobFlow()
+
+  const isInternship = jobFlow[0].label === 'Internship'
+
+  let { division, businessUnit, department } = generateUnit({ isInternship })
+  let { country, province, city } = generateLocation()
+  let salary = choose(['Bi-weekly', 'Monthly'])
+  let workingTime = 'Full-time'
+  let union = 'No'
+
+  let jobLevel = choose(['Entry', 'Mid', 'Senior'])
+
+  const gender = choose(
+    ['Male', 'Female'],
+    division === 'Food' ? [0.4, 0.6] : [0.6, 0.4]
+  )
   const name = chance.name({
     middle: Math.random() > 0.5,
     nationality: 'en',
     gender: gender.toLowerCase()
   })
-  const jobFlow = generateJobFlow()
 
-  const isInternship = jobFlow[0].label === 'Internship'
-  if (isInternship) {
-    ageCategories.length = ageProbabilities.length = 2
-    ageProbabilities[0] = ageProbabilities[1] = 0.5
-  }
-  const ageCategory = choose(ageCategories, ageProbabilities)
-  const ageLimitMin = +ageCategory.split('-')[0]
-  const ageLimitMax = +ageCategory.split('-')[1]
-  let age = Math.floor(
-    Math.random() * (ageLimitMax - ageLimitMin + 1) + ageLimitMin
-  )
-
-  let { division, businessUnit, department } = generateUnit({ isInternship })
-  let { country, province, city } = generateLocation()
-  let workingTime = 'Full-time'
-  let union = 'No'
-  let salary = choose(['Bi-weekly', 'Monthly'])
-
-  let jobLevel = choose(['Entry', 'Mid', 'Senior'])
+  const maxBirthYear = isInternship ? 30 : 50
+  const birthDate =
+    jobFlow[0].date - 31536e6 * chance.integer({ min: 21, max: maxBirthYear })
+  const birthday = chance.birthday({ year: new Date(birthDate).getFullYear() })
 
   for (let i = 0; i < jobFlow.length; ++i) {
     const { label, date, action, reason } = jobFlow[i]
-    const entry = { name, gender, age }
-    data.push(entry)
+    const entry = (data[data.length] = { name, gender })
 
     entry.date = new Date(date).toLocaleDateString()
+    entry.birthday = new Date(birthday).toLocaleDateString()
     entry.actionName = action
     entry.actionReason = reason
-
-    for (let i = ageCategories.length - 1; i >= 0; --i) {
-      if (age < ageBoundaries[i]) continue
-      entry.ageCategory = ageCategories[i]
-      break
-    }
-    age += Math.floor(((jobFlow[i + 1]?.date || Date.now()) - date) / 31536e6)
 
     if (label === 'Transfer') {
       const changes = generateTransfer({
@@ -181,7 +169,7 @@ function buildEmployee() {
       const levels = ['Entry', 'Mid', 'Senior', 'Manager']
       const index = levels.indexOf(jobLevel)
       // Too many promotions there is no going back
-      if (index >= levels.length) return buildEmployee()
+      if (index >= levels.length - 1) return buildEmployee()
       jobLevel = levels[index + 1]
     }
 
@@ -439,7 +427,7 @@ function generateJobFlow() {
       const prev = nodes[path[j - 1].index]
       const index = prev.choices.indexOf(path[j].index)
       const minYears = prev.minYears?.[index] || 0
-      const maxYears = prev.maxYears?.[index] || 5
+      const maxYears = prev.maxYears?.[index] || 20
       const min = 31536e6 * minYears
       const max = 31536e6 * maxYears
       date -= chance.integer({ min, max })
