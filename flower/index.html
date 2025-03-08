@@ -343,7 +343,7 @@
   <script>
     const param = decodeURI(atob(new URLSearchParams(location.search).get('t')))
     if (param.indexOf('|') !== -1) {
-      document.querySelector('textPath').textContent = param.split('|')[0]
+      document.querySelector('textPath').textContent = param.split('|')[0] + ','
       document.querySelectorAll('textPath')[1].textContent = param.split('|')[1]
       document.title = param.split('|')[2] || 'flower'
     }
