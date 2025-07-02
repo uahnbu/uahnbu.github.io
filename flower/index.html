@@ -346,6 +346,19 @@
       document.querySelector('textPath').textContent = param.split('|')[0] + ','
       document.querySelectorAll('textPath')[1].textContent = param.split('|')[1]
       document.title = param.split('|')[2] || 'flower'
+
+      const color = param.split('|')[3] || '250, 200, 150'
+      const style = document.createElement('style')
+      style.textContent = `
+        :root {
+          --dark-color: rgb(${color});
+          --dark-color-03: rgba(${color}, 0.03);
+          --dark-color-20: rgba(${color}, 0.2);
+          --dark-color-50: rgba(${color}, 0.5);
+          --dark-color-60: rgba(${color}, 0.6);
+        }
+      `
+      document.body.appendChild(style)
     }
   </script>
 </html>
